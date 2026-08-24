@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+*.db
+data/citizen_reports/*
+!data/citizen_reports/reports.json

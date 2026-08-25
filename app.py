@@ -7,7 +7,7 @@ YOLOv8 vision analytics preview, and multi-factor explainability breakdowns.
 
 import streamlit as st
 import folium
-from folium.plugins import HeatMap, MiniMap, Fullscreen
+from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster
 from streamlit_folium import st_folium
 import pandas as pd
 import plotly.express as px
@@ -425,130 +425,263 @@ tab_map, tab_explain, tab_vision, tab_citizen = st.tabs([
 ])
 
 # ----------------------------------------------------
-# TAB 1: REAL-TIME INTERACTIVE ALERT MAP (SATELLITE + STREETS + HEATMAP)
+# TAB 1: REAL-TIME GLOBAL & REGIONAL RISK SURVEILLANCE MAP
 # ----------------------------------------------------
 with tab_map:
-    st.subheader("🗺️ Real-Time India Road Junction Surveillance & Alert Map")
+    st.subheader("🗺️ Global & Regional Junction Risk Surveillance System")
     st.markdown(
-        "Live GIS surveillance dashboard. Switch between **🛰️ HD Satellite Imagery**, **🛣️ Street Navigation**, and **🔥 Risk Heatmaps**. "
-        "High-risk zones exhibit **pulsing radar halos** and dynamic conflict danger perimeters."
+        "Single unified GIS command map with seamless **View Modes** (Satellite, Streets, Dark Tactical) "
+        "and **Explainable Risk Layers** (Heatmaps, Hazard Buffers, Radar Halos)."
     )
 
-    # Quick Navigation / Junction Focus Bar
-    map_ctrl1, map_ctrl2, map_ctrl3 = st.columns([2, 1, 1])
-    
-    with map_ctrl1:
-        junction_options = {"🇮🇳 All India Overview": None}
-        for j in filtered_junctions:
-            junction_options[f"📍 {j['name']} ({j.get('risk_level', 'LOW')} - {j.get('risk_score', 0):.1f})"] = j
+    # ── Map Control Toolbar: View Options & Risk Part ──
+    with st.container():
+        st.markdown('<div style="background:rgba(15,23,42,0.7); border:1px solid rgba(51,65,85,0.5); border-radius:14px; padding:16px 20px; margin-bottom:15px;">', unsafe_allow_html=True)
         
-        selected_map_view = st.selectbox("🎯 Focus on Junction Camera / Location", options=list(junction_options.keys()))
+        # Row 1: Geographic Scope & Base View Options
+        ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([2, 2, 2])
+        
+        with ctrl_col1:
+            map_scope = st.selectbox(
+                "🌐 Geographic Scope",
+                options=[
+                    "🌍 Single World Map (Global View)",
+                    "🇮🇳 India National Hotspot Overview",
+                    "🎯 Focus on Specific Junction Camera"
+                ],
+                index=1
+            )
+            
+        with ctrl_col2:
+            base_view_mode = st.selectbox(
+                "🎨 Map View Style",
+                options=[
+                    "🛰️ HD Satellite Imagery (Real World)",
+                    "🛣️ Street Navigation (OpenStreetMap)",
+                    "🌃 Dark Tactical / Command Center",
+                    "🗺️ Clean Light Map",
+                    "🏔️ Topographic Terrain"
+                ],
+                index=0
+            )
 
-    with map_ctrl2:
-        show_heatmap = st.checkbox("🔥 Show Accident Density Heatmap", value=True)
+        with ctrl_col3:
+            if "Specific Junction" in map_scope:
+                junction_pick_options = {f"📍 {j['name']} ({j['risk_level']})": j for j in filtered_junctions}
+                picked_jnc_label = st.selectbox("Select Target Junction", options=list(junction_pick_options.keys()))
+                focused_jnc = junction_pick_options.get(picked_jnc_label)
+            else:
+                focused_jnc = None
+                st.selectbox("Camera Status", options=["📡 All Junction Telemetry Live", "⚡ Radar Beacon Active"], disabled=True)
 
-    with map_ctrl3:
-        show_danger_buffers = st.checkbox("⭕ Show Conflict Hazard Zones (500m)", value=True)
+        st.markdown('<hr style="margin:10px 0; border-color:rgba(51,65,85,0.4);">', unsafe_allow_html=True)
 
-    # Determine center and zoom level based on selection
-    target_jnc = junction_options[selected_map_view]
-    if target_jnc is not None:
-        map_center = [target_jnc["lat"], target_jnc["lon"]]
+        # Row 2: "Those Risk Part" (Risk Layers & Thresholds)
+        risk_col1, risk_col2, risk_col3, risk_col4 = st.columns([2, 2, 2, 2])
+
+        with risk_col1:
+            map_risk_filter = st.multiselect(
+                "🚨 Filter Risk Severity",
+                options=["HIGH", "MEDIUM", "LOW"],
+                default=["HIGH", "MEDIUM", "LOW"]
+            )
+
+        with risk_col2:
+            enable_heatmap = st.checkbox("🔥 Accident Density Heatmap", value=True)
+            heat_radius = st.slider("Heat Intensity Radius", min_value=15, max_value=45, value=28, step=5) if enable_heatmap else 28
+
+        with risk_col3:
+            enable_buffers = st.checkbox("⭕ Hazard Conflict Buffers", value=True)
+            buffer_radius_m = st.selectbox("Safety Buffer Radius", options=[250, 500, 1000], index=1, format_func=lambda x: f"{x} Meters") if enable_buffers else 500
+
+        with risk_col4:
+            marker_style = st.radio(
+                "⚡ Marker Style",
+                options=["Pulsing Radar Beacons", "Standard Pin Markers"],
+                index=0,
+                horizontal=True
+            )
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Filter junctions displayed on map based on the map_risk_filter
+    map_junctions = [j for j in filtered_junctions if j["risk_level"] in map_risk_filter]
+
+    # Live Risk Telemetry Mini HUD above Map
+    map_high = sum(1 for j in map_junctions if j["risk_level"] == "HIGH")
+    map_med = sum(1 for j in map_junctions if j["risk_level"] == "MEDIUM")
+    map_low = sum(1 for j in map_junctions if j["risk_level"] == "LOW")
+    map_avg = round(sum(j["risk_score"] for j in map_junctions if j["risk_score"] is not None) / max(1, len(map_junctions)), 1)
+
+    hud_c1, hud_c2, hud_c3, hud_c4 = st.columns(4)
+    hud_c1.markdown(f'<div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#fca5a5; font-weight:600;">🔴 HIGH RISK HOTSPOTS</span><span style="font-size:1.3rem; font-weight:800; color:#ef4444;">{map_high}</span></div>', unsafe_allow_html=True)
+    hud_c2.markdown(f'<div style="background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#fde68a; font-weight:600;">🟡 MEDIUM RISK ZONES</span><span style="font-size:1.3rem; font-weight:800; color:#f59e0b;">{map_med}</span></div>', unsafe_allow_html=True)
+    hud_c3.markdown(f'<div style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#a7f3d0; font-weight:600;">🟢 LOW RISK NODES</span><span style="font-size:1.3rem; font-weight:800; color:#10b981;">{map_low}</span></div>', unsafe_allow_html=True)
+    hud_c4.markdown(f'<div style="background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#bfdbfe; font-weight:600;">📊 AVG RISK INDEX</span><span style="font-size:1.3rem; font-weight:800; color:#3b82f6;">{map_avg}/100</span></div>', unsafe_allow_html=True)
+
+    st.write("")
+
+    # Determine center and zoom level based on Geographic Scope
+    if "Global" in map_scope:
+        map_center = [20.0, 0.0]
+        map_zoom = 2
+        min_zoom = 2
+    elif "Specific Junction" in map_scope and focused_jnc is not None:
+        map_center = [focused_jnc["lat"], focused_jnc["lon"]]
         map_zoom = 15
-    else:
+        min_zoom = 2
+    else:  # India National Overview
         map_center = [20.5937, 78.9629]
         map_zoom = 5
+        min_zoom = 2
 
-    # Initialize Folium Map with OpenStreetMap by default
+    # Initialize SINGLE NON-REPEATING Folium Map (no infinite tiling clones)
     m = folium.Map(
         location=map_center,
         zoom_start=map_zoom,
+        min_zoom=min_zoom,
+        max_zoom=19,
         tiles=None,
-        control_scale=True
+        control_scale=True,
+        world_copy_jump=False,
+        max_bounds=True,
+        min_lat=-85, max_lat=85, min_lon=-180, max_lon=180
     )
 
-    # 1. Base Tile Layers (Streets, Real Satellite, Dark Canvas, Light)
-    folium.TileLayer(
-        tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        attr="&copy; OpenStreetMap contributors",
-        name="🛣️ Street View (OpenStreetMap)",
-        overlay=False,
-        control=True
-    ).add_to(m)
-
-    folium.TileLayer(
+    # 1. Base Tile Layers with no_wrap=True (Guarantees ONE single world map, no horizontal wrapping)
+    satellite_tile = folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr="Esri World Imagery, Maxar, Earthstar Geographics",
-        name="🛰️ Real Satellite Imagery (HD)",
+        name="🛰️ HD Satellite Imagery (Real World)",
         overlay=False,
-        control=True
-    ).add_to(m)
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
+    )
 
-    folium.TileLayer(
-        tiles="CartoDB dark_matter",
-        name="🌃 Dark Tactical View",
+    streets_tile = folium.TileLayer(
+        tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        attr="&copy; OpenStreetMap contributors",
+        name="🛣️ Street Navigation (OpenStreetMap)",
         overlay=False,
-        control=True
-    ).add_to(m)
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
+    )
 
-    folium.TileLayer(
-        tiles="CartoDB positron",
+    dark_tile = folium.TileLayer(
+        tiles="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        attr="&copy; OpenStreetMap contributors &copy; CARTO",
+        name="🌃 Dark Tactical / Command Center",
+        overlay=False,
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
+    )
+
+    positron_tile = folium.TileLayer(
+        tiles="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        attr="&copy; OpenStreetMap contributors &copy; CARTO",
         name="🗺️ Clean Light Map",
         overlay=False,
-        control=True
-    ).add_to(m)
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
+    )
 
-    # 2. Add Accident Risk HeatMap Layer
-    if show_heatmap and filtered_junctions:
+    topo_tile = folium.TileLayer(
+        tiles="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+        attr="Map data &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap",
+        name="🏔️ Topographic Terrain",
+        overlay=False,
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
+    )
+
+    # Add default layer based on user dropdown selection
+    if "Satellite" in base_view_mode:
+        satellite_tile.add_to(m)
+        streets_tile.add_to(m)
+        dark_tile.add_to(m)
+        positron_tile.add_to(m)
+        topo_tile.add_to(m)
+    elif "Street" in base_view_mode:
+        streets_tile.add_to(m)
+        satellite_tile.add_to(m)
+        dark_tile.add_to(m)
+        positron_tile.add_to(m)
+        topo_tile.add_to(m)
+    elif "Dark" in base_view_mode:
+        dark_tile.add_to(m)
+        satellite_tile.add_to(m)
+        streets_tile.add_to(m)
+        positron_tile.add_to(m)
+        topo_tile.add_to(m)
+    elif "Terrain" in base_view_mode:
+        topo_tile.add_to(m)
+        satellite_tile.add_to(m)
+        streets_tile.add_to(m)
+        dark_tile.add_to(m)
+        positron_tile.add_to(m)
+    else:
+        positron_tile.add_to(m)
+        satellite_tile.add_to(m)
+        streets_tile.add_to(m)
+        dark_tile.add_to(m)
+        topo_tile.add_to(m)
+
+    # 2. Add Risk HeatMap Layer
+    if enable_heatmap and map_junctions:
         heat_data = []
-        for j in filtered_junctions:
+        for j in map_junctions:
             weight = (j.get("risk_score") or 30.0) / 100.0
-            # Add center point and slight jitter points for realistic heat radius
-            heat_data.append([j["lat"], j["lon"], weight * 1.5])
-            heat_data.append([j["lat"] + 0.0015, j["lon"] + 0.0015, weight * 0.9])
-            heat_data.append([j["lat"] - 0.0015, j["lon"] - 0.0015, weight * 0.9])
+            # Add primary center point and surrounding radius points
+            heat_data.append([j["lat"], j["lon"], weight * 1.6])
+            heat_data.append([j["lat"] + 0.0018, j["lon"] + 0.0018, weight * 0.9])
+            heat_data.append([j["lat"] - 0.0018, j["lon"] - 0.0018, weight * 0.9])
         
         heatmap_layer = folium.FeatureGroup(name="🔥 Accident Risk Heatmap", overlay=True)
         HeatMap(
             heat_data,
-            radius=28,
-            blur=20,
+            radius=heat_radius,
+            blur=18,
             max_zoom=13,
-            gradient={0.2: '#10b981', 0.5: '#f59e0b', 0.8: '#ef4444', 1.0: '#991b1b'}
+            gradient={0.2: '#10b981', 0.45: '#f59e0b', 0.75: '#ef4444', 1.0: '#991b1b'}
         ).add_to(heatmap_layer)
         heatmap_layer.add_to(m)
 
-    # 3. Add Junction Danger Zone Buffers (500m conflict perimeter)
-    if show_danger_buffers:
-        buffer_layer = folium.FeatureGroup(name="⭕ Hazard Perimeter Buffers (500m)", overlay=True)
-        for jnc in filtered_junctions:
+    # 3. Add Hazard Conflict Buffer Zones (Safety Perimeters)
+    if enable_buffers and map_junctions:
+        buffer_layer = folium.FeatureGroup(name=f"⭕ Hazard Conflict Buffers ({buffer_radius_m}m)", overlay=True)
+        for jnc in map_junctions:
             lvl = jnc.get("risk_level", "LOW")
             if lvl == "HIGH":
                 buf_color = "#ef4444"
-                buf_opacity = 0.18
+                buf_opacity = 0.20
             elif lvl == "MEDIUM":
                 buf_color = "#f59e0b"
-                buf_opacity = 0.12
+                buf_opacity = 0.14
             else:
                 buf_color = "#10b981"
                 buf_opacity = 0.08
 
             folium.Circle(
                 location=[jnc["lat"], jnc["lon"]],
-                radius=450,
+                radius=buffer_radius_m,
                 color=buf_color,
                 fill=True,
                 fill_color=buf_color,
                 fill_opacity=buf_opacity,
                 weight=1.5,
-                dash_array="5, 5",
-                tooltip=f"500m Risk Perimeter: {jnc['name']}"
+                dash_array="6, 4",
+                tooltip=f"Danger Buffer ({buffer_radius_m}m): {jnc['name']}"
             ).add_to(buffer_layer)
         buffer_layer.add_to(m)
 
     # 4. Add Interactive Junction Markers with Live Radar Halos
-    markers_layer = folium.FeatureGroup(name="🚨 Junction Alert Markers", overlay=True)
-    for jnc in filtered_junctions:
+    markers_layer = folium.FeatureGroup(name="🚨 Junction Hotspot Markers", overlay=True)
+    for jnc in map_junctions:
         score = jnc["risk_score"] or 0.0
         level = jnc["risk_level"] or "LOW"
         name = jnc["name"]
@@ -558,16 +691,18 @@ with tab_map:
             marker_html = f'<div class="pulse-marker-high" title="{name}: {score}"></div>'
             color_hex = "#ef4444"
             badge_bg = "#ef4444"
+            pin_color = "red"
         elif level == "MEDIUM":
             marker_html = f'<div class="pulse-marker-med" title="{name}: {score}"></div>'
             color_hex = "#f59e0b"
             badge_bg = "#f59e0b"
+            pin_color = "orange"
         else:
             marker_html = f'<div class="pulse-marker-low" title="{name}: {score}"></div>'
             color_hex = "#10b981"
             badge_bg = "#10b981"
+            pin_color = "green"
 
-        # Factors popup summary
         factors_items = "".join([
             f'<div style="display:flex; justify-content:space-between; margin-bottom:3px;">'
             f'<span style="color:#64748b;">• {f["factor"]}:</span>'
@@ -584,7 +719,7 @@ with tab_map:
             </div>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin:6px 0;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; color:#64748b; font-weight:600;">RISK SCORE</span>
+                    <span style="font-size:0.75rem; color:#64748b; font-weight:600;">JUNCTION RISK SCORE</span>
                     <span style="background:{badge_bg}; color:white; padding:2px 8px; border-radius:9999px; font-size:0.65rem; font-weight:700;">{level}</span>
                 </div>
                 <div style="font-size:1.6rem; font-weight:800; color:{color_hex}; line-height:1.2; margin-top:2px;">
@@ -598,33 +733,40 @@ with tab_map:
             <div style="margin-top:10px; padding-top:8px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:0.7rem; color:#94a3b8; font-family:monospace;">{lat:.4f}, {lon:.4f}</span>
                 <a href="{gmaps_url}" target="_blank" style="color:#3b82f6; text-decoration:none; font-size:0.75rem; font-weight:600;">
-                    📍 View on Maps &rarr;
+                    📍 Google Maps &rarr;
                 </a>
             </div>
         </div>
         """
 
-        # Custom DivIcon for Pulsing Effect
-        icon = folium.DivIcon(
-            html=marker_html,
-            icon_size=(20, 20),
-            icon_anchor=(10, 10)
-        )
-        folium.Marker(
-            location=[lat, lon],
-            icon=icon,
-            popup=folium.Popup(popup_content, max_width=300),
-            tooltip=f"{name} | {level} Risk ({score:.1f}/100)"
-        ).add_to(markers_layer)
+        if marker_style == "Pulsing Radar Beacons":
+            icon = folium.DivIcon(
+                html=marker_html,
+                icon_size=(20, 20),
+                icon_anchor=(10, 10)
+            )
+            folium.Marker(
+                location=[lat, lon],
+                icon=icon,
+                popup=folium.Popup(popup_content, max_width=300),
+                tooltip=f"{name} | {level} Risk ({score:.1f}/100)"
+            ).add_to(markers_layer)
+        else:
+            folium.Marker(
+                location=[lat, lon],
+                popup=folium.Popup(popup_content, max_width=300),
+                tooltip=f"{name} | {level} Risk ({score:.1f}/100)",
+                icon=folium.Icon(color=pin_color, icon="info-sign")
+            ).add_to(markers_layer)
 
     markers_layer.add_to(m)
 
-    # 5. Interactive Folium Plugins
+    # 5. Interactive GIS Plugins
     Fullscreen(position="topright").add_to(m)
     MiniMap(toggle_display=True, tile_layer="OpenStreetMap", position="bottomright", width=140, height=100).add_to(m)
     folium.LayerControl(position="topleft", collapsed=False).add_to(m)
 
-    st_folium(m, width="stretch", height=580, key=f"real_map_{selected_map_view}")
+    st_folium(m, width="stretch", height=600, key=f"unified_map_{map_scope}_{base_view_mode}_{len(map_junctions)}_{marker_style}")
 
 # ----------------------------------------------------
 # TAB 2: EXPLAINABILITY & CONTRIBUTING FACTORS

@@ -197,32 +197,44 @@ with col_map:
     m = folium.Map(
         location=map_center,
         zoom_start=map_zoom,
+        min_zoom=2,
+        max_zoom=19,
         tiles=None,
-        control_scale=True
+        control_scale=True,
+        world_copy_jump=False,
+        max_bounds=True,
+        min_lat=-85, max_lat=85, min_lon=-180, max_lon=180
     )
     
-    # 1. Base Tile Layers (Street View, Real Satellite HD, Dark Matter)
-    folium.TileLayer(
-        tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        attr="&copy; OpenStreetMap contributors",
-        name="🛣️ Street View (OpenStreetMap)",
-        overlay=False,
-        control=True
-    ).add_to(m)
-
+    # 1. Base Tile Layers with no_wrap=True (Guarantees ONE single world map, no horizontal wrapping)
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr="Esri World Imagery, Maxar",
         name="🛰️ Real Satellite Imagery (HD)",
         overlay=False,
-        control=True
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
     ).add_to(m)
 
     folium.TileLayer(
-        tiles="CartoDB dark_matter",
+        tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        attr="&copy; OpenStreetMap contributors",
+        name="🛣️ Street View (OpenStreetMap)",
+        overlay=False,
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
+    ).add_to(m)
+
+    folium.TileLayer(
+        tiles="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        attr="&copy; CARTO",
         name="🌃 Dark Tactical View",
         overlay=False,
-        control=True
+        control=True,
+        no_wrap=True,
+        bounds=[[-85, -180], [85, 180]]
     ).add_to(m)
 
     # 2. Add markers for all filtered junctions

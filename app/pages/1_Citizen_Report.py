@@ -17,24 +17,139 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Style Injection
+# ── Comprehensive CSS for Citizen Report Page ──
 st.markdown("""
 <style>
+    /* ── Global Dark Theme Override ── */
+    .stApp,
+    [data-testid="stAppViewContainer"] {
+        background: #0a0e1a !important;
+        color: #e2e8f0 !important;
+    }
+    header[data-testid="stHeader"] {
+        background: rgba(10, 14, 26, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0f1729 0%, #0a0e1a 100%) !important;
+        border-right: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    /* ── Custom Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* ── Section Headers ── */
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4 {
+        color: #f1f5f9 !important;
+    }
+
+    /* ── Animated Gradient Separator ── */
+    @keyframes gradientFlow {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .gradient-separator {
+        height: 3px;
+        background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6, #ef4444);
+        background-size: 300% 100%;
+        animation: gradientFlow 4s ease infinite;
+        border-radius: 2px;
+        margin: 0.5rem 0 1.5rem 0;
+    }
+
+    /* ── Report Card ── */
     .report-card {
-        background-color: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.75) 100%);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(51, 65, 85, 0.4);
+        border-left: 4px solid #6366f1;
+        border-radius: 12px;
         padding: 1.25rem;
         margin-bottom: 1rem;
+        transition: all 0.25s ease;
+    }
+    .report-card:hover {
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+        transform: translateY(-1px);
     }
     .report-header {
         display: flex;
         justify-content: space-between;
-        border-bottom: 1px solid #475569;
+        border-bottom: 1px solid rgba(71, 85, 105, 0.3);
         padding-bottom: 0.5rem;
         margin-bottom: 0.75rem;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: #94a3b8;
+    }
+    .report-junction {
+        color: #a5b4fc;
+        font-weight: 600;
+    }
+    .report-timestamp {
+        color: #64748b;
+        font-size: 0.78rem;
+        background: rgba(51, 65, 85, 0.3);
+        padding: 2px 10px;
+        border-radius: 9999px;
+        border: 1px solid rgba(71, 85, 105, 0.3);
+    }
+    .report-reporter {
+        font-size: 0.9rem;
+        margin-bottom: 0.6rem;
+        color: #e2e8f0;
+    }
+    .report-description {
+        font-size: 0.88rem;
+        line-height: 1.6;
+        color: #94a3b8;
+    }
+
+    /* ── Form Styling ── */
+    .stForm {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(51, 65, 85, 0.4);
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    /* ── Footer ── */
+    .app-footer {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(10, 14, 26, 0.9));
+        border: 1px solid rgba(51, 65, 85, 0.3);
+        border-radius: 12px;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+    }
+    .footer-brand {
+        font-size: 0.85rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+    .footer-version {
+        font-size: 0.7rem;
+        color: #475569;
+        background: rgba(51, 65, 85, 0.3);
+        padding: 3px 10px;
+        border-radius: 9999px;
+        border: 1px solid rgba(71, 85, 105, 0.3);
+    }
+
+    /* ── Submission Success Animation ── */
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .stSuccess {
+        animation: slideInUp 0.4s ease-out;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -66,19 +181,42 @@ def save_report(report_data):
         st.error(f"Failed to save report: {e}")
         return False
 
-# Header
-st.title("📣 Citizen Safety Reporting Portal")
+# ── Branded Page Header ──
 st.markdown("""
-Use this form to report hazard situations, traffic violations, or infrastructure issues directly at junctions. 
-Submissions are saved locally and used to compute junction safety rankings.
-""")
+<div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 14, 26, 0.95) 100%);
+            border: 1px solid rgba(51, 65, 85, 0.4); border-radius: 16px; padding: 24px 28px;
+            position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 12px; right: 16px;
+                background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 3px 12px;
+                border-radius: 9999px; font-size: 0.65rem; font-weight: 700;
+                border: 1px solid rgba(245, 158, 11, 0.25); letter-spacing: 0.08em;">
+        PUBLIC PORTAL
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 2.2rem;">📣</span>
+        <div>
+            <h1 style="margin: 0; font-size: 1.8rem; font-weight: 800;
+                        background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+                        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                        background-clip: text;">
+                Citizen Safety Reporting Portal
+            </h1>
+            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.9rem; font-weight: 400;">
+                Report hazard situations, traffic violations, or infrastructure issues directly at junctions.
+                Submissions are saved locally and used to compute junction safety rankings.
+            </p>
+        </div>
+    </div>
+</div>
+<div class="gradient-separator"></div>
+""", unsafe_allow_html=True)
 
 # Load the placeholder junctions
 junctions = load_junctions()
 junction_names = [j.name for j in junctions]
 
 # Create form
-st.markdown("### File a Safety Report")
+st.markdown("### 📝 File a Safety Report")
 with st.form("citizen_report_form", clear_on_submit=True):
     col_j, col_n = st.columns(2)
     with col_j:
@@ -93,7 +231,7 @@ with st.form("citizen_report_form", clear_on_submit=True):
         type=["jpg", "png", "jpeg", "mp4", "mov", "avi", "webm"]
     )
     
-    submit_button = st.form_submit_button("Submit Safety Report")
+    submit_button = st.form_submit_button("🚨 Submit Safety Report")
 
 # Handle Submission
 if submit_button:
@@ -161,13 +299,15 @@ else:
             st.markdown(f"""
             <div class="report-card">
                 <div class="report-header">
-                    <div>📍 <strong>{report.get('junction_name')}</strong> (ID: {report.get('junction_id')})</div>
-                    <div>📅 {report.get('timestamp')}</div>
+                    <div>📍 <span class="report-junction">{report.get('junction_name')}</span>
+                        <span style="color:#475569; font-size:0.75rem;"> (ID: {report.get('junction_id')})</span></div>
+                    <div class="report-timestamp">📅 {report.get('timestamp')}</div>
                 </div>
-                <div style="font-size: 0.95rem; margin-bottom: 0.8rem; color: #f8fafc;">
-                    <strong>Reporter:</strong> {report.get('reporter_name')}
+                <div class="report-reporter">
+                    <span style="color:#94a3b8; font-size: 0.8rem;">Reporter:</span>
+                    <strong>{report.get('reporter_name')}</strong>
                 </div>
-                <div style="font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; margin-bottom: 1rem;">
+                <div class="report-description">
                     {report.get('description')}
                 </div>
             </div>
@@ -189,4 +329,15 @@ else:
                 else:
                     st.warning("Evidence file not found on disk.")
                     
-            st.markdown("<div style='margin-bottom: 1.5rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
+
+# ── Professional Footer ──
+st.markdown("""
+<div class="app-footer">
+    <div class="footer-brand">🚨 JunctionGuard AI • Citizen Safety Reporting Portal</div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="footer-version">v1.0.0</span>
+        <span style="font-size: 0.7rem; color: #475569;">OMNIKON Hackathon</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)

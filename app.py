@@ -34,63 +34,173 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for UI styling & pulsing red halo map markers
+# ============================================================
+# COMPREHENSIVE CSS DESIGN SYSTEM — JunctionGuard AI Brand
+# ============================================================
 st.markdown("""
 <style>
-    /* Metric Card Styling */
+    /* ── Global Dark Theme Override ── */
+    .stApp,
+    [data-testid="stAppViewContainer"] {
+        background: #0a0e1a !important;
+        color: #e2e8f0 !important;
+    }
+    header[data-testid="stHeader"] {
+        background: rgba(10, 14, 26, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0f1729 0%, #0a0e1a 100%) !important;
+        border-right: 1px solid rgba(51, 65, 85, 0.5);
+    }
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] label {
+        color: #cbd5e1 !important;
+    }
+
+    /* ── Custom Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* ── Animated Gradient Separator ── */
+    @keyframes gradientFlow {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .gradient-separator {
+        height: 3px;
+        background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6, #ef4444);
+        background-size: 300% 100%;
+        animation: gradientFlow 4s ease infinite;
+        border-radius: 2px;
+        margin: 0.5rem 0 1.5rem 0;
+    }
+
+    /* ── Metric / KPI Card Styling ── */
     .metric-card {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        border: 1px solid #334155;
-        border-radius: 12px;
-        padding: 18px;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+        border-radius: 16px;
+        padding: 20px;
         color: #f8fafc;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .metric-card:hover {
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.2);
+        transform: translateY(-2px);
+    }
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-color, #6366f1), transparent);
+        border-radius: 16px 16px 0 0;
+    }
+    .metric-icon {
+        font-size: 1.3rem;
+        margin-right: 6px;
+        opacity: 0.8;
     }
     .metric-title {
-        font-size: 0.85rem;
+        font-size: 0.78rem;
         color: #94a3b8;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.06em;
     }
     .metric-value {
-        font-size: 2.1rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        margin-top: 4px;
+        margin-top: 6px;
+        line-height: 1.1;
     }
-    .badge-high {
-        background-color: #ef4444;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-weight: 700;
+    .metric-status {
+        font-size: 0.65rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
-    .badge-medium {
-        background-color: #f59e0b;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-weight: 700;
+    .metric-status .live-dot {
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        border-radius: 50%;
+        animation: livePulse 2s ease-in-out infinite;
     }
-    .badge-low {
-        background-color: #10b981;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-weight: 700;
+    @keyframes livePulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    .metric-accent-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 0 0 16px 16px;
     }
 
-    /* Pulsing Red Halo CSS Animation for Folium High-Risk Markers */
+    /* ── Risk Level Badges ── */
+    .badge-high {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        padding: 5px 14px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
+        animation: badgePulseHigh 2s ease-in-out infinite;
+    }
+    @keyframes badgePulseHigh {
+        0%, 100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.2); }
+        50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+    }
+    .badge-medium {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        padding: 5px 14px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-low {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        padding: 5px 14px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* ── Pulsing Red Halo CSS Animation for Folium High-Risk Markers ── */
     @keyframes pulse-red {
-        0% {
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
-        }
-        70% {
-            box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-        }
+        0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9); }
+        50%  { box-shadow: 0 0 0 25px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    @keyframes pulse-amber {
+        0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
+        50%  { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
     }
     .pulse-marker-high {
         background-color: #ef4444;
@@ -98,7 +208,7 @@ st.markdown("""
         height: 18px;
         border-radius: 50%;
         border: 3px solid #ffffff;
-        animation: pulse-red 1.8s infinite;
+        animation: pulse-red 1.6s infinite;
     }
     .pulse-marker-med {
         background-color: #f59e0b;
@@ -106,6 +216,7 @@ st.markdown("""
         height: 16px;
         border-radius: 50%;
         border: 2px solid #ffffff;
+        animation: pulse-amber 2.2s infinite;
     }
     .pulse-marker-low {
         background-color: #10b981;
@@ -114,16 +225,134 @@ st.markdown("""
         border-radius: 50%;
         border: 2px solid #ffffff;
     }
+
+    /* ── Tab Styling ── */
+    .stTabs [data-baseweb="tab-list"] {
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 4px;
+        border: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px;
+        color: #94a3b8;
+        font-weight: 600;
+        padding: 8px 16px;
+        background: transparent;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: #e2e8f0;
+        background: rgba(51, 65, 85, 0.3);
+    }
+    .stTabs [aria-selected="true"] {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: #60a5fa !important;
+        border-bottom: 2px solid #3b82f6;
+    }
+
+    /* ── Detail / Info Card ── */
+    .detail-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+        border-radius: 14px;
+        padding: 20px;
+        color: #f8fafc;
+    }
+    .detail-card h3 {
+        margin: 0 0 12px 0;
+        font-size: 1.4rem;
+        color: #f1f5f9;
+    }
+    .detail-card code {
+        background: rgba(99, 102, 241, 0.15);
+        color: #a5b4fc;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    /* ── Section Headers ── */
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4 {
+        color: #f1f5f9 !important;
+    }
+
+    /* ── Form Styling ── */
+    .stForm {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    /* ── Footer ── */
+    .app-footer {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(10, 14, 26, 0.9));
+        border: 1px solid rgba(51, 65, 85, 0.3);
+        border-radius: 12px;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+    }
+    .footer-brand {
+        font-size: 0.85rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+    .footer-version {
+        font-size: 0.7rem;
+        color: #475569;
+        background: rgba(51, 65, 85, 0.3);
+        padding: 3px 10px;
+        border-radius: 9999px;
+        border: 1px solid rgba(71, 85, 105, 0.3);
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# App Header
-st.title("🚨 JunctionGuard AI")
-st.caption("Preventive Road Safety & Explainable Junction Risk Scoring System for Indian Cities")
+# ── Branded Hero Header ──
+st.markdown("""
+<div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 14, 26, 0.95) 100%);
+            border: 1px solid rgba(51, 65, 85, 0.4); border-radius: 16px; padding: 24px 28px;
+            position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 12px; right: 16px;
+                background: rgba(99, 102, 241, 0.15); color: #a5b4fc; padding: 3px 12px;
+                border-radius: 9999px; font-size: 0.65rem; font-weight: 700;
+                border: 1px solid rgba(99, 102, 241, 0.25); letter-spacing: 0.08em;">
+        OMNIKON 2024
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 2.4rem;">🚨</span>
+        <div>
+            <h1 style="margin: 0; font-size: 2rem; font-weight: 800;
+                        background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+                        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                        background-clip: text;">
+                JunctionGuard AI
+            </h1>
+            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.95rem; font-weight: 400;">
+                Preventive Road Safety &amp; Explainable Junction Risk Scoring System for Indian Cities
+            </p>
+        </div>
+    </div>
+</div>
+<div class="gradient-separator"></div>
+""", unsafe_allow_html=True)
 
-# Sidebar Controls
-st.sidebar.image("https://img.icons8.com/color/96/traffic-light.png", width=70)
-st.sidebar.header("🕹️ Dashboard Control Panel")
+# ── Sidebar Controls ──
+st.sidebar.markdown("""
+<div style="text-align: center; padding: 8px 0 16px 0; border-bottom: 1px solid rgba(51,65,85,0.4); margin-bottom: 16px;">
+    <img src="https://img.icons8.com/color/96/traffic-light.png" width="50" style="margin-bottom: 6px;">
+    <div style="font-size: 1.1rem; font-weight: 700; color: #f1f5f9;">Dashboard Controls</div>
+    <div style="font-size: 0.65rem; color: #475569; background: rgba(51,65,85,0.3); display: inline-block;
+                padding: 2px 10px; border-radius: 9999px; margin-top: 4px; border: 1px solid rgba(71,85,105,0.3);">
+        v1.0 • Live Mode
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # Load Junction Data (conforming strictly to Data Contract)
 junctions = fetch_all_junctions()
@@ -146,33 +375,41 @@ total_reports = len(fetch_citizen_reports())
 
 with kpi1:
     st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Monitored Junctions</div>
-        <div class="metric-value">{total_jnc}</div>
+    <div class="metric-card" style="--accent-color: #6366f1;">
+        <div class="metric-title"><span class="metric-icon">◉</span> Monitored Junctions</div>
+        <div class="metric-value" style="color: #e2e8f0;">{total_jnc}</div>
+        <div class="metric-status"><div class="live-dot"></div> REAL-TIME</div>
+        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #6366f1, transparent);"></div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi2:
     st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">High Risk Hotspots</div>
-        <div class="metric-value" style="color:#ef4444;">{high_risk_count}</div>
+    <div class="metric-card" style="--accent-color: #ef4444;">
+        <div class="metric-title"><span class="metric-icon">⚠</span> High Risk Hotspots</div>
+        <div class="metric-value" style="color:#f87171;">{high_risk_count}</div>
+        <div class="metric-status"><div class="live-dot"></div> CRITICAL</div>
+        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #ef4444, transparent);"></div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi3:
     st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Avg Junction Risk Score</div>
-        <div class="metric-value" style="color:#f59e0b;">{avg_risk_score}/100</div>
+    <div class="metric-card" style="--accent-color: #f59e0b;">
+        <div class="metric-title"><span class="metric-icon">📊</span> Avg Risk Score</div>
+        <div class="metric-value" style="color:#fbbf24;">{avg_risk_score}<span style="font-size:1rem; color:#64748b;">/100</span></div>
+        <div class="metric-status"><div class="live-dot"></div> UPDATED</div>
+        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #f59e0b, transparent);"></div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi4:
     st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Citizen Hazard Reports</div>
-        <div class="metric-value" style="color:#3b82f6;">{total_reports}</div>
+    <div class="metric-card" style="--accent-color: #3b82f6;">
+        <div class="metric-title"><span class="metric-icon">📋</span> Citizen Reports</div>
+        <div class="metric-value" style="color:#60a5fa;">{total_reports}</div>
+        <div class="metric-status"><div class="live-dot"></div> LIVE FEED</div>
+        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #3b82f6, transparent);"></div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -217,11 +454,18 @@ with tab_map:
         # Factors popup summary
         factors_text = "<br>".join([f"• {f['factor']}: {int(f['weight']*100)}%" for f in (jnc["contributing_factors"] or [])[:3]])
         popup_content = f"""
-        <div style="font-family: sans-serif; width: 220px;">
-            <h4 style="margin:0 0 5px 0;">{name}</h4>
-            <p style="margin:0;"><b>Risk Score:</b> <span style="color:{color_hex}; font-weight:bold;">{score}/100</span> ({level})</p>
-            <hr style="margin:8px 0;">
-            <p style="margin:0; font-size:12px;"><b>Top Contributing Factors:</b><br>{factors_text}</p>
+        <div style="font-family: 'Segoe UI', sans-serif; width: 240px; padding: 4px;">
+            <h4 style="margin:0 0 6px 0; color: #1e293b; font-size: 0.95rem;">{name}</h4>
+            <p style="margin:0;">
+                <b>Risk Score:</b>
+                <span style="color:{color_hex}; font-weight:800; font-size: 1.1rem;">{score}/100</span>
+                <span style="background:{color_hex}; color:white; padding:2px 8px; border-radius:9999px;
+                             font-size:0.65rem; font-weight:700; margin-left:4px;">{level}</span>
+            </p>
+            <hr style="margin:8px 0; border-color:#e2e8f0;">
+            <p style="margin:0; font-size:11px; color:#475569;">
+                <b>Top Contributing Factors:</b><br>{factors_text}
+            </p>
         </div>
         """
 
@@ -234,7 +478,7 @@ with tab_map:
         folium.Marker(
             location=[lat, lon],
             icon=icon,
-            popup=folium.Popup(popup_content, max_width=260),
+            popup=folium.Popup(popup_content, max_width=280),
             tooltip=f"{name} ({level} - {score}/100)"
         ).add_to(m)
 
@@ -262,12 +506,17 @@ with tab_explain:
             level = jnc_data["risk_level"]
             badge_class = f"badge-{level.lower()}"
             st.markdown(f"""
-            <div style="background:#1e293b; padding:15px; border-radius:10px; margin-top:15px;">
-                <h3>{jnc_data['name']}</h3>
-                <p><b>Junction ID:</b> <code>{jnc_data['junction_id']}</code></p>
-                <p><b>Risk Score:</b> <span style="font-size:1.8rem; font-weight:bold;">{score}/100</span></p>
-                <p><b>Risk Level:</b> <span class="{badge_class}">{level}</span></p>
-                <p><small>Last Updated: {jnc_data['last_updated']}</small></p>
+            <div class="detail-card" style="margin-top: 15px;">
+                <h3>🏙️ {jnc_data['name']}</h3>
+                <p style="margin: 8px 0;"><b style="color:#94a3b8;">Junction ID:</b> <code>{jnc_data['junction_id']}</code></p>
+                <p style="margin: 8px 0;">
+                    <b style="color:#94a3b8;">Risk Score:</b>
+                    <span style="font-size:2rem; font-weight:800; color: {'#f87171' if level=='HIGH' else '#fbbf24' if level=='MEDIUM' else '#34d399'};">
+                        {score}<span style="font-size:1rem; color:#64748b;">/100</span>
+                    </span>
+                </p>
+                <p style="margin: 8px 0;"><b style="color:#94a3b8;">Risk Level:</b> <span class="{badge_class}">{level}</span></p>
+                <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #475569;">Last Updated: {jnc_data['last_updated']}</p>
             </div>
             """, unsafe_allow_html=True)
 
@@ -292,7 +541,10 @@ with tab_explain:
                 yaxis=dict(autorange="reversed"),
                 xaxis_title="Factor Impact Contribution (%)",
                 height=320,
-                margin=dict(l=20, r=20, t=20, b=20)
+                margin=dict(l=20, r=20, t=20, b=20),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(15,23,42,0.5)",
+                font_color="#cbd5e1"
             )
             fig.update_traces(texttemplate='%{text}%', textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
@@ -387,6 +639,13 @@ with tab_citizen:
         else:
             st.write("No reports submitted yet.")
 
-# Footer
-st.divider()
-st.caption("JunctionGuard AI • OMNIKON Hackathon • Parallel Architecture: Track A (Vision) & Track B (Data/Logic)")
+# ── Professional Footer ──
+st.markdown("""
+<div class="app-footer">
+    <div class="footer-brand">🚨 JunctionGuard AI • Explainable Road Safety Intelligence</div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="footer-version">v1.0.0</span>
+        <span style="font-size: 0.7rem; color: #475569;">OMNIKON Hackathon • Track A (Vision) & Track B (Data/Logic)</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)

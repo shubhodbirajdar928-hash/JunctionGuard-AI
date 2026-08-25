@@ -4,7 +4,7 @@ Calculates near-miss proximity scores, congestion indices, and vision-based risk
 """
 
 import math
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple
 
 class TrafficVisionAnalyzer:
     """

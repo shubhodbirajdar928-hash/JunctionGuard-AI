@@ -1,5 +1,6 @@
 import streamlit as st
 import folium
+from folium.plugins import HeatMap, MiniMap, Fullscreen
 from streamlit_folium import st_folium
 import pandas as pd
 from typing import Optional, List
@@ -178,50 +179,126 @@ with col_list:
 selected_junction = next((j for j in junctions if j.junction_id == st.session_state.selected_junction_id), None)
 
 with col_map:
-    st.markdown("### 🗺️ Geographic Overview")
+    st.markdown("### 🗺️ Geographic Surveillance & GIS Overview")
     
-    # India-centered map coordinates
-    map_center = [20.5937, 78.9629]
-    m = folium.Map(location=map_center, zoom_start=5, tiles="cartodbpositron")
+    # Auto-focus on selected junction or center of filtered junctions
+    if selected_junction:
+        map_center = [selected_junction.lat, selected_junction.lon]
+        map_zoom = 14
+    elif filtered_junctions:
+        avg_lat = sum(j.lat for j in filtered_junctions) / len(filtered_junctions)
+        avg_lon = sum(j.lon for j in filtered_junctions) / len(filtered_junctions)
+        map_center = [avg_lat, avg_lon]
+        map_zoom = 12
+    else:
+        map_center = [16.7000, 74.2500]
+        map_zoom = 12
+
+    m = folium.Map(
+        location=map_center,
+        zoom_start=map_zoom,
+        tiles=None,
+        control_scale=True
+    )
     
-    # Add markers for all filtered junctions
+    # 1. Base Tile Layers (Street View, Real Satellite HD, Dark Matter)
+    folium.TileLayer(
+        tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        attr="&copy; OpenStreetMap contributors",
+        name="🛣️ Street View (OpenStreetMap)",
+        overlay=False,
+        control=True
+    ).add_to(m)
+
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri World Imagery, Maxar",
+        name="🛰️ Real Satellite Imagery (HD)",
+        overlay=False,
+        control=True
+    ).add_to(m)
+
+    folium.TileLayer(
+        tiles="CartoDB dark_matter",
+        name="🌃 Dark Tactical View",
+        overlay=False,
+        control=True
+    ).add_to(m)
+
+    # 2. Add markers for all filtered junctions
+    markers_layer = folium.FeatureGroup(name="📍 Junction Hotspots", overlay=True)
     for j in filtered_junctions:
         # Determine color
         if j.risk_level is None:
-            color = "gray"
+            color = "blue"
+            badge_bg = "#6366f1"
         elif j.risk_level.upper() == "LOW":
             color = "green"
+            badge_bg = "#10b981"
         elif j.risk_level.upper() == "MEDIUM":
             color = "orange"
+            badge_bg = "#f59e0b"
         elif j.risk_level.upper() == "HIGH":
             color = "red"
+            badge_bg = "#ef4444"
         else:
-            color = "gray"
+            color = "blue"
+            badge_bg = "#6366f1"
             
-        # Tooltip text
-        tooltip_text = f"<b>{j.name}</b><br>Risk: {j.risk_level or 'Awaiting Data'}"
+        is_current = (selected_junction and selected_junction.junction_id == j.junction_id)
+        gmaps_url = f"https://www.google.com/maps/search/?api=1&query={j.lat},{j.lon}"
+
+        popup_content = f"""
+        <div style="font-family: 'Segoe UI', system-ui, sans-serif; width: 230px; padding: 4px;">
+            <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:0.9rem;">{j.name}</h4>
+            <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">ID: <code>{j.junction_id}</code></div>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px; margin:4px 0;">
+                <span style="background:{badge_bg}; color:white; padding:2px 6px; border-radius:9999px; font-size:0.65rem; font-weight:700;">
+                    {j.risk_level or 'AWAITING DATA'}
+                </span>
+                <span style="font-size:0.8rem; font-weight:700; color:#334155; margin-left:6px;">
+                    {f"{j.risk_score:.1f}/100" if j.risk_score is not None else "Pending Telemetry"}
+                </span>
+            </div>
+            <div style="margin-top:6px; font-size:0.75rem;">
+                <a href="{gmaps_url}" target="_blank" style="color:#3b82f6; text-decoration:none; font-weight:600;">
+                    📍 Open in Google Maps &rarr;
+                </a>
+            </div>
+        </div>
+        """
         
         # Add primary marker
         folium.Marker(
             location=[j.lat, j.lon],
-            tooltip=tooltip_text,
+            popup=folium.Popup(popup_content, max_width=260),
+            tooltip=f"{j.name} ({j.risk_level or 'Awaiting Data'})",
             icon=folium.Icon(color=color, icon="info-sign")
-        ).add_to(m)
+        ).add_to(markers_layer)
         
-        # If risk level is High, add an extra soft red halo circle
-        if j.risk_level and j.risk_level.upper() == "HIGH":
+        # Danger halo / selection circle
+        if is_current or (j.risk_level and j.risk_level.upper() == "HIGH"):
+            circle_color = "red" if (j.risk_level and j.risk_level.upper() == "HIGH") else "#3b82f6"
             folium.Circle(
                 location=[j.lat, j.lon],
-                radius=150,
-                color="red",
+                radius=250,
+                color=circle_color,
                 fill=True,
-                fill_color="red",
-                fill_opacity=0.15,
-                weight=1
-            ).add_to(m)
+                fill_color=circle_color,
+                fill_opacity=0.2,
+                weight=2,
+                dash_array="4, 4" if not is_current else None
+            ).add_to(markers_layer)
+
+    markers_layer.add_to(m)
+
+    # 3. Interactive plugins
+    Fullscreen(position="topright").add_to(m)
+    MiniMap(toggle_display=True, tile_layer="OpenStreetMap", position="bottomright", width=120, height=80).add_to(m)
+    folium.LayerControl(position="topleft", collapsed=False).add_to(m)
             
     # Render map
-    st_folium(m, width="100%", height=450, key="junctions_map")
+    st_folium(m, width="stretch", height=490, key=f"junctions_map_{st.session_state.selected_junction_id}")
 
 # Details Section Below
 st.markdown("---")

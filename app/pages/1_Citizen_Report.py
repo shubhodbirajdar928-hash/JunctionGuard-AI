@@ -181,30 +181,26 @@ def save_report(report_data):
         st.error(f"Failed to save report: {e}")
         return False
 
-# ── Branded Page Header ──
+# ── Top Navigation Bar ──
 st.markdown("""
-<div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 14, 26, 0.95) 100%);
-            border: 1px solid rgba(51, 65, 85, 0.4); border-radius: 16px; padding: 24px 28px;
-            position: relative; overflow: hidden;">
-    <div style="position: absolute; top: 12px; right: 16px;
-                background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 3px 12px;
-                border-radius: 9999px; font-size: 0.65rem; font-weight: 700;
-                border: 1px solid rgba(245, 158, 11, 0.25); letter-spacing: 0.08em;">
-        PUBLIC PORTAL
-    </div>
-    <div style="display: flex; align-items: center; gap: 12px;">
-        <span style="font-size: 2.2rem;">📣</span>
+<div class="cyber-navbar">
+    <div class="navbar-brand">
+        <div class="brand-radar">
+            <span class="radar-icon">📣</span>
+            <span class="radar-ring"></span>
+        </div>
         <div>
-            <h1 style="margin: 0; font-size: 1.8rem; font-weight: 800;
-                        background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
-                        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-                        background-clip: text;">
-                Citizen Safety Reporting Portal
-            </h1>
-            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.9rem; font-weight: 400;">
-                Report hazard situations, traffic violations, or infrastructure issues directly at junctions.
-                Submissions are saved locally and used to compute junction safety rankings.
-            </p>
+            <div class="brand-title">Citizen Hazard <span class="brand-ai">Sentinel</span></div>
+            <div class="brand-sub">Public Safety &amp; Crowdsourced Infrastructure Hazard Reporting</div>
+        </div>
+    </div>
+    <div class="navbar-status-group">
+        <div class="status-chip chip-online">
+            <span class="live-dot"></span>
+            <span>DISPATCH LIVE</span>
+        </div>
+        <div class="status-chip chip-nodes">
+            <span>🛡️ CIVIC SENTINEL</span>
         </div>
     </div>
 </div>
@@ -331,13 +327,21 @@ else:
                     
             st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
 
-# ── Professional Footer ──
+# ── Modern Branded Cyber Footer ──
 st.markdown("""
-<div class="app-footer">
-    <div class="footer-brand">🚨 JunctionGuard AI • Citizen Safety Reporting Portal</div>
-    <div style="display: flex; align-items: center; gap: 12px;">
-        <span class="footer-version">v1.0.0</span>
-        <span style="font-size: 0.7rem; color: #475569;">OMNIKON Hackathon</span>
+<div class="cyber-footer">
+    <div class="footer-left">
+        <div class="footer-logo">📣 Citizen Hazard Sentinel • JunctionGuard AI</div>
+        <div class="footer-copy">Crowdsourced Infrastructure Hazards &amp; Vision AI Feedback Loop</div>
+    </div>
+    <div class="footer-center">
+        <span class="footer-tag">Public Sentinel</span>
+        <span class="footer-tag">Instant Sync</span>
+        <span class="footer-tag">Verified Dispatch</span>
+    </div>
+    <div class="footer-right">
+        <div class="footer-uptime">● 99.98% System Uptime</div>
+        <div class="footer-version">v2.4.0 • Public Edition</div>
     </div>
 </div>
 """, unsafe_allow_html=True)

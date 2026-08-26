@@ -346,7 +346,7 @@ with col_map:
     MiniMap(toggle_display=True, tile_layer="OpenStreetMap", position="bottomright", width=120, height=80).add_to(m)
     folium.LayerControl(position="topleft", collapsed=False).add_to(m)
             
-    st_folium(m, width="stretch", height=500, key=f"junctions_map_{st.session_state.selected_junction_id}")
+    st_folium(m, width="stretch", height=500, key=f"junctions_map_{st.session_state.selected_junction_id}", returned_objects=["last_object_clicked"])
 
 # Details Section Below
 st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)

@@ -647,7 +647,8 @@ def add_citizen_report(
     severity: int,
     description: str,
     media_filename: Optional[str] = None,
-    media_relative_path: Optional[str] = None
+    media_relative_path: Optional[str] = None,
+    media_url: Optional[str] = None
 ) -> bool:
     """Inserts a new citizen report into both SQLite DB and Supabase."""
     conn = get_db_connection()
@@ -670,7 +671,10 @@ def add_citizen_report(
             "junction_id": junction_id,
             "reporter_name": reporter,
             "description": f"{issue}: {description} (Severity: {severity}/5)",
-            "status": "PENDING_REVIEW"
+            "status": "PENDING_REVIEW",
+            "media_url": media_url,
+            "media_filename": media_filename,
+            "media_relative_path": media_relative_path
         })
     except Exception:
         pass
@@ -708,6 +712,9 @@ def fetch_citizen_reports(junction_id: Optional[str] = None) -> List[Dict[str, A
                     "issue_type": issue_type,
                     "severity": 4,
                     "description": desc,
+                    "media_filename": r.get("media_path"),
+                    "media_relative_path": r.get("media_path"),
+                    "media_url": r.get("media_url"),
                     "timestamp": r.get("submitted_at", "")[:19].replace("T", " ")
                 })
             return formatted

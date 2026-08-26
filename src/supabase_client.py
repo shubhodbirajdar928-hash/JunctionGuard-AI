@@ -85,8 +85,62 @@ def update_junction_risk_supabase(junction_id: str, risk_score: float, risk_leve
         return False
 
 # ============================================================
-# CITIZEN HAZARD REPORTS
+# CITIZEN HAZARD REPORTS & STORAGE
 # ============================================================
+def upload_citizen_media_supabase(
+    file_bytes: bytes,
+    filename: str,
+    content_type: str = "image/jpeg",
+    bucket_name: str = "citizen-reports"
+) -> Optional[str]:
+    """
+    Uploads photo/video evidence bytes to Supabase Storage and returns the public URL.
+    Returns None if upload fails or credentials/storage are unavailable.
+    """
+    if not SUPABASE_AVAILABLE:
+        return None
+    try:
+        client = get_supabase_client()
+        storage_path = f"evidence/{filename}"
+        
+        target_buckets = [bucket_name, "citizen-reports", "citizen_hazard_media", "reports"]
+        target_buckets = list(dict.fromkeys(target_buckets))
+
+        last_error = None
+        for b_name in target_buckets:
+            try:
+                # Try standard upload first
+                client.storage.from_(b_name).upload(
+                    path=storage_path,
+                    file=file_bytes,
+                    file_options={"content-type": content_type}
+                )
+                public_url = client.storage.from_(b_name).get_public_url(storage_path)
+                print(f"✅ [Supabase Storage] Uploaded {filename} to '{b_name}' -> {public_url}")
+                return public_url
+            except Exception as upload_err:
+                last_error = upload_err
+                # Try update if file already exists
+                try:
+                    client.storage.from_(b_name).update(
+                        path=storage_path,
+                        file=file_bytes,
+                        file_options={"content-type": content_type}
+                    )
+                    public_url = client.storage.from_(b_name).get_public_url(storage_path)
+                    print(f"✅ [Supabase Storage] Updated {filename} in '{b_name}' -> {public_url}")
+                    return public_url
+                except Exception as update_err:
+                    last_error = update_err
+                    continue
+
+        if last_error:
+            print(f"[Supabase Storage Note] Upload error: {last_error}")
+        return None
+    except Exception as e:
+        print(f"[Supabase Storage Note] Failed to upload media: {e}")
+        return None
+
 def fetch_citizen_reports_supabase(junction_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """Fetches citizen hazard reports from Supabase."""
     client = get_supabase_client()
@@ -113,8 +167,12 @@ def insert_citizen_report_supabase(report_data: Dict[str, Any]) -> Dict[str, Any
         "description": report_data.get("description", "Hazard Report"),
         "status": report_data.get("status", "PENDING_REVIEW")
     }
+    if report_data.get("media_url"):
+        payload["media_url"] = report_data["media_url"]
+
     try:
         res = client.table("citizen_reports").insert(payload).execute()
+        print(f"✅ [Supabase DB] Successfully inserted report {report_id} into Supabase table!")
         return res.data[0] if res.data else payload
     except Exception as e:
         print(f"[Supabase insert_citizen_report Note] {e}")

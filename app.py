@@ -6,10 +6,12 @@ YOLOv8 vision analytics preview, and multi-factor explainability breakdowns.
 """
 
 import os
+import uuid
+import mimetypes
 import cv2
 import streamlit as st
 import folium
-from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster
+from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster, LocateControl
 from streamlit_folium import st_folium
 import pandas as pd
 import plotly.express as px
@@ -23,6 +25,10 @@ from src.database import (
     add_citizen_report, fetch_citizen_reports
 )
 from src.analytics.risk_engine import ExplainableRiskEngine
+import importlib
+import src.geo_utils
+importlib.reload(src.geo_utils)
+from src.geo_utils import find_nearest_junction, reverse_geocode_location
 from src.analytics.data_loader import compute_historical_risk_score, load_accident_dataset
 from src.vision.stream_processor import StreamProcessor
 
@@ -407,6 +413,18 @@ st.markdown("""
         padding: 3px 10px;
         border-radius: 9999px;
         border: 1px solid rgba(71, 85, 105, 0.3);
+    }
+    /* ── Map Container Anti-Flicker & Dark Mode Integration ── */
+    iframe[title*="st_folium"], .stFolium iframe {
+        background-color: #070b14 !important;
+        border-radius: 12px;
+        border: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .leaflet-container {
+        background-color: #070b14 !important;
+    }
+    .leaflet-tile-container img {
+        transition: opacity 0.15s ease-in-out;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -863,7 +881,7 @@ with tab_map:
     MiniMap(toggle_display=True, tile_layer="OpenStreetMap", position="bottomright", width=140, height=100).add_to(m)
     folium.LayerControl(position="topleft", collapsed=False).add_to(m)
 
-    st_folium(m, width="stretch", height=600, key=f"unified_map_{map_scope}_{base_view_mode}_{len(map_junctions)}_{marker_style}")
+    st_folium(m, width="stretch", height=600, key=f"unified_map_{map_scope}_{base_view_mode}_{len(map_junctions)}_{marker_style}", returned_objects=["last_object_clicked"])
 
 # ----------------------------------------------------
 # TAB 2: EXPLAINABILITY & CONTRIBUTING FACTORS
@@ -1038,46 +1056,273 @@ with tab_vision:
 # ----------------------------------------------------
 with tab_citizen:
     st.subheader("📝 Citizen Road Hazard Reporting")
-    st.markdown("Citizens and traffic police can report road hazards (potholes, missing signals, near-misses) to dynamically update the Junction Risk Score.")
+    st.markdown("Citizens and traffic police can report road hazards with interactive GPS / map location picking, auto-junction detection, and media evidence upload.")
 
-    c_form, c_list = st.columns([1, 1])
+    if "submitted_report_msg" in st.session_state:
+        st.success(st.session_state.pop("submitted_report_msg"))
 
-    with c_form:
-        st.write("#### Submit New Hazard Report")
-        with st.form("citizen_report_form"):
-            rep_jnc = st.selectbox("Select Junction", options=list(jnc_names.keys()))
-            rep_name = st.text_input("Reporter Name / Designation", value="Traffic Marshal / Resident")
-            rep_issue = st.selectbox("Issue Category", [
-                "Pothole / Damaged Road Surface",
-                "Broken Traffic Signal / Light",
-                "Blind Spot / Obstructed View",
-                "Frequent Speeding / Illegal U-turn",
-                "Near-Miss Pedestrian Crossing"
-            ])
-            rep_sev = st.slider("Hazard Severity (1 = Minor, 5 = Severe Hazard)", 1, 5, 3)
-            rep_desc = st.text_area("Detailed Description", placeholder="Describe exact location, lane blockages, or timing...")
-            
-            submit_btn = st.form_submit_button("🚨 Submit Hazard Report")
+    c_map, c_form = st.columns([1, 1])
 
-            if submit_btn:
-                target_id = jnc_names[rep_jnc]
-                add_citizen_report(target_id, rep_name, rep_issue, rep_sev, rep_desc)
-                # Recalculate risk score immediately
-                risk_engine.compute_junction_risk(target_id)
-                st.success(f"Report submitted for {rep_jnc}! Risk score recalculated dynamically.")
+    with c_map:
+        st.markdown("##### 📍 Pinpoint Location on Map")
+        st.caption("Click anywhere on the map or use 📍 Current Location button to pinpoint the hazard spot.")
+        
+        all_jnc_list = fetch_all_junctions()
+        default_lat = all_jnc_list[0]['lat'] if all_jnc_list else 12.9716
+        default_lon = all_jnc_list[0]['lon'] if all_jnc_list else 77.5946
+        
+        m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
+        LocateControl(auto_start=False).add_to(m_picker)
+
+        # Force precise target crosshair cursor instead of hand icon inside map frame
+        custom_cursor_css = """
+        <style>
+        .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
+            cursor: crosshair !important;
+        }
+        .leaflet-container:active, .leaflet-grab:active {
+            cursor: crosshair !important;
+        }
+        </style>
+        """
+        m_picker.get_root().html.add_child(folium.Element(custom_cursor_css))
+
+        for jnc in all_jnc_list:
+            folium.Marker(
+                [jnc['lat'], jnc['lon']],
+                popup=jnc['name'],
+                tooltip=f"Junction: {jnc['name']}",
+                icon=folium.Icon(color="blue", icon="info-sign")
+            ).add_to(m_picker)
+
+        # Render red pinpoint marker if user has selected a location
+        if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
+            p_lat = st.session_state["tab_picked_lat"]
+            p_lng = st.session_state["tab_picked_lng"]
+            m_picker.location = [p_lat, p_lng]
+            folium.Marker(
+                [p_lat, p_lng],
+                popup=folium.Popup(f"<b>📍 Selected Hazard Location</b><br>({p_lat:.5f}, {p_lng:.5f})", max_width=250),
+                tooltip="📍 Selected Hazard Pinpoint",
+                icon=folium.Icon(color="red", icon="flag")
+            ).add_to(m_picker)
+
+        # Restrict returned_objects to last_clicked to prevent cursor movement reruns and map brightness flicker
+        map_data = st_folium(m_picker, width="100%", height=380, key="citizen_tab_map_picker", returned_objects=["last_clicked"])
+
+        if map_data and map_data.get("last_clicked"):
+            c_lat = map_data["last_clicked"]["lat"]
+            c_lng = map_data["last_clicked"]["lng"]
+            if st.session_state.get("tab_picked_lat") != c_lat or st.session_state.get("tab_picked_lng") != c_lng:
+                st.session_state["tab_picked_lat"] = c_lat
+                st.session_state["tab_picked_lng"] = c_lng
+                
+                near_jnc, dist_km = find_nearest_junction(c_lat, c_lng, all_jnc_list, threshold_km=1.0)
+                if near_jnc:
+                    det_val = near_jnc['name']
+                else:
+                    det_val = reverse_geocode_location(c_lat, c_lng)
+                
+                st.session_state["selected_junction_name_val"] = det_val
+                st.session_state["tab_select_junction_dropdown"] = det_val
                 st.rerun()
 
-    with c_list:
-        st.write("#### Recent Citizen & Officer Reports")
-        reports_df = pd.DataFrame(fetch_citizen_reports())
-        if not reports_df.empty:
-            st.dataframe(
-                reports_df[["junction_id", "issue_type", "severity", "reporter_name", "timestamp"]],
-                use_container_width=True,
-                height=350
+        detected_jnc_name = None
+        detected_address = ""
+
+        if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
+            click_lat = st.session_state["tab_picked_lat"]
+            click_lng = st.session_state["tab_picked_lng"]
+            near_jnc, dist_km = find_nearest_junction(click_lat, click_lng, all_jnc_list, threshold_km=1.0)
+            if near_jnc:
+                detected_jnc_name = near_jnc['name']
+                st.success(f"✅ **Cataloged Junction Auto-Detected**: {detected_jnc_name} ({round(dist_km*1000)}m away)")
+            else:
+                detected_address = reverse_geocode_location(click_lat, click_lng)
+                st.success(f"📍 **Pinpoint Location Auto-Detected**: {detected_address}")
+
+    with c_form:
+        st.markdown("##### 🚨 Hazard Details & Evidence")
+        
+        # Build dynamic list of location options including map auto-detected location
+        current_loc = st.session_state.get("selected_junction_name_val", "")
+        catalog_names = list(jnc_names.keys())
+        
+        loc_options = []
+        if current_loc:
+            loc_options.append(current_loc)
+        for cname in catalog_names:
+            if cname not in loc_options:
+                loc_options.append(cname)
+        loc_options.append("➕ Type Custom Location Manually...")
+
+        # Sync current_loc with selectbox widget state key
+        if current_loc and st.session_state.get("tab_select_junction_dropdown") != current_loc:
+            st.session_state["tab_select_junction_dropdown"] = current_loc
+
+        selected_val = st.session_state.get("tab_select_junction_dropdown", loc_options[0])
+        idx = loc_options.index(selected_val) if selected_val in loc_options else 0
+
+        selected_option = st.selectbox(
+            "Select Junction / Location*",
+            options=loc_options,
+            index=idx,
+            key="tab_select_junction_dropdown"
+        )
+
+        if selected_option == "➕ Type Custom Location Manually...":
+            selected_jnc_name = st.text_input(
+                "Enter Custom Location*",
+                value="",
+                placeholder="Click map or type exact location..."
             )
         else:
-            st.write("No reports submitted yet.")
+            selected_jnc_name = selected_option
+            st.session_state["selected_junction_name_val"] = selected_option
+
+        rep_name = st.text_input("Reporter Name / Designation", value="", placeholder="e.g. Traffic Marshal / Resident (Optional)")
+        
+        issue_categories = [
+            "Pothole / Damaged Road Surface",
+            "Broken Traffic Signal / Light",
+            "Blind Spot / Obstructed View",
+            "Frequent Speeding / Illegal U-turn",
+            "Near-Miss Pedestrian Crossing",
+            "Other (Specify below)"
+        ]
+        rep_issue_sel = st.selectbox("Issue Category", issue_categories)
+        
+        custom_issue = ""
+        if rep_issue_sel == "Other (Specify below)":
+            custom_issue = st.text_input("Specify Custom Issue Category*", value="", placeholder="e.g. Waterlogging, Fallen Tree, Construction Obstruction...")
+
+        rep_sev = st.slider("Hazard Severity (1 = Minor, 5 = Severe Hazard)", 1, 5, 3)
+        rep_desc = st.text_area("Detailed Description", value="", placeholder="Describe exact location, lane blockages, or timing...")
+        
+        uploaded_evidence = st.file_uploader(
+            "Upload Photo or Video Evidence (Optional)",
+            type=["jpg", "png", "jpeg", "mp4", "mov", "avi", "webm"]
+        )
+        
+        submit_btn = st.button("🚨 Submit Hazard Report", use_container_width=True)
+
+        if submit_btn:
+            if not selected_jnc_name.strip():
+                st.error("Please enter or select a junction location.")
+            elif rep_issue_sel == "Other (Specify below)" and not custom_issue.strip():
+                st.error("Please specify the custom issue category.")
+            else:
+                final_jnc_name = selected_jnc_name.strip()
+                final_desc = rep_desc.strip() if rep_desc.strip() else f"Road hazard reported at {final_jnc_name}."
+                target_id = jnc_names.get(final_jnc_name, f"J-CUSTOM-{uuid.uuid4().hex[:6].upper()}")
+
+                # Determine final issue category
+                if rep_issue_sel == "Other (Specify below)":
+                    final_issue = custom_issue.strip()
+                else:
+                    final_issue = rep_issue_sel
+
+                saved_filename = None
+                saved_relative_path = None
+                media_url = None
+                
+                if uploaded_evidence is not None:
+                    file_ext = os.path.splitext(uploaded_evidence.name)[1].lower()
+                    saved_filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}{file_ext}"
+                    reports_dir = os.path.join("data", "citizen_reports")
+                    os.makedirs(reports_dir, exist_ok=True)
+                    media_dest = os.path.join(reports_dir, saved_filename)
+                    
+                    try:
+                        # Extract full raw bytes using getvalue() to guarantee full uncorrupted file payload
+                        file_bytes = uploaded_evidence.getvalue()
+                        with open(media_dest, "wb") as f:
+                            f.write(file_bytes)
+                        saved_relative_path = os.path.join("data", "citizen_reports", saved_filename)
+
+                        # Determine correct MIME content-type
+                        guessed_mime = mimetypes.guess_type(uploaded_evidence.name)[0]
+                        if not guessed_mime:
+                            guessed_mime = "video/mp4" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "image/jpeg"
+
+                        # Supabase Storage Upload
+                        from src.supabase_client import upload_citizen_media_supabase
+                        media_url = upload_citizen_media_supabase(
+                            file_bytes,
+                            saved_filename,
+                            content_type=guessed_mime
+                        )
+                    except Exception as e:
+                        print(f"[Evidence Upload Note] {e}")
+
+                add_citizen_report(
+                    target_id, rep_name, final_issue, rep_sev, final_desc,
+                    media_filename=saved_filename,
+                    media_relative_path=saved_relative_path,
+                    media_url=media_url
+                )
+                
+                # Clear/reset picked map location and form session state
+                st.session_state.pop("tab_picked_lat", None)
+                st.session_state.pop("tab_picked_lng", None)
+                st.session_state.pop("selected_junction_name_val", None)
+                st.session_state.pop("tab_select_junction_dropdown", None)
+
+                evidence_note = " 📹 Video evidence attached." if uploaded_evidence is not None else ""
+                st.session_state["submitted_report_msg"] = f"🎉 **Hazard Report Successfully Submitted for '{final_jnc_name}'!**{evidence_note}"
+                st.rerun()
+
+    st.markdown("---")
+    st.write("#### 🗂️ Recent Citizen & Officer Reports")
+    reports = fetch_citizen_reports()
+    if reports:
+        for rep in reports[:10]: # Show top 10 recent
+            j_id = rep.get("junction_id", "")
+            issue = rep.get("issue_type", "Hazard")
+            sev = rep.get("severity", 3)
+            rep_by = rep.get("reporter_name", "Anonymous")
+            ts = rep.get("timestamp", "")
+            desc = rep.get("description", "")
+            m_url = rep.get("media_url")
+            m_rel = rep.get("media_relative_path")
+            m_fn = rep.get("media_filename")
+
+            # Check local file existence
+            local_path = None
+            if m_rel and os.path.exists(m_rel):
+                local_path = m_rel
+            elif m_fn and os.path.exists(os.path.join("data", "citizen_reports", m_fn)):
+                local_path = os.path.join("data", "citizen_reports", m_fn)
+            
+            sev_badge = "🔴 High Risk" if sev >= 4 else ("🟡 Medium Risk" if sev >= 3 else "🟢 Low Risk")
+            st.markdown(f"""
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong>📍 {j_id} - {issue}</strong>
+                    <span style="font-size: 0.8rem; background: #1e293b; padding: 2px 8px; border-radius: 4px; color: #94a3b8;">{sev_badge}</span>
+                </div>
+                <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Reporter: {rep_by} | {ts}</div>
+                <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 6px;">{desc}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Render video / image media preview if present
+            if m_url:
+                ext = os.path.splitext(m_url.split('?')[0])[1].lower()
+                if ext in [".mp4", ".mov", ".avi", ".webm", ".mkv"]:
+                    st.caption("📹 Video Evidence (Supabase Cloud)")
+                    st.video(m_url)
+                else:
+                    st.image(m_url, caption="Evidence (Supabase Cloud)", use_container_width=True)
+            elif local_path:
+                ext = os.path.splitext(local_path)[1].lower()
+                if ext in [".mp4", ".mov", ".avi", ".webm", ".mkv"]:
+                    st.caption("📹 Video Evidence (Local Storage)")
+                    st.video(local_path)
+                else:
+                    st.image(local_path, caption="Evidence (Local Storage)", use_container_width=True)
+    else:
+        st.write("No reports submitted yet.")
 
 # ── Modern Branded Cyber Footer ──
 st.markdown("""

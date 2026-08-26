@@ -3,12 +3,21 @@ import os
 import sys
 import json
 import uuid
+import mimetypes
 from datetime import datetime
 
 # Add the 'app' directory to python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_loader import load_junctions
+
+import folium
+from folium.plugins import LocateControl
+from streamlit_folium import st_folium
+import importlib
+import src.geo_utils
+importlib.reload(src.geo_utils)
+from src.geo_utils import find_nearest_junction, reverse_geocode_location
 
 # Page Config
 st.set_page_config(
@@ -41,6 +50,19 @@ st.markdown("""
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* ── Map Container Anti-Flicker & Dark Mode Integration ── */
+    iframe[title*="st_folium"], .stFolium iframe {
+        background-color: #0a0e1a !important;
+        border-radius: 12px;
+        border: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .leaflet-container {
+        background-color: #0a0e1a !important;
+    }
+    .leaflet-tile-container img {
+        transition: opacity 0.15s ease-in-out;
+    }
 
     /* ── Section Headers ── */
     .stApp h1, .stApp h2, .stApp h3, .stApp h4 {
@@ -211,15 +233,145 @@ st.markdown("""
 junctions = load_junctions()
 junction_names = [j.name for j in junctions]
 
-# Create form
 st.markdown("### 📝 File a Safety Report")
-with st.form("citizen_report_form", clear_on_submit=True):
-    col_j, col_n = st.columns(2)
-    with col_j:
-        selected_junction_name = st.selectbox("Select Junction", options=junction_names)
-    with col_n:
-        reporter_name = st.text_input("Your Name (Optional)", placeholder="Anonymous")
-        
+
+if "sentinel_submitted_msg" in st.session_state:
+    st.success(st.session_state.pop("sentinel_submitted_msg"))
+    st.balloons()
+
+col_map, col_form = st.columns([1, 1])
+
+with col_map:
+    st.markdown("##### 📍 Pinpoint Location on Map")
+    st.caption("Click anywhere on the map or use 📍 Current Location button to pinpoint the hazard spot.")
+    
+    default_lat = junctions[0].lat if junctions else 12.9716
+    default_lon = junctions[0].lon if junctions else 77.5946
+    
+    m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
+    LocateControl(auto_start=False).add_to(m_picker)
+
+    # Force precise target crosshair cursor instead of hand icon inside map frame
+    custom_cursor_css = """
+    <style>
+    .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
+        cursor: crosshair !important;
+    }
+    .leaflet-container:active, .leaflet-grab:active {
+        cursor: crosshair !important;
+    }
+    </style>
+    """
+    m_picker.get_root().html.add_child(folium.Element(custom_cursor_css))
+
+    for jnc in junctions:
+        folium.Marker(
+            [jnc.lat, jnc.lon],
+            popup=jnc.name,
+            tooltip=f"Junction: {jnc.name}",
+            icon=folium.Icon(color="blue", icon="info-sign")
+        ).add_to(m_picker)
+
+    # Render red pinpoint marker if user has selected a location
+    if "sentinel_picked_lat" in st.session_state and "sentinel_picked_lng" in st.session_state:
+        p_lat = st.session_state["sentinel_picked_lat"]
+        p_lng = st.session_state["sentinel_picked_lng"]
+        m_picker.location = [p_lat, p_lng]
+        folium.Marker(
+            [p_lat, p_lng],
+            popup=folium.Popup(f"<b>📍 Selected Hazard Location</b><br>({p_lat:.5f}, {p_lng:.5f})", max_width=250),
+            tooltip="📍 Selected Hazard Pinpoint",
+            icon=folium.Icon(color="red", icon="flag")
+        ).add_to(m_picker)
+
+    # Restrict returned_objects to last_clicked to prevent cursor movement reruns and map brightness flicker
+    map_data = st_folium(m_picker, width="100%", height=380, key="citizen_sentinel_map_picker", returned_objects=["last_clicked"])
+
+    if map_data and map_data.get("last_clicked"):
+        c_lat = map_data["last_clicked"]["lat"]
+        c_lng = map_data["last_clicked"]["lng"]
+        if st.session_state.get("sentinel_picked_lat") != c_lat or st.session_state.get("sentinel_picked_lng") != c_lng:
+            st.session_state["sentinel_picked_lat"] = c_lat
+            st.session_state["sentinel_picked_lng"] = c_lng
+
+            near_jnc, dist_km = find_nearest_junction(c_lat, c_lng, junctions, threshold_km=1.0)
+            if near_jnc:
+                det_val = near_jnc.name
+            else:
+                det_val = reverse_geocode_location(c_lat, c_lng)
+
+            st.session_state["sentinel_jnc_input"] = det_val
+            st.session_state["sentinel_select_junction_dropdown"] = det_val
+            st.rerun()
+
+    detected_jnc_name = None
+    detected_address = ""
+
+    if "sentinel_picked_lat" in st.session_state and "sentinel_picked_lng" in st.session_state:
+        click_lat = st.session_state["sentinel_picked_lat"]
+        click_lng = st.session_state["sentinel_picked_lng"]
+        near_jnc, dist_km = find_nearest_junction(click_lat, click_lng, junctions, threshold_km=1.0)
+        if near_jnc:
+            detected_jnc_name = near_jnc.name
+            st.success(f"✅ **Cataloged Junction Auto-Detected**: {detected_jnc_name} ({round(dist_km*1000)}m away)")
+        else:
+            detected_address = reverse_geocode_location(click_lat, click_lng)
+            st.success(f"📍 **Pinpoint Location Auto-Detected**: {detected_address}")
+
+with col_form:
+    st.markdown("##### 🚨 Hazard Details & Evidence")
+    
+    # Build dynamic list of location options including map auto-detected location
+    current_loc = st.session_state.get("sentinel_jnc_input", "")
+    
+    loc_options = []
+    if current_loc:
+        loc_options.append(current_loc)
+    for jname in junction_names:
+        if jname not in loc_options:
+            loc_options.append(jname)
+    loc_options.append("➕ Type Custom Location Manually...")
+
+    # Sync current_loc with selectbox widget state key
+    if current_loc and st.session_state.get("sentinel_select_junction_dropdown") != current_loc:
+        st.session_state["sentinel_select_junction_dropdown"] = current_loc
+
+    selected_val = st.session_state.get("sentinel_select_junction_dropdown", loc_options[0])
+    idx = loc_options.index(selected_val) if selected_val in loc_options else 0
+
+    selected_option = st.selectbox(
+        "Select Junction / Location*",
+        options=loc_options,
+        index=idx,
+        key="sentinel_select_junction_dropdown"
+    )
+
+    if selected_option == "➕ Type Custom Location Manually...":
+        selected_junction_name = st.text_input(
+            "Enter Custom Location*",
+            value="",
+            placeholder="Click map or type exact location..."
+        )
+    else:
+        selected_junction_name = selected_option
+        st.session_state["sentinel_jnc_input"] = selected_option
+
+    reporter_name = st.text_input("Your Name (Optional)", value="", placeholder="e.g. Anonymous / Traffic Police")
+
+    issue_options = [
+        "Pothole / Damaged Road Surface",
+        "Broken Traffic Signal / Light",
+        "Blind Spot / Obstructed View",
+        "Frequent Speeding / Illegal U-turn",
+        "Near-Miss Pedestrian Crossing",
+        "Other (Specify below)"
+    ]
+    selected_issue = st.selectbox("Issue Category", options=issue_options)
+
+    custom_issue_type = ""
+    if selected_issue == "Other (Specify below)":
+        custom_issue_type = st.text_input("Specify Custom Issue Category*", placeholder="e.g. Waterlogging, Broken Street Lamp, Construction Debris...")
+
     description = st.text_area("Hazard Description (Required)", placeholder="Describe the hazard, issue or accident hazard in detail...")
     
     uploaded_file = st.file_uploader(
@@ -227,48 +379,98 @@ with st.form("citizen_report_form", clear_on_submit=True):
         type=["jpg", "png", "jpeg", "mp4", "mov", "avi", "webm"]
     )
     
-    submit_button = st.form_submit_button("🚨 Submit Safety Report")
+    submit_button = st.button("🚨 Submit Safety Report", use_container_width=True)
 
 # Handle Submission
 if submit_button:
     if not description.strip():
         st.error("Please provide a description of the safety hazard.")
+    elif not selected_junction_name.strip():
+        st.error("Please enter or select a junction location.")
+    elif selected_issue == "Other (Specify below)" and not custom_issue_type.strip():
+        st.error("Please specify the custom issue category.")
     else:
-        # Resolve selected junction ID
-        selected_j = next(j for j in junctions if j.name == selected_junction_name)
+        # Resolve junction details
+        final_jnc_name = selected_junction_name.strip()
+        selected_j = next((j for j in junctions if j.name == final_jnc_name), None)
+        final_jnc_id = selected_j.junction_id if selected_j else f"J-CUSTOM-{uuid.uuid4().hex[:6].upper()}"
+
+        # Resolve issue category
+        if selected_issue == "Other (Specify below)":
+            final_issue = custom_issue_type.strip()
+        else:
+            final_issue = selected_issue
         
         # Save media file
         saved_filename = None
         saved_relative_path = None
+        media_url = None
         
         if uploaded_file is not None:
-            file_ext = os.path.splitext(uploaded_file.name)[1]
+            file_ext = os.path.splitext(uploaded_file.name)[1].lower()
             saved_filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}{file_ext}"
             media_dest = os.path.join(REPORTS_DIR, saved_filename)
             
             try:
+                file_bytes = uploaded_file.getvalue()
                 with open(media_dest, "wb") as f:
-                    f.write(uploaded_file.getbuffer())
-                # Use a path relative to project root so Streamlit app can reference it easily
+                    f.write(file_bytes)
                 saved_relative_path = os.path.join("data", "citizen_reports", saved_filename)
+
+                # Determine MIME type
+                guessed_mime = mimetypes.guess_type(uploaded_file.name)[0]
+                if not guessed_mime:
+                    guessed_mime = "video/mp4" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "image/jpeg"
+
+                # Upload to Supabase Storage
+                from src.supabase_client import upload_citizen_media_supabase
+                media_url = upload_citizen_media_supabase(
+                    file_bytes,
+                    saved_filename,
+                    content_type=guessed_mime
+                )
             except Exception as e:
-                st.error(f"Failed to save media upload: {e}")
+                st.error(f"Failed to process media file: {e}")
         
         # Create report record
         new_report = {
             "report_id": uuid.uuid4().hex,
-            "junction_id": selected_j.junction_id,
-            "junction_name": selected_j.name,
+            "junction_id": final_jnc_id,
+            "junction_name": final_jnc_name,
             "reporter_name": reporter_name.strip() if reporter_name.strip() else "Anonymous",
+            "issue_type": final_issue,
             "description": description.strip(),
             "media_filename": saved_filename,
             "media_relative_path": saved_relative_path,
+            "media_url": media_url,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
+
+        # Sync to SQLite & Supabase tables
+        try:
+            from src.database import add_citizen_report
+            add_citizen_report(
+                junction_id=final_jnc_id,
+                reporter=new_report["reporter_name"],
+                issue=final_issue,
+                severity=3,
+                description=description.strip(),
+                media_filename=saved_filename,
+                media_relative_path=saved_relative_path,
+                media_url=media_url
+            )
+        except Exception as ex:
+            print(f"[Database Sync Note] {ex}")
         
         if save_report(new_report):
-            st.success(f"Report for **{selected_j.name}** successfully submitted!")
-            st.balloons()
+            # Reset picked location & form state
+            st.session_state.pop("sentinel_picked_lat", None)
+            st.session_state.pop("sentinel_picked_lng", None)
+            st.session_state.pop("sentinel_jnc_input", None)
+            st.session_state.pop("sentinel_select_junction_dropdown", None)
+
+            st.session_state["sentinel_submitted_msg"] = f"🎉 **Report for '{final_jnc_name}' successfully submitted!** Map location and form inputs reset for next report."
+            st.rerun()
 
 # Feed Section
 st.markdown("---")
@@ -311,8 +513,15 @@ else:
             
             # Show media inline if available
             rel_path = report.get("media_relative_path")
-            if rel_path:
-                # Streamlit runs from project root, so rel_path is valid from execution context
+            media_url = report.get("media_url")
+
+            if media_url:
+                ext = os.path.splitext(media_url.split('?')[0])[1].lower()
+                if ext in [".mp4", ".mov", ".avi", ".webm"]:
+                    st.video(media_url)
+                else:
+                    st.image(media_url, caption=f"Evidence (Supabase Cloud Storage): {report.get('media_filename', '')}", use_container_width=True)
+            elif rel_path:
                 full_media_path = os.path.join(PROJECT_ROOT, rel_path)
                 if os.path.exists(full_media_path):
                     ext = os.path.splitext(rel_path)[1].lower()

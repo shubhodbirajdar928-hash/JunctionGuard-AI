@@ -34,7 +34,7 @@ class TrafficDetector:
                 print(f"[TrafficDetector] Warning loading YOLO model: {e}. Falling back to OpenCV motion analytics.")
                 self.yolo_available = False
 
-    def process_frame(self, frame: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def process_frame(self, frame: np.ndarray, conf_threshold: float = 0.25) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Processes a video frame, draws bounding boxes, counts vehicles/pedestrians,
         and computes raw vision metrics.
@@ -44,7 +44,7 @@ class TrafficDetector:
         detections = []
 
         if self.yolo_available and self.model is not None:
-            results = self.model(frame, verbose=False)[0]
+            results = self.model(frame, conf=conf_threshold, verbose=False)[0]
             for box in results.boxes:
                 cls_id = int(box.cls[0])
                 if cls_id in COCO_TARGET_CLASSES:
@@ -54,7 +54,7 @@ class TrafficDetector:
                     xyxy = box.xyxy[0].cpu().numpy().astype(int)
                     detections.append({
                         "class": class_name,
-                        "confidence": conf,
+                        "confidence": round(conf, 4),
                         "bbox": xyxy.tolist()
                     })
 

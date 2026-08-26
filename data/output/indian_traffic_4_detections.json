@@ -1,0 +1,2767 @@
+{
+  "video_name": "indian_traffic_4",
+  "fps": 24.0,
+  "interval_sec": 0.5,
+  "total_video_frames": 4807,
+  "duration_sec": 200.29,
+  "sampled_frames_count": 100,
+  "frames": [
+    {
+      "frame_index": 0,
+      "timestamp_sec": 0.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 12,
+      "timestamp_sec": 0.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 24,
+      "timestamp_sec": 1.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 36,
+      "timestamp_sec": 1.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 48,
+      "timestamp_sec": 2.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 60,
+      "timestamp_sec": 2.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 72,
+      "timestamp_sec": 3.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 84,
+      "timestamp_sec": 3.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 96,
+      "timestamp_sec": 4.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 108,
+      "timestamp_sec": 4.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 120,
+      "timestamp_sec": 5.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 132,
+      "timestamp_sec": 5.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 144,
+      "timestamp_sec": 6.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 156,
+      "timestamp_sec": 6.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 168,
+      "timestamp_sec": 7.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 180,
+      "timestamp_sec": 7.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 192,
+      "timestamp_sec": 8.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 204,
+      "timestamp_sec": 8.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 216,
+      "timestamp_sec": 9.0,
+      "counts": {
+        "car": 2,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 2,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.3321,
+          "bbox": [
+            0,
+            284,
+            164,
+            356
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3311,
+          "bbox": [
+            263,
+            281,
+            286,
+            298
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 228,
+      "timestamp_sec": 9.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 240,
+      "timestamp_sec": 10.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 252,
+      "timestamp_sec": 10.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 264,
+      "timestamp_sec": 11.0,
+      "counts": {
+        "car": 3,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 3,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 4,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.3619,
+          "bbox": [
+            339,
+            284,
+            365,
+            304
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.351,
+          "bbox": [
+            501,
+            25,
+            531,
+            45
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2651,
+          "bbox": [
+            401,
+            280,
+            429,
+            297
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.2606,
+          "bbox": [
+            0,
+            19,
+            85,
+            342
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 276,
+      "timestamp_sec": 11.5,
+      "counts": {
+        "car": 1,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 1,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.2888,
+          "bbox": [
+            0,
+            16,
+            70,
+            346
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2715,
+          "bbox": [
+            518,
+            49,
+            549,
+            71
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 288,
+      "timestamp_sec": 12.0,
+      "counts": {
+        "car": 1,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 1,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.2507,
+          "bbox": [
+            536,
+            79,
+            572,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 300,
+      "timestamp_sec": 12.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 312,
+      "timestamp_sec": 13.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 324,
+      "timestamp_sec": 13.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 336,
+      "timestamp_sec": 14.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 348,
+      "timestamp_sec": 14.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 360,
+      "timestamp_sec": 15.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 372,
+      "timestamp_sec": 15.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 384,
+      "timestamp_sec": 16.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 396,
+      "timestamp_sec": 16.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 408,
+      "timestamp_sec": 17.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9162,
+          "bbox": [
+            216,
+            78,
+            504,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 420,
+      "timestamp_sec": 17.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9063,
+          "bbox": [
+            258,
+            55,
+            586,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 432,
+      "timestamp_sec": 18.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9526,
+          "bbox": [
+            272,
+            55,
+            601,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 444,
+      "timestamp_sec": 18.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9263,
+          "bbox": [
+            214,
+            48,
+            611,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 456,
+      "timestamp_sec": 19.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9548,
+          "bbox": [
+            215,
+            44,
+            579,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 468,
+      "timestamp_sec": 19.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9443,
+          "bbox": [
+            241,
+            36,
+            596,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 480,
+      "timestamp_sec": 20.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.9458,
+          "bbox": [
+            280,
+            37,
+            598,
+            357
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 492,
+      "timestamp_sec": 20.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.872,
+          "bbox": [
+            272,
+            32,
+            602,
+            355
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 504,
+      "timestamp_sec": 21.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 516,
+      "timestamp_sec": 21.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 528,
+      "timestamp_sec": 22.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 540,
+      "timestamp_sec": 22.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 552,
+      "timestamp_sec": 23.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 564,
+      "timestamp_sec": 23.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 576,
+      "timestamp_sec": 24.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 588,
+      "timestamp_sec": 24.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 600,
+      "timestamp_sec": 25.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 612,
+      "timestamp_sec": 25.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 624,
+      "timestamp_sec": 26.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 636,
+      "timestamp_sec": 26.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 648,
+      "timestamp_sec": 27.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 660,
+      "timestamp_sec": 27.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 672,
+      "timestamp_sec": 28.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 684,
+      "timestamp_sec": 28.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 696,
+      "timestamp_sec": 29.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 708,
+      "timestamp_sec": 29.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 720,
+      "timestamp_sec": 30.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 732,
+      "timestamp_sec": 30.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 744,
+      "timestamp_sec": 31.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 756,
+      "timestamp_sec": 31.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 768,
+      "timestamp_sec": 32.0,
+      "counts": {
+        "car": 2,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 2,
+        "pedestrian": 0
+      },
+      "total_vehicles": 4,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 4,
+      "detections": [
+        {
+          "class": "truck",
+          "confidence": 0.4783,
+          "bbox": [
+            402,
+            50,
+            450,
+            103
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.4179,
+          "bbox": [
+            186,
+            98,
+            282,
+            152
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3968,
+          "bbox": [
+            193,
+            98,
+            282,
+            153
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3809,
+          "bbox": [
+            451,
+            75,
+            472,
+            87
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 780,
+      "timestamp_sec": 32.5,
+      "counts": {
+        "car": 4,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 4,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 4,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.5878,
+          "bbox": [
+            450,
+            79,
+            475,
+            93
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5451,
+          "bbox": [
+            427,
+            75,
+            448,
+            90
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5231,
+          "bbox": [
+            359,
+            85,
+            408,
+            113
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.255,
+          "bbox": [
+            307,
+            65,
+            341,
+            76
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 792,
+      "timestamp_sec": 33.0,
+      "counts": {
+        "car": 2,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 2,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.3214,
+          "bbox": [
+            460,
+            74,
+            475,
+            84
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2653,
+          "bbox": [
+            429,
+            83,
+            456,
+            100
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 804,
+      "timestamp_sec": 33.5,
+      "counts": {
+        "car": 3,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 3,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 3,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.6931,
+          "bbox": [
+            463,
+            79,
+            485,
+            91
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5809,
+          "bbox": [
+            422,
+            112,
+            486,
+            149
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2638,
+          "bbox": [
+            420,
+            99,
+            457,
+            110
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 816,
+      "timestamp_sec": 34.0,
+      "counts": {
+        "car": 3,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 3,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 3,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.4772,
+          "bbox": [
+            498,
+            98,
+            539,
+            127
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4498,
+          "bbox": [
+            484,
+            75,
+            500,
+            86
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2984,
+          "bbox": [
+            0,
+            94,
+            31,
+            128
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 828,
+      "timestamp_sec": 34.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 1,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 1,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "bus",
+          "confidence": 0.589,
+          "bbox": [
+            0,
+            79,
+            305,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 840,
+      "timestamp_sec": 35.0,
+      "counts": {
+        "car": 1,
+        "motorcycle": 0,
+        "bus": 1,
+        "truck": 1,
+        "pedestrian": 0
+      },
+      "total_vehicles": 3,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 3,
+      "detections": [
+        {
+          "class": "bus",
+          "confidence": 0.7379,
+          "bbox": [
+            268,
+            75,
+            474,
+            187
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.4816,
+          "bbox": [
+            0,
+            79,
+            136,
+            204
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.427,
+          "bbox": [
+            320,
+            65,
+            345,
+            75
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 852,
+      "timestamp_sec": 35.5,
+      "counts": {
+        "car": 1,
+        "motorcycle": 0,
+        "bus": 2,
+        "truck": 1,
+        "pedestrian": 0
+      },
+      "total_vehicles": 4,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 4,
+      "detections": [
+        {
+          "class": "bus",
+          "confidence": 0.4917,
+          "bbox": [
+            438,
+            76,
+            537,
+            137
+          ]
+        },
+        {
+          "class": "bus",
+          "confidence": 0.4886,
+          "bbox": [
+            264,
+            62,
+            357,
+            120
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.3257,
+          "bbox": [
+            438,
+            75,
+            537,
+            137
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3191,
+          "bbox": [
+            252,
+            69,
+            273,
+            80
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 864,
+      "timestamp_sec": 36.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 876,
+      "timestamp_sec": 36.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 888,
+      "timestamp_sec": 37.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 900,
+      "timestamp_sec": 37.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 912,
+      "timestamp_sec": 38.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 2
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 2,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.8843,
+          "bbox": [
+            161,
+            2,
+            476,
+            355
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.6019,
+          "bbox": [
+            217,
+            61,
+            345,
+            250
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 924,
+      "timestamp_sec": 38.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 3
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 3,
+      "detection_count": 3,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.8223,
+          "bbox": [
+            151,
+            1,
+            473,
+            354
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.5332,
+          "bbox": [
+            217,
+            63,
+            343,
+            249
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.5292,
+          "bbox": [
+            130,
+            3,
+            638,
+            354
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 936,
+      "timestamp_sec": 39.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 4
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 4,
+      "detection_count": 4,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.8159,
+          "bbox": [
+            157,
+            1,
+            477,
+            355
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.5688,
+          "bbox": [
+            140,
+            1,
+            624,
+            356
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3884,
+          "bbox": [
+            312,
+            1,
+            474,
+            184
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3339,
+          "bbox": [
+            232,
+            70,
+            346,
+            230
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 948,
+      "timestamp_sec": 39.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 5
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 5,
+      "detection_count": 5,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.5853,
+          "bbox": [
+            162,
+            0,
+            551,
+            356
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.5776,
+          "bbox": [
+            317,
+            1,
+            470,
+            185
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.365,
+          "bbox": [
+            234,
+            70,
+            339,
+            222
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3607,
+          "bbox": [
+            257,
+            1,
+            636,
+            356
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.255,
+          "bbox": [
+            160,
+            30,
+            392,
+            358
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 960,
+      "timestamp_sec": 40.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 2
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 2,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.803,
+          "bbox": [
+            158,
+            1,
+            547,
+            356
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.4131,
+          "bbox": [
+            305,
+            2,
+            460,
+            187
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 972,
+      "timestamp_sec": 40.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 2
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 2,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.5617,
+          "bbox": [
+            139,
+            0,
+            613,
+            357
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3952,
+          "bbox": [
+            314,
+            2,
+            505,
+            186
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 984,
+      "timestamp_sec": 41.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.3662,
+          "bbox": [
+            0,
+            21,
+            191,
+            346
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 996,
+      "timestamp_sec": 41.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1008,
+      "timestamp_sec": 42.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1020,
+      "timestamp_sec": 42.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1032,
+      "timestamp_sec": 43.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1044,
+      "timestamp_sec": 43.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1056,
+      "timestamp_sec": 44.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1068,
+      "timestamp_sec": 44.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 2
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 2,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.6481,
+          "bbox": [
+            205,
+            3,
+            639,
+            221
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3821,
+          "bbox": [
+            204,
+            68,
+            639,
+            220
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1080,
+      "timestamp_sec": 45.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.7699,
+          "bbox": [
+            210,
+            3,
+            639,
+            219
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1092,
+      "timestamp_sec": 45.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 3
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 3,
+      "detection_count": 3,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.6279,
+          "bbox": [
+            228,
+            2,
+            619,
+            354
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.5988,
+          "bbox": [
+            43,
+            3,
+            302,
+            353
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3934,
+          "bbox": [
+            64,
+            1,
+            635,
+            354
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1104,
+      "timestamp_sec": 46.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 3
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 3,
+      "detection_count": 3,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.5943,
+          "bbox": [
+            256,
+            2,
+            638,
+            353
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.4004,
+          "bbox": [
+            94,
+            4,
+            334,
+            354
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.318,
+          "bbox": [
+            92,
+            0,
+            631,
+            354
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1116,
+      "timestamp_sec": 46.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 2
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 2,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.4546,
+          "bbox": [
+            284,
+            2,
+            638,
+            353
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.386,
+          "bbox": [
+            125,
+            0,
+            601,
+            354
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1128,
+      "timestamp_sec": 47.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 2
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 2,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.7151,
+          "bbox": [
+            299,
+            3,
+            638,
+            352
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.3443,
+          "bbox": [
+            168,
+            3,
+            626,
+            354
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1140,
+      "timestamp_sec": 47.5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 1
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 1,
+      "detection_count": 1,
+      "detections": [
+        {
+          "class": "pedestrian",
+          "confidence": 0.7631,
+          "bbox": [
+            190,
+            1,
+            636,
+            355
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1152,
+      "timestamp_sec": 48.0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 0,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 0,
+      "detections": []
+    },
+    {
+      "frame_index": 1164,
+      "timestamp_sec": 48.5,
+      "counts": {
+        "car": 10,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 2,
+        "pedestrian": 0
+      },
+      "total_vehicles": 12,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 12,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.6751,
+          "bbox": [
+            182,
+            69,
+            232,
+            122
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.6465,
+          "bbox": [
+            144,
+            113,
+            225,
+            201
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.6084,
+          "bbox": [
+            452,
+            96,
+            557,
+            140
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5531,
+          "bbox": [
+            287,
+            85,
+            372,
+            138
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.5382,
+          "bbox": [
+            416,
+            121,
+            555,
+            216
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5111,
+          "bbox": [
+            94,
+            6,
+            121,
+            29
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4755,
+          "bbox": [
+            345,
+            56,
+            399,
+            87
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4435,
+          "bbox": [
+            95,
+            63,
+            136,
+            102
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4433,
+          "bbox": [
+            374,
+            82,
+            458,
+            130
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3863,
+          "bbox": [
+            157,
+            43,
+            204,
+            83
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.3797,
+          "bbox": [
+            23,
+            19,
+            69,
+            65
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2628,
+          "bbox": [
+            96,
+            40,
+            130,
+            65
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1176,
+      "timestamp_sec": 49.0,
+      "counts": {
+        "car": 8,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 4,
+        "pedestrian": 0
+      },
+      "total_vehicles": 12,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 12,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.7889,
+          "bbox": [
+            118,
+            127,
+            217,
+            225
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5782,
+          "bbox": [
+            354,
+            59,
+            412,
+            94
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.574,
+          "bbox": [
+            400,
+            89,
+            508,
+            146
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.552,
+          "bbox": [
+            163,
+            50,
+            211,
+            89
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5454,
+          "bbox": [
+            304,
+            60,
+            357,
+            93
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4971,
+          "bbox": [
+            97,
+            8,
+            121,
+            28
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4601,
+          "bbox": [
+            313,
+            98,
+            400,
+            149
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4299,
+          "bbox": [
+            487,
+            99,
+            604,
+            148
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.4268,
+          "bbox": [
+            23,
+            20,
+            69,
+            64
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.3992,
+          "bbox": [
+            77,
+            35,
+            140,
+            110
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.2845,
+          "bbox": [
+            476,
+            134,
+            637,
+            243
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.2669,
+          "bbox": [
+            187,
+            78,
+            244,
+            131
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 1188,
+      "timestamp_sec": 49.5,
+      "counts": {
+        "car": 11,
+        "motorcycle": 0,
+        "bus": 1,
+        "truck": 2,
+        "pedestrian": 0
+      },
+      "total_vehicles": 14,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 14,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.7001,
+          "bbox": [
+            317,
+            65,
+            372,
+            102
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.6521,
+          "bbox": [
+            434,
+            98,
+            549,
+            163
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5418,
+          "bbox": [
+            364,
+            64,
+            427,
+            102
+          ]
+        },
+        {
+          "class": "bus",
+          "confidence": 0.4836,
+          "bbox": [
+            566,
+            157,
+            639,
+            243
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4836,
+          "bbox": [
+            72,
+            145,
+            201,
+            264
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4548,
+          "bbox": [
+            194,
+            89,
+            245,
+            150
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4466,
+          "bbox": [
+            97,
+            9,
+            121,
+            32
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3554,
+          "bbox": [
+            332,
+            107,
+            437,
+            167
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3441,
+          "bbox": [
+            251,
+            31,
+            285,
+            58
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.337,
+          "bbox": [
+            168,
+            52,
+            217,
+            97
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3087,
+          "bbox": [
+            100,
+            48,
+            135,
+            78
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.3048,
+          "bbox": [
+            72,
+            145,
+            201,
+            264
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2714,
+          "bbox": [
+            101,
+            80,
+            147,
+            122
+          ]
+        },
+        {
+          "class": "truck",
+          "confidence": 0.2689,
+          "bbox": [
+            23,
+            19,
+            69,
+            66
+          ]
+        }
+      ]
+    }
+  ]
+}

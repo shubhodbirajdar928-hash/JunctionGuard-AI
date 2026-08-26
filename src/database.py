@@ -260,7 +260,7 @@ def fetch_junction_by_id(junction_id: str) -> Optional[Dict[str, Any]]:
     return record.to_dict()
 
 def update_junction_risk(junction_id: str, risk_score: float, factors: List[Dict[str, float]]):
-    """Update risk score and contributing factors for a junction."""
+    """Update risk score and contributing factors for a junction in both local DB and Supabase."""
     conn = get_db_connection()
     cursor = conn.cursor()
     risk_level = JunctionRecord.calculate_risk_level(risk_score)
@@ -274,6 +274,13 @@ def update_junction_risk(junction_id: str, risk_score: float, factors: List[Dict
     conn.commit()
     conn.close()
 
+    # Sync to Supabase
+    try:
+        from src.supabase_client import update_junction_risk_supabase
+        update_junction_risk_supabase(junction_id, risk_score, risk_level, factors)
+    except Exception as e:
+        print(f"[Supabase Sync Note] {e}")
+
 def add_citizen_report(junction_id: str, reporter: str, issue: str, severity: int, description: str):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -285,7 +292,42 @@ def add_citizen_report(junction_id: str, reporter: str, issue: str, severity: in
     conn.commit()
     conn.close()
 
+    # Sync to Supabase citizen_reports table
+    try:
+        from src.supabase_client import insert_citizen_report_supabase
+        insert_citizen_report_supabase({
+            "junction_id": junction_id,
+            "reporter_name": reporter,
+            "description": f"{issue}: {description} (Severity: {severity}/5)",
+            "status": "PENDING_REVIEW"
+        })
+    except Exception as e:
+        print(f"[Supabase Sync Note] Could not sync report to Supabase: {e}")
+
 def fetch_citizen_reports(junction_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    # Try fetching from Supabase first
+    try:
+        from src.supabase_client import fetch_citizen_reports_supabase
+        sb_reports = fetch_citizen_reports_supabase(junction_id)
+        if sb_reports:
+            formatted = []
+            for r in sb_reports:
+                desc = r.get("description", "")
+                issue_type = desc.split(":")[0] if ":" in desc else "Citizen Hazard Report"
+                formatted.append({
+                    "id": r.get("report_id"),
+                    "junction_id": r.get("junction_id"),
+                    "reporter_name": r.get("reporter_name", "Anonymous"),
+                    "issue_type": issue_type,
+                    "severity": 4,
+                    "description": desc,
+                    "timestamp": r.get("submitted_at", "")[:19].replace("T", " ")
+                })
+            return formatted
+    except Exception as e:
+        pass
+
+    # Fallback to local SQLite DB
     conn = get_db_connection()
     cursor = conn.cursor()
     if junction_id:

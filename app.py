@@ -5,6 +5,8 @@ Features Streamlit frontend, interactive Folium map with pulsing red halos for h
 YOLOv8 vision analytics preview, and multi-factor explainability breakdowns.
 """
 
+import os
+import cv2
 import streamlit as st
 import folium
 from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster
@@ -852,30 +854,89 @@ with tab_vision:
         "high **two-wheeler weaving density** (critical for Indian traffic), and spatial near-miss proximity."
     )
 
+    demo_sources = {
+        "🎬 Demo Clip 1: Shivaji Chowk (J001)": {"video": "data/sample_videos/indian_traffic_1.mp4", "jnc_id": "J001", "name": "Shivaji Chowk"},
+        "🎬 Demo Clip 2: Rajaram Corner (J002)": {"video": "data/sample_videos/indian_traffic_2.mp4", "jnc_id": "J002", "name": "Rajaram Corner"},
+        "🎬 Demo Clip 3: Dabholkar Corner (J003)": {"video": "data/sample_videos/indian_traffic_3.mp4", "jnc_id": "J003", "name": "Dabholkar Corner"},
+        "🎬 Demo Clip 4: Cyber Chowk (J004)": {"video": "data/sample_videos/indian_traffic_4.mp4", "jnc_id": "J004", "name": "Cyber Chowk"},
+        "⚠️ Demo Clip 5: Kawala Naka (Corrupt / Edge Case Test)": {"video": "data/sample_videos/corrupt_or_short_demo.mp4", "jnc_id": "J005", "name": "Kawala Naka"},
+        "💻 Live Synthetic Junction Stream": {"video": None, "jnc_id": None, "name": "Synthetic Stream"}
+    }
+
+    source_label = st.selectbox("Select CCTV Feed / Demo Clip Source:", options=list(demo_sources.keys()), index=0)
+    selected_meta = demo_sources[source_label]
+
     v_col1, v_col2 = st.columns([2, 1])
 
     with v_col1:
-        run_vision = st.checkbox("▶️ Run Live CCTV Video Processor Stream", value=True)
+        run_vision = st.checkbox("▶️ Play CCTV Video Stream Overlay", value=True)
         video_placeholder = st.empty()
 
-        if run_vision:
-            processor = StreamProcessor()
-            # Render animated live feed frames
-            for frame_idx in range(1, 30):
-                processed_frame, metrics = processor.generate_simulated_frame(frame_idx)
-                # Convert BGR (OpenCV) to RGB for Streamlit image display
-                frame_rgb = processed_frame[:, :, ::-1]
-                video_placeholder.image(frame_rgb, caption=f"Silk Board Junction CCTV - Frame {frame_idx}", width="stretch")
-                time.sleep(0.08)
-
     with v_col2:
-        st.write("#### 📐 Real-Time Vision Metrics")
+        st.write("#### 📐 Vision & Spatial Indicators (Supabase Cached)")
         st.info("YOLOv8 Class Highlights: Motorcycle (Cyan), Pedestrian (Red), Cars (Green), Heavy (Orange)")
 
-        st.metric("Vision Risk Index", "68.4 / 100")
-        st.metric("Total Detected Vehicles", "47")
-        st.metric("Two-Wheeler Share (Indian Context)", "59.5%")
-        st.metric("Near-Miss Proximity Conflicts", "6")
+        # Fetch pre-computed Supabase indicators if available
+        sb_indicators = {}
+        if selected_meta["jnc_id"]:
+            try:
+                from src.supabase_client import fetch_detection_indicators
+                records = fetch_detection_indicators(selected_meta["jnc_id"])
+                # Match by video filename if multiple records exist
+                matched = [r for r in records if r.get("source_video") == os.path.basename(selected_meta["video"])]
+                if matched:
+                    sb_indicators = matched[-1]
+            except Exception as e:
+                pass
+
+        if sb_indicators:
+            st.success("⚡ Loaded pre-computed indicators from Supabase (Zero Inference Latency)")
+            st.metric("Traffic Density (avg vehicles/frame)", f"{sb_indicators.get('traffic_density', 0.0)}")
+            st.metric("Speed / Movement Proxy", f"{sb_indicators.get('speed_proxy', 0.0)} px/s")
+            st.metric("Pedestrian Activity Level", f"{sb_indicators.get('pedestrian_activity', 0.0)} peds/frame")
+            st.metric("Conflict / Near-Miss Proxy Count", f"{sb_indicators.get('conflict_proxy', 0)}")
+        else:
+            metric_risk = st.empty()
+            metric_veh = st.empty()
+            metric_2w = st.empty()
+            metric_near = st.empty()
+
+            metric_risk.metric("Vision Risk Index", "-- / 100")
+            metric_veh.metric("Total Detected Vehicles", "--")
+            metric_2w.metric("Two-Wheeler Share (Indian Context)", "--%")
+            metric_near.metric("Near-Miss Proximity Conflicts", "--")
+
+    if run_vision:
+        processor = StreamProcessor()
+        video_file = selected_meta["video"]
+
+        if video_file and os.path.exists(video_file):
+            stream_gen = processor.process_video_stream(video_file, max_frames=80, step=3)
+            has_frames = False
+            for frame_idx, (processed_frame, metrics) in enumerate(stream_gen):
+                has_frames = True
+                frame_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
+                video_placeholder.image(frame_rgb, caption=f"YOLOv8 Analysis - {selected_meta['name']} (Frame {frame_idx * 3})", width="stretch")
+                if not sb_indicators:
+                    metric_risk.metric("Vision Risk Index", f"{metrics.get('vision_risk_score', 0.0)} / 100")
+                    metric_veh.metric("Total Detected Vehicles", f"{metrics.get('total_vehicles', 0)}")
+                    metric_2w.metric("Two-Wheeler Share (Indian Context)", f"{metrics.get('two_wheeler_share_pct', 0.0)}%")
+                    metric_near.metric("Near-Miss Proximity Conflicts", f"{metrics.get('near_miss_count', 0)}")
+                time.sleep(0.04)
+
+            if not has_frames:
+                video_placeholder.warning("⚠️ Error Handled: This video file is corrupt or unreadable. System handled the error gracefully without crashing.")
+        else:
+            for frame_idx in range(1, 30):
+                processed_frame, metrics = processor.generate_simulated_frame(frame_idx)
+                frame_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
+                video_placeholder.image(frame_rgb, caption=f"Silk Board Junction CCTV - Frame {frame_idx}", width="stretch")
+                if not sb_indicators:
+                    metric_risk.metric("Vision Risk Index", f"{metrics.get('vision_risk_score', 0.0)} / 100")
+                    metric_veh.metric("Total Detected Vehicles", f"{metrics.get('total_vehicles', 0)}")
+                    metric_2w.metric("Two-Wheeler Share (Indian Context)", f"{metrics.get('two_wheeler_share_pct', 0.0)}%")
+                    metric_near.metric("Near-Miss Proximity Conflicts", f"{metrics.get('near_miss_count', 0)}")
+                time.sleep(0.08)
 
 # ----------------------------------------------------
 # TAB 4: CITIZEN HAZARD REPORTING

@@ -16,6 +16,8 @@ class JunctionRecord(BaseModel):
     name: str
     lat: float
     lon: float
+    city: Optional[str] = Field(None, description="City name")
+    state: Optional[str] = Field(None, description="State name")
     risk_score: Optional[float] = Field(None, ge=0.0, le=100.0, description="Junction Risk Score 0-100")
     risk_level: Optional[str] = Field(None, description="LOW, MEDIUM, or HIGH")
     contributing_factors: Optional[List[Dict[str, Any]]] = Field(

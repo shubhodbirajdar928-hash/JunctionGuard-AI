@@ -950,11 +950,11 @@ with tab_vision:
     )
 
     demo_sources = {
-        "🎬 Demo Clip 1: Shivaji Chowk (J001)": {"video": "data/sample_videos/indian_traffic_1.mp4", "jnc_id": "J001", "name": "Shivaji Chowk"},
-        "🎬 Demo Clip 2: Rajaram Corner (J002)": {"video": "data/sample_videos/indian_traffic_2.mp4", "jnc_id": "J002", "name": "Rajaram Corner"},
-        "🎬 Demo Clip 3: Dabholkar Corner (J003)": {"video": "data/sample_videos/indian_traffic_3.mp4", "jnc_id": "J003", "name": "Dabholkar Corner"},
-        "🎬 Demo Clip 4: Cyber Chowk (J004)": {"video": "data/sample_videos/indian_traffic_4.mp4", "jnc_id": "J004", "name": "Cyber Chowk"},
-        "⚠️ Demo Clip 5: Kawala Naka (Corrupt / Edge Case Test)": {"video": "data/sample_videos/corrupt_or_short_demo.mp4", "jnc_id": "J005", "name": "Kawala Naka"},
+        "🎬 Demo Clip 1: Shivaji Chowk (J001) - Dense Urban Crossing": {"video": "data/sample_videos/indian_traffic_1.mp4", "jnc_id": "J001", "name": "Shivaji Chowk"},
+        "🎬 Demo Clip 2: Rajaram Corner (J002) - Multi-Lane Arterial Junction": {"video": "data/sample_videos/indian_traffic_2.mp4", "jnc_id": "J002", "name": "Rajaram Corner"},
+        "🎬 Demo Clip 3: Dabholkar Corner (J003) - Bus Terminal & Commercial Crossing": {"video": "data/sample_videos/indian_traffic_3.mp4", "jnc_id": "J003", "name": "Dabholkar Corner"},
+        "🎬 Demo Clip 4: Cyber Chowk (J004) - High-Density Two-Wheeler & Mixed Flow": {"video": "data/sample_videos/indian_traffic_4.mp4", "jnc_id": "J004", "name": "Cyber Chowk"},
+        "🎬 Demo Clip 5: Kawala Naka (J005) - Heavy Vehicle Bottleneck & Peak Hour Traffic": {"video": "data/sample_videos/indian_traffic_5.mp4", "jnc_id": "J005", "name": "Kawala Naka"},
         "💻 Live Synthetic Junction Stream": {"video": None, "jnc_id": None, "name": "Synthetic Stream"}
     }
 
@@ -971,7 +971,7 @@ with tab_vision:
         st.write("#### 📐 Vision & Spatial Indicators (Supabase Cached)")
         st.info("YOLOv8 Class Highlights: Motorcycle (Cyan), Pedestrian (Red), Cars (Green), Heavy (Orange)")
 
-        # Fetch pre-computed Supabase indicators if available
+        # Fetch pre-computed Supabase / SQLite indicators if available
         sb_indicators = {}
         if selected_meta["jnc_id"]:
             try:
@@ -981,11 +981,21 @@ with tab_vision:
                 matched = [r for r in records if r.get("source_video") == os.path.basename(selected_meta["video"])]
                 if matched:
                     sb_indicators = matched[-1]
-            except Exception as e:
+            except Exception:
                 pass
 
+            if not sb_indicators:
+                try:
+                    from src.database import fetch_detection_indicators_from_db
+                    records = fetch_detection_indicators_from_db(selected_meta["jnc_id"])
+                    matched = [r for r in records if r.get("source_video") == os.path.basename(selected_meta["video"])]
+                    if matched:
+                        sb_indicators = matched[0]
+                except Exception:
+                    pass
+
         if sb_indicators:
-            st.success("⚡ Loaded pre-computed indicators from Supabase (Zero Inference Latency)")
+            st.success("⚡ Loaded pre-computed indicators (Zero Inference Latency)")
             st.metric("Traffic Density (avg vehicles/frame)", f"{sb_indicators.get('traffic_density', 0.0)}")
             st.metric("Speed / Movement Proxy", f"{sb_indicators.get('speed_proxy', 0.0)} px/s")
             st.metric("Pedestrian Activity Level", f"{sb_indicators.get('pedestrian_activity', 0.0)} peds/frame")

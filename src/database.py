@@ -577,13 +577,25 @@ def save_detection_result(
             "traffic_density": traffic_density,
             "speed_proxy": speed_proxy,
             "pedestrian_activity": pedestrian_activity,
-            "conflict_proxy": conflict_proxy,
-            "two_wheeler_share_pct": two_wheeler_share_pct
         })
     except Exception:
         pass
 
     return success
+
+def fetch_detection_indicators_from_db(junction_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    """
+    Fetches persisted YOLO detection indicators from SQLite table `detection_indicators`.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    if junction_id:
+        cursor.execute("SELECT * FROM detection_indicators WHERE junction_id = ? ORDER BY id DESC", (junction_id,))
+    else:
+        cursor.execute("SELECT * FROM detection_indicators ORDER BY id DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
 
 # ============================================================
 # CITIZEN REPORTS MIGRATION & QUERYING

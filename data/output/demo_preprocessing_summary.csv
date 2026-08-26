@@ -1,6 +1,6 @@
 Junction ID,Junction Name,Video File,Status,Traffic Density,Speed Proxy,Pedestrian Activity,Conflict Proxy,Supabase Written,Note
-J001,Shivaji Chowk,indian_traffic_1.mp4,✅ Processed,6.94,103.1806,1.97,196,True,100 frames
-J002,Rajaram Corner,indian_traffic_2.mp4,✅ Processed,13.04,71.8211,0.02,249,True,100 frames
-J003,Dabholkar Corner,indian_traffic_3.mp4,✅ Processed,3.69,34.0076,0.26,40,True,100 frames
-J004,Cyber Chowk,indian_traffic_4.mp4,✅ Processed,0.69,62.687,0.43,7,True,100 frames
-J005,Kawala Naka (Edge Case),corrupt_or_short_demo.mp4,⚠️ Error Handled,N/A,N/A,N/A,N/A,False,Could not open video file (corrupt header or ...
+J001,Shivaji Chowk,indian_traffic_1.mp4,✅ Processed,6.98,104.7077,1.98,193,False,100 frames
+J002,Rajaram Corner,indian_traffic_2.mp4,✅ Processed,12.64,73.1123,0.0,210,False,100 frames
+J003,Dabholkar Corner,indian_traffic_3.mp4,✅ Processed,3.65,32.2696,0.27,32,False,100 frames
+J004,Cyber Chowk,indian_traffic_4.mp4,✅ Processed,15.619,49.0522,2.4524,227,False,42 frames
+J005,Kawala Naka,indian_traffic_5.mp4,✅ Processed,15.873,42.2212,0.0,169,False,63 frames

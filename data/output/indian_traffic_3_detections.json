@@ -23,7 +23,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.918,
+          "confidence": 0.9149,
           "bbox": [
             202,
             223,
@@ -33,7 +33,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5446,
+          "confidence": 0.5331,
           "bbox": [
             423,
             224,
@@ -43,7 +43,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.3597,
+          "confidence": 0.3705,
           "bbox": [
             373,
             230,
@@ -70,17 +70,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8739,
+          "confidence": 0.873,
           "bbox": [
             233,
             219,
             347,
-            299
+            298
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4496,
+          "confidence": 0.4386,
           "bbox": [
             425,
             222,
@@ -90,9 +90,9 @@
         },
         {
           "class": "car",
-          "confidence": 0.3709,
+          "confidence": 0.3526,
           "bbox": [
-            811,
+            810,
             237,
             853,
             261
@@ -100,22 +100,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.3269,
+          "confidence": 0.3267,
           "bbox": [
             375,
             220,
-            401,
+            402,
             241
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2784,
+          "confidence": 0.2508,
           "bbox": [
-            376,
+            375,
             225,
             400,
-            240
+            241
           ]
         }
       ]
@@ -124,20 +124,20 @@
       "frame_index": 30,
       "timestamp_sec": 1.0,
       "counts": {
-        "car": 3,
+        "car": 2,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 3,
+      "total_vehicles": 2,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 3,
+      "detection_count": 2,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8465,
+          "confidence": 0.8515,
           "bbox": [
             257,
             220,
@@ -147,22 +147,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.2905,
+          "confidence": 0.2923,
           "bbox": [
-            419,
+            412,
             220,
             456,
             245
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2667,
-          "bbox": [
-            428,
-            222,
-            455,
-            244
           ]
         }
       ]
@@ -184,7 +174,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8646,
+          "confidence": 0.8635,
           "bbox": [
             279,
             213,
@@ -194,10 +184,10 @@
         },
         {
           "class": "car",
-          "confidence": 0.3018,
+          "confidence": 0.3053,
           "bbox": [
             430,
-            216,
+            215,
             458,
             238
           ]
@@ -221,7 +211,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8382,
+          "confidence": 0.8415,
           "bbox": [
             295,
             220,
@@ -231,19 +221,19 @@
         },
         {
           "class": "car",
-          "confidence": 0.3144,
+          "confidence": 0.3213,
           "bbox": [
             430,
-            218,
+            217,
             464,
-            240
+            239
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2881,
+          "confidence": 0.2923,
           "bbox": [
-            434,
+            433,
             221,
             462,
             240
@@ -251,10 +241,10 @@
         },
         {
           "class": "car",
-          "confidence": 0.2546,
+          "confidence": 0.2591,
           "bbox": [
             375,
-            213,
+            214,
             413,
             238
           ]
@@ -278,7 +268,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.732,
+          "confidence": 0.735,
           "bbox": [
             309,
             218,
@@ -288,7 +278,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5438,
+          "confidence": 0.543,
           "bbox": [
             435,
             220,
@@ -315,17 +305,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8021,
+          "confidence": 0.7891,
           "bbox": [
             319,
             219,
             385,
-            269
+            270
           ]
         },
         {
           "class": "car",
-          "confidence": 0.627,
+          "confidence": 0.6406,
           "bbox": [
             438,
             219,
@@ -352,7 +342,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7306,
+          "confidence": 0.7157,
           "bbox": [
             330,
             221,
@@ -362,7 +352,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5456,
+          "confidence": 0.5359,
           "bbox": [
             443,
             222,
@@ -389,22 +379,22 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6858,
+          "confidence": 0.6793,
           "bbox": [
             335,
             220,
             392,
-            262
+            263
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6254,
+          "confidence": 0.6309,
           "bbox": [
             446,
             221,
             489,
-            251
+            250
           ]
         }
       ]
@@ -426,17 +416,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6691,
+          "confidence": 0.6663,
           "bbox": [
             450,
             221,
-            498,
-            253
+            497,
+            252
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5395,
+          "confidence": 0.494,
           "bbox": [
             339,
             221,
@@ -463,7 +453,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6806,
+          "confidence": 0.69,
           "bbox": [
             448,
             223,
@@ -473,9 +463,9 @@
         },
         {
           "class": "car",
-          "confidence": 0.4433,
+          "confidence": 0.4435,
           "bbox": [
-            337,
+            336,
             221,
             388,
             254
@@ -483,12 +473,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.2573,
+          "confidence": 0.287,
           "bbox": [
             452,
             229,
             501,
-            252
+            253
           ]
         }
       ]
@@ -510,27 +500,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7752,
+          "confidence": 0.7694,
           "bbox": [
             0,
             213,
             174,
-            396
+            397
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4757,
+          "confidence": 0.4704,
           "bbox": [
-            450,
-            221,
-            505,
-            259
+            451,
+            222,
+            506,
+            258
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4075,
+          "confidence": 0.4088,
           "bbox": [
             336,
             221,
@@ -557,7 +547,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9158,
+          "confidence": 0.9179,
           "bbox": [
             0,
             209,
@@ -567,22 +557,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.4352,
+          "confidence": 0.4351,
           "bbox": [
-            449,
+            451,
             225,
-            509,
-            261
+            510,
+            260
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3376,
+          "confidence": 0.3484,
           "bbox": [
-            343,
-            224,
-            385,
-            250
+            342,
+            226,
+            384,
+            251
           ]
         }
       ]
@@ -590,130 +580,6 @@
     {
       "frame_index": 195,
       "timestamp_sec": 6.5,
-      "counts": {
-        "car": 4,
-        "motorcycle": 0,
-        "bus": 0,
-        "truck": 0,
-        "pedestrian": 0
-      },
-      "total_vehicles": 4,
-      "two_wheeler_share_pct": 0.0,
-      "pedestrian_count": 0,
-      "detection_count": 4,
-      "detections": [
-        {
-          "class": "car",
-          "confidence": 0.8958,
-          "bbox": [
-            84,
-            214,
-            290,
-            353
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.5523,
-          "bbox": [
-            450,
-            224,
-            512,
-            263
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2816,
-          "bbox": [
-            345,
-            227,
-            395,
-            251
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2707,
-          "bbox": [
-            346,
-            225,
-            384,
-            250
-          ]
-        }
-      ]
-    },
-    {
-      "frame_index": 210,
-      "timestamp_sec": 7.0,
-      "counts": {
-        "car": 5,
-        "motorcycle": 0,
-        "bus": 0,
-        "truck": 0,
-        "pedestrian": 0
-      },
-      "total_vehicles": 5,
-      "two_wheeler_share_pct": 0.0,
-      "pedestrian_count": 0,
-      "detection_count": 5,
-      "detections": [
-        {
-          "class": "car",
-          "confidence": 0.9201,
-          "bbox": [
-            160,
-            215,
-            314,
-            316
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.5297,
-          "bbox": [
-            453,
-            222,
-            521,
-            265
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.3692,
-          "bbox": [
-            475,
-            243,
-            519,
-            264
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2759,
-          "bbox": [
-            346,
-            221,
-            381,
-            247
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2586,
-          "bbox": [
-            454,
-            222,
-            496,
-            264
-          ]
-        }
-      ]
-    },
-    {
-      "frame_index": 225,
-      "timestamp_sec": 7.5,
       "counts": {
         "car": 3,
         "motorcycle": 0,
@@ -728,7 +594,111 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8665,
+          "confidence": 0.8936,
+          "bbox": [
+            84,
+            214,
+            290,
+            352
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5465,
+          "bbox": [
+            451,
+            224,
+            512,
+            263
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2734,
+          "bbox": [
+            346,
+            227,
+            383,
+            250
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 210,
+      "timestamp_sec": 7.0,
+      "counts": {
+        "car": 4,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 4,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 4,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.9193,
+          "bbox": [
+            160,
+            215,
+            314,
+            316
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.5396,
+          "bbox": [
+            453,
+            222,
+            521,
+            265
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3554,
+          "bbox": [
+            473,
+            237,
+            520,
+            266
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2552,
+          "bbox": [
+            346,
+            221,
+            381,
+            247
+          ]
+        }
+      ]
+    },
+    {
+      "frame_index": 225,
+      "timestamp_sec": 7.5,
+      "counts": {
+        "car": 2,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0,
+        "pedestrian": 0
+      },
+      "total_vehicles": 2,
+      "two_wheeler_share_pct": 0.0,
+      "pedestrian_count": 0,
+      "detection_count": 2,
+      "detections": [
+        {
+          "class": "car",
+          "confidence": 0.8634,
           "bbox": [
             209,
             215,
@@ -738,22 +708,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.3935,
+          "confidence": 0.4479,
           "bbox": [
-            460,
+            459,
             220,
             530,
-            266
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2911,
-          "bbox": [
-            769,
-            236,
-            853,
-            358
+            267
           ]
         }
       ]
@@ -775,17 +735,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8947,
+          "confidence": 0.9008,
           "bbox": [
             647,
-            217,
+            218,
             848,
             342
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7837,
+          "confidence": 0.7897,
           "bbox": [
             239,
             218,
@@ -795,21 +755,21 @@
         },
         {
           "class": "car",
-          "confidence": 0.3754,
-          "bbox": [
-            458,
-            218,
-            533,
-            268
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.3731,
+          "confidence": 0.3693,
           "bbox": [
             479,
             247,
             527,
+            269
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3502,
+          "bbox": [
+            458,
+            218,
+            533,
             269
           ]
         }
@@ -832,9 +792,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8871,
+          "confidence": 0.8887,
           "bbox": [
-            583,
+            584,
             220,
             722,
             302
@@ -842,17 +802,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.7312,
+          "confidence": 0.7338,
           "bbox": [
             258,
             221,
-            336,
+            337,
             280
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3658,
+          "confidence": 0.3753,
           "bbox": [
             447,
             224,
@@ -862,21 +822,21 @@
         },
         {
           "class": "car",
-          "confidence": 0.3562,
+          "confidence": 0.3297,
           "bbox": [
-            458,
-            222,
-            536,
+            477,
+            242,
+            533,
             272
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3127,
+          "confidence": 0.3248,
           "bbox": [
-            477,
-            243,
-            534,
+            459,
+            222,
+            535,
             271
           ]
         }
@@ -886,20 +846,20 @@
       "frame_index": 270,
       "timestamp_sec": 9.0,
       "counts": {
-        "car": 6,
+        "car": 5,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 6,
+      "total_vehicles": 5,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 6,
+      "detection_count": 5,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8646,
+          "confidence": 0.8636,
           "bbox": [
             549,
             221,
@@ -909,29 +869,29 @@
         },
         {
           "class": "car",
-          "confidence": 0.6438,
+          "confidence": 0.6476,
           "bbox": [
             270,
             222,
-            344,
+            345,
             273
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4937,
+          "confidence": 0.4914,
           "bbox": [
             478,
-            243,
+            242,
             535,
             274
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3704,
+          "confidence": 0.3782,
           "bbox": [
-            457,
+            456,
             222,
             496,
             269
@@ -939,22 +899,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.3115,
+          "confidence": 0.2872,
           "bbox": [
             518,
             233,
             538,
-            266
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2597,
-          "bbox": [
-            446,
-            224,
-            468,
-            242
+            267
           ]
         }
       ]
@@ -976,7 +926,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7618,
+          "confidence": 0.7724,
           "bbox": [
             528,
             222,
@@ -986,7 +936,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6987,
+          "confidence": 0.6922,
           "bbox": [
             283,
             223,
@@ -996,7 +946,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.4043,
+          "confidence": 0.386,
           "bbox": [
             477,
             245,
@@ -1023,7 +973,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.679,
+          "confidence": 0.6816,
           "bbox": [
             291,
             226,
@@ -1033,9 +983,9 @@
         },
         {
           "class": "car",
-          "confidence": 0.3668,
+          "confidence": 0.3839,
           "bbox": [
-            524,
+            522,
             226,
             564,
             265
@@ -1043,17 +993,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.2822,
+          "confidence": 0.2864,
           "bbox": [
-            532,
+            531,
             226,
             564,
-            258
+            260
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2818,
+          "confidence": 0.2657,
           "bbox": [
             460,
             226,
@@ -1080,7 +1030,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6257,
+          "confidence": 0.6204,
           "bbox": [
             506,
             228,
@@ -1090,7 +1040,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6173,
+          "confidence": 0.6005,
           "bbox": [
             298,
             226,
@@ -1100,32 +1050,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.461,
+          "confidence": 0.5105,
           "bbox": [
             746,
             243,
             853,
-            361
+            362
           ]
         },
         {
           "class": "car",
-          "confidence": 0.27,
+          "confidence": 0.2857,
+          "bbox": [
+            460,
+            227,
+            530,
+            276
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2653,
           "bbox": [
             446,
             228,
             465,
             246
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2552,
-          "bbox": [
-            460,
-            227,
-            528,
-            276
           ]
         }
       ]
@@ -1147,27 +1097,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6409,
+          "confidence": 0.6516,
           "bbox": [
             303,
             225,
-            359,
-            266
+            358,
+            265
           ]
         },
         {
           "class": "car",
-          "confidence": 0.615,
+          "confidence": 0.5652,
           "bbox": [
             667,
             218,
             853,
-            365
+            366
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5257,
+          "confidence": 0.5227,
           "bbox": [
             460,
             226,
@@ -1177,12 +1127,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.3583,
+          "confidence": 0.3648,
           "bbox": [
             396,
             226,
             445,
-            256
+            255
           ]
         }
       ]
@@ -1204,49 +1154,49 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8767,
+          "confidence": 0.8811,
           "bbox": [
             620,
             219,
             842,
-            360
+            361
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6032,
+          "confidence": 0.598,
           "bbox": [
             307,
-            226,
-            357,
-            264
+            225,
+            355,
+            263
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5425,
+          "confidence": 0.5671,
           "bbox": [
             635,
             176,
-            703,
+            702,
             229
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5409,
+          "confidence": 0.5424,
           "bbox": [
-            462,
+            461,
             230,
             542,
-            278
+            277
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3755,
+          "confidence": 0.3883,
           "bbox": [
-            395,
+            396,
             227,
             442,
             256
@@ -1258,40 +1208,40 @@
       "frame_index": 360,
       "timestamp_sec": 12.0,
       "counts": {
-        "car": 8,
+        "car": 7,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 8,
+      "total_vehicles": 7,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 8,
+      "detection_count": 7,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8904,
+          "confidence": 0.8926,
           "bbox": [
             587,
             222,
-            744,
+            743,
             316
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6408,
+          "confidence": 0.65,
           "bbox": [
             308,
             225,
-            362,
+            363,
             264
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6143,
+          "confidence": 0.6127,
           "bbox": [
             394,
             224,
@@ -1301,7 +1251,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.3355,
+          "confidence": 0.3334,
           "bbox": [
             447,
             228,
@@ -1311,42 +1261,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.2812,
+          "confidence": 0.3,
           "bbox": [
-            457,
-            227,
-            547,
-            289
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2745,
-          "bbox": [
-            478,
-            241,
-            547,
+            481,
+            245,
+            546,
             288
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2504,
+          "confidence": 0.2627,
+          "bbox": [
+            457,
+            227,
+            548,
+            289
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2595,
           "bbox": [
             447,
             228,
             466,
             253
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2503,
-          "bbox": [
-            491,
-            233,
-            524,
-            255
           ]
         }
       ]
@@ -1368,17 +1308,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8333,
+          "confidence": 0.8315,
           "bbox": [
             554,
-            224,
+            223,
             677,
             295
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6595,
+          "confidence": 0.6471,
           "bbox": [
             309,
             224,
@@ -1388,7 +1328,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.584,
+          "confidence": 0.571,
           "bbox": [
             393,
             226,
@@ -1398,7 +1338,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.4951,
+          "confidence": 0.5065,
           "bbox": [
             465,
             225,
@@ -1408,7 +1348,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.2819,
+          "confidence": 0.2753,
           "bbox": [
             447,
             226,
@@ -1435,27 +1375,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6705,
+          "confidence": 0.6562,
           "bbox": [
             308,
             223,
-            359,
+            360,
             262
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6107,
+          "confidence": 0.6313,
           "bbox": [
             461,
-            223,
+            222,
             573,
             288
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4979,
+          "confidence": 0.5147,
           "bbox": [
             394,
             226,
@@ -1465,17 +1405,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.3664,
+          "confidence": 0.4024,
           "bbox": [
             558,
-            225,
+            224,
             624,
             281
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2927,
+          "confidence": 0.276,
           "bbox": [
             568,
             234,
@@ -1502,7 +1442,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6104,
+          "confidence": 0.6098,
           "bbox": [
             307,
             222,
@@ -1512,7 +1452,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5589,
+          "confidence": 0.545,
           "bbox": [
             468,
             222,
@@ -1522,7 +1462,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.4621,
+          "confidence": 0.4453,
           "bbox": [
             392,
             225,
@@ -1549,27 +1489,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6432,
+          "confidence": 0.6467,
           "bbox": [
-            464,
-            227,
+            465,
+            226,
             595,
             300
           ]
         },
         {
           "class": "car",
-          "confidence": 0.615,
+          "confidence": 0.6107,
           "bbox": [
             306,
-            222,
+            223,
             359,
             262
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5685,
+          "confidence": 0.559,
           "bbox": [
             737,
             224,
@@ -1579,10 +1519,10 @@
         },
         {
           "class": "car",
-          "confidence": 0.4935,
+          "confidence": 0.4912,
           "bbox": [
             397,
-            231,
+            232,
             448,
             263
           ]
@@ -1593,20 +1533,20 @@
       "frame_index": 435,
       "timestamp_sec": 14.5,
       "counts": {
-        "car": 2,
+        "car": 4,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 2,
+      "total_vehicles": 4,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 2,
+      "detection_count": 4,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.5861,
+          "confidence": 0.5946,
           "bbox": [
             305,
             222,
@@ -1616,12 +1556,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.5606,
+          "confidence": 0.5734,
           "bbox": [
-            468,
-            232,
+            467,
+            231,
             605,
             312
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2813,
+          "bbox": [
+            718,
+            233,
+            760,
+            245
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2731,
+          "bbox": [
+            396,
+            237,
+            436,
+            262
           ]
         }
       ]
@@ -1643,17 +1603,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.612,
-          "bbox": [
-            464,
-            223,
-            610,
-            316
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.5907,
+          "confidence": 0.6004,
           "bbox": [
             305,
             223,
@@ -1663,9 +1613,19 @@
         },
         {
           "class": "car",
-          "confidence": 0.2869,
+          "confidence": 0.5932,
           "bbox": [
-            397,
+            464,
+            222,
+            610,
+            316
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2884,
+          "bbox": [
+            396,
             239,
             435,
             263
@@ -1690,40 +1650,40 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6211,
+          "confidence": 0.622,
           "bbox": [
-            473,
-            225,
+            476,
+            226,
             606,
             306
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5923,
+          "confidence": 0.5892,
           "bbox": [
             304,
-            223,
+            222,
             360,
             263
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2894,
+          "confidence": 0.3032,
           "bbox": [
-            397,
-            238,
-            434,
-            264
+            395,
+            239,
+            436,
+            265
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2556,
+          "confidence": 0.2718,
           "bbox": [
             395,
-            237,
+            238,
             449,
             266
           ]
@@ -1747,32 +1707,32 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9023,
+          "confidence": 0.9067,
           "bbox": [
             652,
-            217,
+            218,
             853,
             336
           ]
         },
         {
           "class": "car",
-          "confidence": 0.626,
+          "confidence": 0.6264,
           "bbox": [
-            478,
-            223,
-            605,
-            304
+            303,
+            222,
+            359,
+            264
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5902,
+          "confidence": 0.6147,
           "bbox": [
-            303,
+            477,
             223,
-            359,
-            264
+            605,
+            303
           ]
         }
       ]
@@ -1781,20 +1741,20 @@
       "frame_index": 495,
       "timestamp_sec": 16.5,
       "counts": {
-        "car": 4,
+        "car": 5,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 4,
+      "total_vehicles": 5,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 4,
+      "detection_count": 5,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6978,
+          "confidence": 0.6968,
           "bbox": [
             303,
             223,
@@ -1804,7 +1764,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6392,
+          "confidence": 0.6635,
           "bbox": [
             575,
             221,
@@ -1814,7 +1774,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5561,
+          "confidence": 0.5641,
           "bbox": [
             389,
             223,
@@ -1824,12 +1784,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.3165,
+          "confidence": 0.3355,
           "bbox": [
             478,
-            223,
-            588,
+            222,
+            593,
             299
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2814,
+          "bbox": [
+            478,
+            222,
+            604,
+            323
           ]
         }
       ]
@@ -1851,32 +1821,32 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7205,
+          "confidence": 0.7134,
           "bbox": [
             302,
             226,
-            361,
-            266
+            360,
+            267
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6511,
+          "confidence": 0.5576,
           "bbox": [
-            482,
+            483,
             221,
             615,
-            323
+            322
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2542,
+          "confidence": 0.2579,
           "bbox": [
-            385,
-            223,
-            464,
-            271
+            384,
+            224,
+            452,
+            272
           ]
         }
       ]
@@ -1898,7 +1868,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7365,
+          "confidence": 0.7307,
           "bbox": [
             303,
             225,
@@ -1908,32 +1878,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.658,
+          "confidence": 0.6458,
           "bbox": [
             385,
-            221,
+            222,
             463,
             277
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3925,
+          "confidence": 0.4047,
           "bbox": [
             504,
             256,
-            599,
-            315
+            597,
+            306
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2942,
+          "confidence": 0.2712,
           "bbox": [
             487,
             222,
-            575,
-            285
+            572,
+            284
           ]
         }
       ]
@@ -1955,7 +1925,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8079,
+          "confidence": 0.8092,
           "bbox": [
             303,
             223,
@@ -1965,22 +1935,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.686,
+          "confidence": 0.6939,
           "bbox": [
             382,
             219,
-            469,
+            467,
             278
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4404,
+          "confidence": 0.4209,
           "bbox": [
-            496,
-            224,
+            497,
+            223,
             597,
-            305
+            303
           ]
         }
       ]
@@ -2002,7 +1972,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8024,
+          "confidence": 0.8019,
           "bbox": [
             303,
             223,
@@ -2012,17 +1982,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.754,
+          "confidence": 0.7627,
           "bbox": [
             377,
             220,
             472,
-            282
+            281
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3776,
+          "confidence": 0.3799,
           "bbox": [
             508,
             255,
@@ -2032,10 +2002,10 @@
         },
         {
           "class": "car",
-          "confidence": 0.3704,
+          "confidence": 0.375,
           "bbox": [
             500,
-            230,
+            229,
             594,
             296
           ]
@@ -2059,7 +2029,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8322,
+          "confidence": 0.8388,
           "bbox": [
             500,
             220,
@@ -2069,32 +2039,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.7279,
+          "confidence": 0.7233,
           "bbox": [
             303,
-            223,
+            224,
             360,
             266
           ]
         },
         {
           "class": "car",
-          "confidence": 0.694,
+          "confidence": 0.6868,
           "bbox": [
             368,
-            222,
-            467,
+            223,
+            468,
             284
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5182,
+          "confidence": 0.4985,
           "bbox": [
             472,
-            227,
+            226,
             508,
-            250
+            249
           ]
         }
       ]
@@ -2103,20 +2073,30 @@
       "frame_index": 585,
       "timestamp_sec": 19.5,
       "counts": {
-        "car": 6,
+        "car": 5,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 6,
+      "total_vehicles": 5,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 6,
+      "detection_count": 5,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6169,
+          "confidence": 0.6144,
+          "bbox": [
+            303,
+            223,
+            356,
+            266
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.6004,
           "bbox": [
             464,
             226,
@@ -2126,52 +2106,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.6033,
-          "bbox": [
-            303,
-            224,
-            356,
-            266
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.5053,
+          "confidence": 0.5567,
           "bbox": [
             356,
             223,
             450,
-            283
+            282
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3854,
+          "confidence": 0.3889,
           "bbox": [
             505,
-            220,
+            219,
             591,
             286
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2835,
+          "confidence": 0.2682,
           "bbox": [
             507,
-            252,
-            589,
+            251,
+            588,
             286
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2534,
-          "bbox": [
-            532,
-            228,
-            591,
-            282
           ]
         }
       ]
@@ -2193,9 +2153,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6999,
+          "confidence": 0.7054,
           "bbox": [
-            302,
+            303,
             224,
             357,
             265
@@ -2203,27 +2163,27 @@
         },
         {
           "class": "car",
-          "confidence": 0.5458,
+          "confidence": 0.552,
           "bbox": [
             465,
-            227,
+            226,
             493,
-            248
+            247
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4071,
+          "confidence": 0.4465,
           "bbox": [
             347,
             221,
-            473,
-            289
+            474,
+            288
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3879,
+          "confidence": 0.3781,
           "bbox": [
             569,
             223,
@@ -2233,19 +2193,19 @@
         },
         {
           "class": "car",
-          "confidence": 0.3718,
+          "confidence": 0.3688,
           "bbox": [
             516,
-            254,
-            585,
+            244,
+            587,
             284
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3628,
+          "confidence": 0.3563,
           "bbox": [
-            508,
+            509,
             223,
             590,
             285
@@ -2253,12 +2213,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.2706,
+          "confidence": 0.2819,
           "bbox": [
             346,
             240,
-            426,
-            287
+            427,
+            286
           ]
         }
       ]
@@ -2280,57 +2240,57 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.6774,
+          "confidence": 0.6997,
           "bbox": [
-            334,
+            333,
             221,
-            474,
+            475,
             293
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6589,
+          "confidence": 0.6643,
           "bbox": [
             302,
             224,
-            352,
+            353,
             266
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3837,
+          "confidence": 0.4061,
           "bbox": [
             512,
             221,
             589,
-            283
+            282
           ]
         },
         {
           "class": "car",
-          "confidence": 0.333,
+          "confidence": 0.3276,
           "bbox": [
             592,
-            225,
-            619,
+            226,
+            618,
             239
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3237,
+          "confidence": 0.3111,
           "bbox": [
             517,
-            246,
+            245,
             588,
             281
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2854,
+          "confidence": 0.3055,
           "bbox": [
             466,
             227,
@@ -2340,11 +2300,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.2761,
+          "confidence": 0.2584,
           "bbox": [
-            512,
+            511,
             236,
-            541,
+            540,
             272
           ]
         }
@@ -2367,7 +2327,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8006,
+          "confidence": 0.8089,
           "bbox": [
             315,
             221,
@@ -2377,17 +2337,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.7146,
+          "confidence": 0.7306,
           "bbox": [
             514,
-            219,
+            218,
             591,
             275
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6193,
+          "confidence": 0.6248,
           "bbox": [
             303,
             224,
@@ -2397,7 +2357,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.3038,
+          "confidence": 0.3073,
           "bbox": [
             461,
             228,
@@ -2424,17 +2384,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8183,
+          "confidence": 0.8202,
           "bbox": [
             293,
-            221,
+            220,
             471,
             303
           ]
         },
         {
           "class": "car",
-          "confidence": 0.663,
+          "confidence": 0.6599,
           "bbox": [
             517,
             221,
@@ -2444,7 +2404,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.4278,
+          "confidence": 0.4471,
           "bbox": [
             697,
             224,
@@ -2454,17 +2414,27 @@
         },
         {
           "class": "car",
-          "confidence": 0.3156,
+          "confidence": 0.3301,
           "bbox": [
             695,
             224,
             772,
-            249
+            250
           ]
         },
         {
           "class": "car",
-          "confidence": 0.303,
+          "confidence": 0.2884,
+          "bbox": [
+            655,
+            228,
+            696,
+            243
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2765,
           "bbox": [
             440,
             228,
@@ -2474,17 +2444,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.2972,
-          "bbox": [
-            655,
-            228,
-            697,
-            242
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.2536,
+          "confidence": 0.2594,
           "bbox": [
             460,
             227,
@@ -2511,7 +2471,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7527,
+          "confidence": 0.7657,
           "bbox": [
             275,
             223,
@@ -2521,17 +2481,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.5914,
+          "confidence": 0.5935,
           "bbox": [
             519,
             223,
             591,
-            273
+            274
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5564,
+          "confidence": 0.5412,
           "bbox": [
             783,
             224,
@@ -2541,7 +2501,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.4556,
+          "confidence": 0.4617,
           "bbox": [
             700,
             229,
@@ -2551,22 +2511,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.4554,
+          "confidence": 0.4097,
           "bbox": [
             0,
-            278,
-            103,
+            276,
+            102,
             396
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3936,
+          "confidence": 0.3958,
           "bbox": [
-            459,
+            460,
             227,
             482,
-            244
+            243
           ]
         }
       ]
@@ -2588,17 +2548,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7644,
+          "confidence": 0.7607,
           "bbox": [
             252,
-            234,
+            235,
             467,
             310
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6758,
+          "confidence": 0.6629,
           "bbox": [
             518,
             223,
@@ -2608,22 +2568,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.6186,
+          "confidence": 0.5174,
+          "bbox": [
+            767,
+            231,
+            831,
+            250
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4428,
           "bbox": [
             0,
             209,
             173,
             396
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.5214,
-          "bbox": [
-            767,
-            231,
-            832,
-            250
           ]
         }
       ]
@@ -2645,17 +2605,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8604,
+          "confidence": 0.8567,
           "bbox": [
             229,
-            224,
+            225,
             462,
             316
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7929,
+          "confidence": 0.7441,
           "bbox": [
             0,
             208,
@@ -2665,22 +2625,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.3819,
+          "confidence": 0.3685,
           "bbox": [
             519,
             249,
             587,
-            281
+            280
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2624,
+          "confidence": 0.2633,
           "bbox": [
             521,
             222,
             590,
-            271
+            272
           ]
         }
       ]
@@ -2702,7 +2662,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.906,
+          "confidence": 0.9034,
           "bbox": [
             208,
             221,
@@ -2712,39 +2672,39 @@
         },
         {
           "class": "car",
-          "confidence": 0.8487,
+          "confidence": 0.8453,
           "bbox": [
             750,
-            222,
+            221,
             853,
             363
           ]
         },
         {
           "class": "car",
-          "confidence": 0.828,
+          "confidence": 0.8045,
           "bbox": [
             0,
-            208,
+            207,
             178,
             402
           ]
         },
         {
           "class": "car",
-          "confidence": 0.689,
+          "confidence": 0.6831,
           "bbox": [
-            517,
-            222,
+            518,
+            223,
             590,
             276
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2532,
+          "confidence": 0.2522,
           "bbox": [
-            446,
+            447,
             227,
             473,
             243
@@ -2769,41 +2729,41 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8833,
+          "confidence": 0.8842,
           "bbox": [
             189,
             222,
-            441,
+            442,
             320
           ]
         },
         {
           "class": "car",
-          "confidence": 0.8227,
+          "confidence": 0.8094,
           "bbox": [
             0,
-            207,
-            178,
+            206,
+            179,
             401
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7674,
+          "confidence": 0.7656,
           "bbox": [
             703,
             215,
             853,
-            376
+            373
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6718,
+          "confidence": 0.6458,
           "bbox": [
-            518,
-            223,
-            588,
+            517,
+            224,
+            589,
             274
           ]
         }
@@ -2826,17 +2786,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8813,
+          "confidence": 0.8796,
           "bbox": [
             177,
-            222,
-            435,
-            322
+            223,
+            434,
+            320
           ]
         },
         {
           "class": "car",
-          "confidence": 0.8667,
+          "confidence": 0.8729,
           "bbox": [
             678,
             219,
@@ -2846,31 +2806,31 @@
         },
         {
           "class": "car",
-          "confidence": 0.7827,
+          "confidence": 0.7526,
           "bbox": [
             0,
-            207,
+            206,
             178,
             402
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4522,
+          "confidence": 0.4531,
           "bbox": [
             519,
-            247,
-            582,
-            275
+            244,
+            587,
+            277
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2714,
+          "confidence": 0.2582,
           "bbox": [
             656,
             227,
-            687,
+            686,
             241
           ]
         }
@@ -2893,7 +2853,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8758,
+          "confidence": 0.8785,
           "bbox": [
             176,
             220,
@@ -2903,9 +2863,9 @@
         },
         {
           "class": "car",
-          "confidence": 0.8321,
+          "confidence": 0.8403,
           "bbox": [
-            658,
+            659,
             218,
             853,
             350
@@ -2913,31 +2873,31 @@
         },
         {
           "class": "car",
-          "confidence": 0.7848,
+          "confidence": 0.7882,
           "bbox": [
             0,
-            205,
+            206,
             178,
-            397
+            398
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4292,
+          "confidence": 0.359,
           "bbox": [
             522,
-            245,
-            582,
+            244,
+            584,
             274
           ]
         },
         {
           "class": "car",
-          "confidence": 0.267,
+          "confidence": 0.3226,
           "bbox": [
             521,
-            237,
-            588,
+            232,
+            589,
             274
           ]
         }
@@ -2960,7 +2920,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8626,
+          "confidence": 0.868,
+          "bbox": [
+            647,
+            216,
+            849,
+            342
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.8656,
           "bbox": [
             178,
             220,
@@ -2970,31 +2940,21 @@
         },
         {
           "class": "car",
-          "confidence": 0.8594,
-          "bbox": [
-            647,
-            216,
-            849,
-            341
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.624,
+          "confidence": 0.6384,
           "bbox": [
             0,
             206,
             177,
-            398
+            399
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3099,
+          "confidence": 0.2658,
           "bbox": [
             525,
             248,
-            582,
+            583,
             272
           ]
         }
@@ -3017,37 +2977,37 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9125,
+          "confidence": 0.9123,
           "bbox": [
             637,
-            215,
+            216,
             829,
             334
           ]
         },
         {
           "class": "car",
-          "confidence": 0.866,
+          "confidence": 0.8672,
           "bbox": [
             184,
-            220,
+            219,
             444,
             320
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7521,
+          "confidence": 0.7339,
           "bbox": [
             0,
-            206,
+            205,
             176,
             396
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5704,
+          "confidence": 0.5922,
           "bbox": [
             822,
             234,
@@ -3057,20 +3017,20 @@
         },
         {
           "class": "car",
-          "confidence": 0.4248,
+          "confidence": 0.4383,
           "bbox": [
             522,
-            232,
+            231,
             589,
             273
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3124,
+          "confidence": 0.2895,
           "bbox": [
             524,
-            243,
+            242,
             587,
             273
           ]
@@ -3094,7 +3054,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9226,
+          "confidence": 0.9233,
           "bbox": [
             628,
             216,
@@ -3104,30 +3064,30 @@
         },
         {
           "class": "car",
-          "confidence": 0.8805,
+          "confidence": 0.8766,
           "bbox": [
             196,
             219,
             456,
-            320
+            321
           ]
         },
         {
           "class": "car",
-          "confidence": 0.743,
+          "confidence": 0.6911,
           "bbox": [
             0,
             205,
             176,
-            397
+            401
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3982,
+          "confidence": 0.3739,
           "bbox": [
             527,
-            243,
+            242,
             586,
             273
           ]
@@ -3151,17 +3111,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9189,
+          "confidence": 0.9204,
           "bbox": [
             618,
             218,
             790,
-            323
+            322
           ]
         },
         {
           "class": "car",
-          "confidence": 0.9028,
+          "confidence": 0.9024,
           "bbox": [
             212,
             222,
@@ -3171,17 +3131,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.7742,
+          "confidence": 0.7483,
           "bbox": [
             0,
             205,
             176,
-            400
+            402
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4805,
+          "confidence": 0.4729,
           "bbox": [
             521,
             240,
@@ -3208,7 +3168,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9087,
+          "confidence": 0.9094,
           "bbox": [
             607,
             219,
@@ -3218,7 +3178,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.8954,
+          "confidence": 0.8991,
           "bbox": [
             239,
             219,
@@ -3228,9 +3188,9 @@
         },
         {
           "class": "car",
-          "confidence": 0.7662,
+          "confidence": 0.7654,
           "bbox": [
-            519,
+            520,
             223,
             604,
             272
@@ -3238,7 +3198,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5639,
+          "confidence": 0.5236,
           "bbox": [
             0,
             206,
@@ -3265,7 +3225,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8746,
+          "confidence": 0.876,
           "bbox": [
             595,
             219,
@@ -3275,30 +3235,30 @@
         },
         {
           "class": "car",
-          "confidence": 0.8344,
+          "confidence": 0.8333,
           "bbox": [
-            277,
+            276,
             216,
-            538,
+            539,
             320
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6693,
+          "confidence": 0.6482,
           "bbox": [
             0,
             204,
             182,
-            408
+            410
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2551,
+          "confidence": 0.2798,
           "bbox": [
             515,
-            227,
+            226,
             578,
             271
           ]
@@ -3322,17 +3282,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8441,
+          "confidence": 0.8433,
           "bbox": [
             586,
-            219,
+            218,
             719,
             302
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7473,
+          "confidence": 0.6667,
           "bbox": [
             0,
             203,
@@ -3342,31 +3302,31 @@
         },
         {
           "class": "car",
-          "confidence": 0.6283,
+          "confidence": 0.6598,
           "bbox": [
-            342,
+            350,
             219,
-            600,
+            597,
             323
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4714,
+          "confidence": 0.4754,
           "bbox": [
             303,
-            222,
+            223,
             352,
             266
           ]
         },
         {
           "class": "motorcycle",
-          "confidence": 0.2872,
+          "confidence": 0.3044,
           "bbox": [
-            354,
-            261,
-            406,
+            355,
+            265,
+            405,
             318
           ]
         }
@@ -3389,7 +3349,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8664,
+          "confidence": 0.8662,
           "bbox": [
             362,
             218,
@@ -3399,9 +3359,9 @@
         },
         {
           "class": "car",
-          "confidence": 0.7802,
+          "confidence": 0.7914,
           "bbox": [
-            583,
+            584,
             220,
             702,
             287
@@ -3409,7 +3369,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6691,
+          "confidence": 0.6655,
           "bbox": [
             304,
             222,
@@ -3419,32 +3379,32 @@
         },
         {
           "class": "car",
-          "confidence": 0.6247,
+          "confidence": 0.614,
           "bbox": [
             0,
             203,
-            216,
+            215,
             395
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5402,
+          "confidence": 0.5626,
           "bbox": [
-            698,
+            697,
             223,
-            853,
+            854,
             289
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2956,
+          "confidence": 0.2987,
           "bbox": [
             1,
-            196,
+            195,
             817,
-            470
+            469
           ]
         }
       ]
@@ -3466,7 +3426,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8916,
+          "confidence": 0.8897,
           "bbox": [
             389,
             219,
@@ -3476,17 +3436,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.842,
+          "confidence": 0.8269,
           "bbox": [
             0,
-            202,
+            203,
             241,
-            394
+            396
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7234,
+          "confidence": 0.7064,
           "bbox": [
             587,
             220,
@@ -3496,11 +3456,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.5448,
+          "confidence": 0.5755,
           "bbox": [
             303,
             222,
-            357,
+            358,
             266
           ]
         }
@@ -3523,7 +3483,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9195,
+          "confidence": 0.923,
           "bbox": [
             399,
             220,
@@ -3533,40 +3493,40 @@
         },
         {
           "class": "car",
-          "confidence": 0.88,
+          "confidence": 0.8652,
           "bbox": [
             0,
             207,
             270,
-            393
+            392
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6507,
+          "confidence": 0.6628,
           "bbox": [
             581,
             221,
-            674,
+            675,
             267
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5825,
+          "confidence": 0.5596,
           "bbox": [
             303,
             223,
-            357,
+            356,
             266
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3737,
+          "confidence": 0.354,
           "bbox": [
             810,
-            286,
+            285,
             853,
             404
           ]
@@ -3590,27 +3550,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9166,
+          "confidence": 0.9211,
           "bbox": [
-            31,
+            30,
             210,
             294,
-            376
+            375
           ]
         },
         {
           "class": "car",
-          "confidence": 0.9124,
+          "confidence": 0.9141,
           "bbox": [
-            398,
+            399,
             222,
-            696,
+            695,
             336
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6059,
+          "confidence": 0.6115,
           "bbox": [
             581,
             222,
@@ -3620,17 +3580,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.5964,
+          "confidence": 0.6057,
           "bbox": [
-            304,
+            303,
             224,
             357,
-            267
+            266
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4079,
+          "confidence": 0.4104,
           "bbox": [
             811,
             287,
@@ -3657,47 +3617,47 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9318,
+          "confidence": 0.9314,
+          "bbox": [
+            400,
+            221,
+            701,
+            337
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.9312,
           "bbox": [
             88,
-            213,
+            212,
             315,
             368
           ]
         },
         {
           "class": "car",
-          "confidence": 0.9313,
-          "bbox": [
-            400,
-            221,
-            702,
-            337
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.6388,
+          "confidence": 0.639,
           "bbox": [
             304,
-            227,
+            226,
             355,
             268
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5651,
+          "confidence": 0.5734,
           "bbox": [
             582,
-            223,
+            224,
             646,
             259
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3239,
+          "confidence": 0.321,
           "bbox": [
             827,
             233,
@@ -3724,7 +3684,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9189,
+          "confidence": 0.9184,
           "bbox": [
             142,
             214,
@@ -3734,21 +3694,21 @@
         },
         {
           "class": "car",
-          "confidence": 0.9177,
+          "confidence": 0.9181,
           "bbox": [
             410,
             220,
             722,
-            345
+            344
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5506,
+          "confidence": 0.5922,
           "bbox": [
             316,
             225,
-            366,
+            365,
             269
           ]
         }
@@ -3771,7 +3731,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9117,
+          "confidence": 0.9136,
           "bbox": [
             427,
             221,
@@ -3781,11 +3741,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.8896,
+          "confidence": 0.8832,
           "bbox": [
-            195,
+            196,
             214,
-            377,
+            378,
             337
           ]
         }
@@ -3808,7 +3768,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9184,
+          "confidence": 0.917,
           "bbox": [
             443,
             216,
@@ -3818,12 +3778,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.9078,
+          "confidence": 0.9107,
           "bbox": [
             251,
             212,
             412,
-            321
+            320
           ]
         }
       ]
@@ -3845,22 +3805,22 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9348,
+          "confidence": 0.9333,
           "bbox": [
             443,
-            219,
+            220,
             782,
             356
           ]
         },
         {
           "class": "car",
-          "confidence": 0.8147,
+          "confidence": 0.8289,
           "bbox": [
             291,
             217,
             429,
-            310
+            309
           ]
         }
       ]
@@ -3882,7 +3842,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9332,
+          "confidence": 0.9294,
           "bbox": [
             443,
             219,
@@ -3892,7 +3852,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.7452,
+          "confidence": 0.7486,
           "bbox": [
             322,
             219,
@@ -3919,7 +3879,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9261,
+          "confidence": 0.9219,
           "bbox": [
             442,
             219,
@@ -3929,17 +3889,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.5753,
+          "confidence": 0.6069,
           "bbox": [
             349,
             221,
-            430,
+            431,
             292
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4267,
+          "confidence": 0.4674,
           "bbox": [
             335,
             223,
@@ -3966,7 +3926,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9328,
+          "confidence": 0.9309,
           "bbox": [
             442,
             219,
@@ -3976,7 +3936,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.5644,
+          "confidence": 0.5876,
           "bbox": [
             335,
             223,
@@ -3986,12 +3946,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.4305,
+          "confidence": 0.4566,
           "bbox": [
             373,
             222,
             439,
-            281
+            282
           ]
         }
       ]
@@ -4013,27 +3973,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8969,
+          "confidence": 0.9026,
           "bbox": [
             441,
             218,
-            782,
+            783,
             356
           ]
         },
         {
           "class": "car",
-          "confidence": 0.715,
+          "confidence": 0.7373,
           "bbox": [
             335,
             223,
-            391,
+            392,
             266
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6956,
+          "confidence": 0.7157,
           "bbox": [
             389,
             222,
@@ -4060,7 +4020,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9118,
+          "confidence": 0.91,
           "bbox": [
             438,
             218,
@@ -4070,7 +4030,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6699,
+          "confidence": 0.6883,
           "bbox": [
             335,
             223,
@@ -4080,11 +4040,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.3163,
+          "confidence": 0.3558,
           "bbox": [
             407,
             222,
-            467,
+            466,
             277
           ]
         }
@@ -4107,7 +4067,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9349,
+          "confidence": 0.9339,
           "bbox": [
             431,
             219,
@@ -4117,21 +4077,21 @@
         },
         {
           "class": "car",
-          "confidence": 0.7076,
+          "confidence": 0.7355,
           "bbox": [
-            334,
+            335,
             223,
-            398,
+            399,
             267
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3532,
+          "confidence": 0.3648,
           "bbox": [
             419,
             221,
-            487,
+            489,
             269
           ]
         }
@@ -4154,7 +4114,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9254,
+          "confidence": 0.9259,
           "bbox": [
             428,
             218,
@@ -4164,7 +4124,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.7345,
+          "confidence": 0.7481,
           "bbox": [
             335,
             223,
@@ -4191,9 +4151,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9304,
+          "confidence": 0.929,
           "bbox": [
-            415,
+            416,
             218,
             766,
             357
@@ -4201,7 +4161,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.7419,
+          "confidence": 0.7518,
           "bbox": [
             335,
             223,
@@ -4228,7 +4188,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9315,
+          "confidence": 0.9344,
           "bbox": [
             408,
             218,
@@ -4238,12 +4198,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.7542,
+          "confidence": 0.7566,
           "bbox": [
             335,
             223,
             399,
-            268
+            267
           ]
         }
       ]
@@ -4265,7 +4225,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9394,
+          "confidence": 0.939,
           "bbox": [
             410,
             219,
@@ -4275,7 +4235,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.745,
+          "confidence": 0.7519,
           "bbox": [
             335,
             223,
@@ -4302,19 +4262,19 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9363,
+          "confidence": 0.9374,
           "bbox": [
             408,
             219,
             751,
-            356
+            355
           ]
         },
         {
           "class": "car",
-          "confidence": 0.74,
+          "confidence": 0.743,
           "bbox": [
-            334,
+            335,
             223,
             398,
             267
@@ -4322,7 +4282,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.2737,
+          "confidence": 0.3062,
           "bbox": [
             768,
             236,
@@ -4349,9 +4309,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9291,
+          "confidence": 0.9271,
           "bbox": [
-            410,
+            409,
             219,
             756,
             359
@@ -4359,11 +4319,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.7871,
+          "confidence": 0.7886,
           "bbox": [
-            334,
+            335,
             223,
-            395,
+            396,
             267
           ]
         }
@@ -4386,7 +4346,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9307,
+          "confidence": 0.9298,
           "bbox": [
             408,
             217,
@@ -4396,7 +4356,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.7392,
+          "confidence": 0.7553,
           "bbox": [
             335,
             223,
@@ -4423,9 +4383,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9304,
+          "confidence": 0.934,
           "bbox": [
-            417,
+            416,
             219,
             765,
             358
@@ -4433,11 +4393,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.7242,
+          "confidence": 0.7262,
           "bbox": [
             335,
             223,
-            394,
+            393,
             267
           ]
         }
@@ -4460,7 +4420,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9266,
+          "confidence": 0.9221,
           "bbox": [
             431,
             219,
@@ -4470,7 +4430,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6759,
+          "confidence": 0.6984,
           "bbox": [
             334,
             223,
@@ -4480,12 +4440,12 @@
         },
         {
           "class": "car",
-          "confidence": 0.4587,
+          "confidence": 0.4983,
           "bbox": [
             0,
             259,
             134,
-            396
+            395
           ]
         }
       ]
@@ -4507,27 +4467,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9283,
+          "confidence": 0.9279,
           "bbox": [
             433,
             218,
-            776,
+            775,
             355
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7632,
+          "confidence": 0.7637,
           "bbox": [
             0,
             208,
             196,
-            398
+            399
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6814,
+          "confidence": 0.6826,
           "bbox": [
             335,
             223,
@@ -4554,37 +4514,37 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8931,
+          "confidence": 0.9052,
           "bbox": [
-            421,
+            422,
             218,
             771,
-            354
+            355
           ]
         },
         {
           "class": "car",
-          "confidence": 0.8241,
+          "confidence": 0.82,
           "bbox": [
             0,
             201,
             237,
-            395
+            396
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6668,
+          "confidence": 0.6781,
           "bbox": [
             334,
             223,
-            393,
+            394,
             267
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.3987,
+          "confidence": 0.4309,
           "bbox": [
             742,
             209,
@@ -4611,9 +4571,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.917,
+          "confidence": 0.9124,
           "bbox": [
-            412,
+            411,
             219,
             751,
             348
@@ -4621,27 +4581,27 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.8715,
+          "confidence": 0.8692,
           "bbox": [
-            757,
-            207,
+            758,
+            206,
             818,
             345
           ]
         },
         {
           "class": "car",
-          "confidence": 0.8387,
+          "confidence": 0.8448,
           "bbox": [
             0,
-            179,
+            180,
             260,
             397
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7274,
+          "confidence": 0.7356,
           "bbox": [
             335,
             223,
@@ -4651,11 +4611,11 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.3956,
+          "confidence": 0.415,
           "bbox": [
-            622,
+            621,
             214,
-            654,
+            655,
             244
           ]
         }
@@ -4678,9 +4638,9 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9033,
+          "confidence": 0.9074,
           "bbox": [
-            390,
+            389,
             217,
             718,
             349
@@ -4688,7 +4648,7 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.8664,
+          "confidence": 0.8677,
           "bbox": [
             740,
             202,
@@ -4698,27 +4658,27 @@
         },
         {
           "class": "car",
-          "confidence": 0.8109,
+          "confidence": 0.8054,
           "bbox": [
             0,
-            183,
+            184,
             263,
-            397
+            398
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7479,
+          "confidence": 0.7466,
           "bbox": [
             335,
             223,
-            398,
+            399,
             267
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.6838,
+          "confidence": 0.6898,
           "bbox": [
             615,
             213,
@@ -4745,27 +4705,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.9232,
+          "confidence": 0.9261,
           "bbox": [
             365,
             218,
-            691,
-            343
+            690,
+            344
           ]
         },
         {
           "class": "car",
-          "confidence": 0.8242,
+          "confidence": 0.8269,
           "bbox": [
             0,
-            194,
-            261,
-            397
+            195,
+            262,
+            398
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.7612,
+          "confidence": 0.7721,
           "bbox": [
             626,
             214,
@@ -4775,11 +4735,11 @@
         },
         {
           "class": "car",
-          "confidence": 0.6624,
+          "confidence": 0.6445,
           "bbox": [
-            336,
+            335,
             223,
-            399,
+            398,
             268
           ]
         }
@@ -4802,27 +4762,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8407,
+          "confidence": 0.8337,
           "bbox": [
             0,
-            181,
+            190,
             261,
             398
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.6538,
+          "confidence": 0.6368,
           "bbox": [
             584,
             200,
-            646,
-            348
+            645,
+            350
           ]
         },
         {
           "class": "car",
-          "confidence": 0.5817,
+          "confidence": 0.5785,
           "bbox": [
             334,
             223,
@@ -4832,20 +4792,20 @@
         },
         {
           "class": "car",
-          "confidence": 0.5644,
+          "confidence": 0.5149,
           "bbox": [
             336,
-            216,
-            657,
-            344
+            217,
+            618,
+            339
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.4529,
+          "confidence": 0.4364,
           "bbox": [
             635,
-            215,
+            216,
             665,
             275
           ]
@@ -4856,30 +4816,30 @@
       "frame_index": 1320,
       "timestamp_sec": 44.0,
       "counts": {
-        "car": 2,
+        "car": 3,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 3
       },
-      "total_vehicles": 2,
+      "total_vehicles": 3,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 3,
-      "detection_count": 5,
+      "detection_count": 6,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8458,
+          "confidence": 0.85,
           "bbox": [
             0,
-            187,
+            194,
             261,
-            398
+            400
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.7204,
+          "confidence": 0.7224,
           "bbox": [
             624,
             213,
@@ -4889,32 +4849,42 @@
         },
         {
           "class": "car",
-          "confidence": 0.6669,
+          "confidence": 0.6253,
           "bbox": [
             305,
-            216,
-            620,
-            340
+            217,
+            619,
+            338
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.452,
+          "confidence": 0.4429,
           "bbox": [
-            497,
+            498,
             207,
             551,
-            282
+            284
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.4055,
+          "confidence": 0.418,
           "bbox": [
-            497,
+            498,
             207,
             551,
-            328
+            325
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.2594,
+          "bbox": [
+            305,
+            218,
+            525,
+            332
           ]
         }
       ]
@@ -4927,26 +4897,26 @@
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
-        "pedestrian": 1
+        "pedestrian": 2
       },
       "total_vehicles": 2,
       "two_wheeler_share_pct": 0.0,
-      "pedestrian_count": 1,
-      "detection_count": 3,
+      "pedestrian_count": 2,
+      "detection_count": 4,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8532,
+          "confidence": 0.8556,
           "bbox": [
             0,
-            202,
+            193,
             259,
-            397
+            400
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7407,
+          "confidence": 0.7533,
           "bbox": [
             274,
             217,
@@ -4956,12 +4926,22 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.658,
+          "confidence": 0.6381,
           "bbox": [
             604,
             213,
             627,
             280
+          ]
+        },
+        {
+          "class": "pedestrian",
+          "confidence": 0.2924,
+          "bbox": [
+            450,
+            197,
+            514,
+            345
           ]
         }
       ]
@@ -4983,27 +4963,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8423,
+          "confidence": 0.8407,
           "bbox": [
             0,
-            203,
+            202,
             251,
-            392
+            393
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7218,
+          "confidence": 0.7152,
           "bbox": [
-            240,
+            241,
             214,
-            554,
+            553,
             342
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.6963,
+          "confidence": 0.7064,
           "bbox": [
             575,
             214,
@@ -5013,17 +4993,17 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.5093,
+          "confidence": 0.5487,
           "bbox": [
-            438,
-            196,
+            439,
+            197,
             489,
-            324
+            327
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.3393,
+          "confidence": 0.3331,
           "bbox": [
             440,
             197,
@@ -5033,7 +5013,7 @@
         },
         {
           "class": "motorcycle",
-          "confidence": 0.2697,
+          "confidence": 0.2676,
           "bbox": [
             241,
             217,
@@ -5060,52 +5040,52 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.81,
+          "confidence": 0.8327,
           "bbox": [
             0,
-            200,
+            201,
             237,
             394
           ]
         },
         {
-          "class": "car",
-          "confidence": 0.5039,
+          "class": "pedestrian",
+          "confidence": 0.5709,
           "bbox": [
-            216,
-            219,
-            525,
+            427,
+            195,
+            487,
+            317
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.4831,
+          "bbox": [
+            215,
+            218,
+            526,
             333
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.4965,
+          "confidence": 0.408,
           "bbox": [
-            426,
-            195,
-            487,
-            315
+            546,
+            215,
+            568,
+            276
           ]
         },
         {
           "class": "car",
-          "confidence": 0.4401,
+          "confidence": 0.3957,
           "bbox": [
             783,
-            233,
-            850,
+            234,
+            849,
             250
-          ]
-        },
-        {
-          "class": "pedestrian",
-          "confidence": 0.3835,
-          "bbox": [
-            545,
-            216,
-            568,
-            274
           ]
         }
       ]
@@ -5127,27 +5107,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7901,
+          "confidence": 0.7846,
           "bbox": [
             0,
-            202,
+            201,
             221,
             397
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7552,
+          "confidence": 0.726,
           "bbox": [
             201,
             219,
-            486,
+            483,
             333
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.6492,
+          "confidence": 0.6664,
           "bbox": [
             513,
             213,
@@ -5156,8 +5136,18 @@
           ]
         },
         {
+          "class": "pedestrian",
+          "confidence": 0.4074,
+          "bbox": [
+            421,
+            196,
+            483,
+            324
+          ]
+        },
+        {
           "class": "car",
-          "confidence": 0.3694,
+          "confidence": 0.362,
           "bbox": [
             807,
             249,
@@ -5167,32 +5157,22 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.3106,
+          "confidence": 0.3503,
           "bbox": [
-            422,
+            421,
             197,
-            478,
-            272
+            481,
+            278
           ]
         },
         {
           "class": "motorcycle",
-          "confidence": 0.2953,
+          "confidence": 0.3072,
           "bbox": [
             462,
-            257,
-            509,
-            317
-          ]
-        },
-        {
-          "class": "pedestrian",
-          "confidence": 0.283,
-          "bbox": [
-            422,
-            197,
-            478,
-            319
+            258,
+            508,
+            318
           ]
         }
       ]
@@ -5214,7 +5194,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8257,
+          "confidence": 0.8236,
           "bbox": [
             0,
             207,
@@ -5224,22 +5204,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.7495,
+          "confidence": 0.7542,
           "bbox": [
             194,
             222,
             502,
-            334
+            335
           ]
         },
         {
           "class": "car",
-          "confidence": 0.528,
+          "confidence": 0.5009,
           "bbox": [
             791,
             229,
             853,
-            345
+            344
           ]
         }
       ]
@@ -5261,27 +5241,27 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.8153,
+          "confidence": 0.8116,
           "bbox": [
             0,
             211,
             193,
-            398
+            399
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.7421,
+          "confidence": 0.7181,
           "bbox": [
             415,
             202,
-            479,
+            478,
             317
           ]
         },
         {
           "class": "car",
-          "confidence": 0.728,
+          "confidence": 0.7093,
           "bbox": [
             775,
             222,
@@ -5291,7 +5271,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.6139,
+          "confidence": 0.6313,
           "bbox": [
             223,
             216,
@@ -5301,21 +5281,21 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.3871,
+          "confidence": 0.4139,
           "bbox": [
             460,
             215,
             481,
-            278
+            279
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3191,
+          "confidence": 0.3212,
           "bbox": [
             222,
-            213,
-            529,
+            214,
+            528,
             332
           ]
         }
@@ -5337,38 +5317,38 @@
       "detection_count": 5,
       "detections": [
         {
-          "class": "car",
-          "confidence": 0.8183,
-          "bbox": [
-            0,
-            211,
-            193,
-            398
-          ]
-        },
-        {
           "class": "pedestrian",
-          "confidence": 0.8175,
+          "confidence": 0.8205,
           "bbox": [
             439,
-            201,
-            510,
+            200,
+            511,
             310
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6996,
+          "confidence": 0.8175,
           "bbox": [
-            761,
-            220,
-            853,
-            336
+            0,
+            211,
+            193,
+            399
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3587,
+          "confidence": 0.6819,
+          "bbox": [
+            761,
+            220,
+            853,
+            335
+          ]
+        },
+        {
+          "class": "car",
+          "confidence": 0.3717,
           "bbox": [
             772,
             235,
@@ -5378,12 +5358,12 @@
         },
         {
           "class": "motorcycle",
-          "confidence": 0.3133,
+          "confidence": 0.2928,
           "bbox": [
-            316,
-            249,
-            409,
-            326
+            317,
+            250,
+            408,
+            325
           ]
         }
       ]
@@ -5405,17 +5385,17 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7909,
+          "confidence": 0.7893,
           "bbox": [
             0,
             211,
             193,
-            399
+            400
           ]
         },
         {
           "class": "car",
-          "confidence": 0.6574,
+          "confidence": 0.6675,
           "bbox": [
             335,
             222,
@@ -5425,22 +5405,22 @@
         },
         {
           "class": "car",
-          "confidence": 0.537,
+          "confidence": 0.5283,
           "bbox": [
             750,
             221,
             853,
-            370
+            350
           ]
         },
         {
           "class": "car",
-          "confidence": 0.481,
+          "confidence": 0.4828,
           "bbox": [
             383,
             221,
             585,
-            303
+            308
           ]
         }
       ]
@@ -5449,20 +5429,20 @@
       "frame_index": 1455,
       "timestamp_sec": 48.5,
       "counts": {
-        "car": 6,
+        "car": 5,
         "motorcycle": 0,
         "bus": 0,
         "truck": 0,
         "pedestrian": 0
       },
-      "total_vehicles": 6,
+      "total_vehicles": 5,
       "two_wheeler_share_pct": 0.0,
       "pedestrian_count": 0,
-      "detection_count": 6,
+      "detection_count": 5,
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7903,
+          "confidence": 0.7822,
           "bbox": [
             0,
             209,
@@ -5472,7 +5452,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.7822,
+          "confidence": 0.7558,
           "bbox": [
             335,
             222,
@@ -5482,40 +5462,30 @@
         },
         {
           "class": "car",
-          "confidence": 0.605,
+          "confidence": 0.6251,
           "bbox": [
-            739,
-            221,
+            740,
+            220,
             853,
-            362
+            347
           ]
         },
         {
           "class": "car",
-          "confidence": 0.345,
-          "bbox": [
-            458,
-            225,
-            508,
-            280
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.3449,
+          "confidence": 0.3033,
           "bbox": [
             458,
             219,
             574,
-            284
+            286
           ]
         },
         {
           "class": "car",
-          "confidence": 0.2564,
+          "confidence": 0.2646,
           "bbox": [
             458,
-            247,
+            227,
             508,
             281
           ]
@@ -5539,7 +5509,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7639,
+          "confidence": 0.761,
           "bbox": [
             0,
             208,
@@ -5549,17 +5519,7 @@
         },
         {
           "class": "car",
-          "confidence": 0.7373,
-          "bbox": [
-            730,
-            221,
-            853,
-            323
-          ]
-        },
-        {
-          "class": "car",
-          "confidence": 0.7309,
+          "confidence": 0.7367,
           "bbox": [
             335,
             223,
@@ -5568,20 +5528,30 @@
           ]
         },
         {
+          "class": "car",
+          "confidence": 0.7242,
+          "bbox": [
+            730,
+            221,
+            853,
+            323
+          ]
+        },
+        {
           "class": "pedestrian",
-          "confidence": 0.488,
+          "confidence": 0.6596,
           "bbox": [
             505,
-            203,
+            201,
             564,
-            310
+            312
           ]
         },
         {
           "class": "car",
-          "confidence": 0.3203,
+          "confidence": 0.3248,
           "bbox": [
-            673,
+            674,
             230,
             699,
             240
@@ -5606,7 +5576,7 @@
       "detections": [
         {
           "class": "car",
-          "confidence": 0.7934,
+          "confidence": 0.8258,
           "bbox": [
             714,
             220,
@@ -5616,17 +5586,17 @@
         },
         {
           "class": "car",
-          "confidence": 0.7802,
+          "confidence": 0.7919,
           "bbox": [
             0,
-            208,
+            209,
             197,
-            397
+            398
           ]
         },
         {
           "class": "car",
-          "confidence": 0.7149,
+          "confidence": 0.7105,
           "bbox": [
             335,
             223,
@@ -5636,22 +5606,22 @@
         },
         {
           "class": "pedestrian",
-          "confidence": 0.6562,
+          "confidence": 0.709,
           "bbox": [
             514,
-            205,
+            204,
             563,
             304
           ]
         },
         {
           "class": "pedestrian",
-          "confidence": 0.3926,
+          "confidence": 0.497,
           "bbox": [
             386,
             213,
             418,
-            290
+            291
           ]
         }
       ]

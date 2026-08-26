@@ -24,7 +24,7 @@ JUNCTION_VIDEO_MAP = [
     {"video": "indian_traffic_2.mp4", "junction_id": "J002", "name": "Rajaram Corner"},
     {"video": "indian_traffic_3.mp4", "junction_id": "J003", "name": "Dabholkar Corner"},
     {"video": "indian_traffic_4.mp4", "junction_id": "J004", "name": "Cyber Chowk"},
-    {"video": "corrupt_or_short_demo.mp4", "junction_id": "J005", "name": "Kawala Naka (Edge Case)"}
+    {"video": "indian_traffic_5.mp4", "junction_id": "J005", "name": "Kawala Naka"}
 ]
 
 def ensure_corrupt_test_file(videos_dir: str):

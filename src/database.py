@@ -106,6 +106,7 @@ def init_db():
             description TEXT,
             media_filename TEXT,
             media_relative_path TEXT,
+            media_url TEXT,
             timestamp TEXT,
             FOREIGN KEY (junction_id) REFERENCES junctions (junction_id)
         )
@@ -121,6 +122,10 @@ def init_db():
         pass
     try:
         cursor.execute("ALTER TABLE citizen_reports ADD COLUMN media_relative_path TEXT")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE citizen_reports ADD COLUMN media_url TEXT")
     except Exception:
         pass
 
@@ -668,11 +673,17 @@ def add_citizen_report(
     report_id = f"REP-{uuid.uuid4().hex[:10].upper()}"
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    # Ensure table schema has media_url column
+    try:
+        cursor.execute("ALTER TABLE citizen_reports ADD COLUMN media_url TEXT")
+    except Exception:
+        pass
+
     cursor.execute("""
         INSERT INTO citizen_reports 
-        (report_id, junction_id, reporter_name, issue_type, severity, description, media_filename, media_relative_path, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (report_id, junction_id, reporter, issue, severity, description, media_filename, media_relative_path, now_str))
+        (report_id, junction_id, reporter_name, issue_type, severity, description, media_filename, media_relative_path, media_url, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (report_id, junction_id, reporter, issue, severity, description, media_filename, media_relative_path, media_url, now_str))
     conn.commit()
     conn.close()
 

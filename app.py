@@ -11,7 +11,7 @@ import mimetypes
 import cv2
 import streamlit as st
 import folium
-from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster, LocateControl
+from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster
 from streamlit_folium import st_folium
 import pandas as pd
 import plotly.express as px
@@ -28,9 +28,31 @@ from src.analytics.risk_engine import ExplainableRiskEngine
 import importlib
 import src.geo_utils
 importlib.reload(src.geo_utils)
-from src.geo_utils import find_nearest_junction, reverse_geocode_location
+from src.geo_utils import find_nearest_junction, reverse_geocode_location, get_ip_location, forward_geocode_location
+import streamlit.components.v1 as components
 from src.analytics.data_loader import compute_historical_risk_score, load_accident_dataset
 from src.vision.stream_processor import StreamProcessor
+
+# ── Handle Browser GPS Callback (from HTML5 Geolocation Button) ──
+if "geo_lat" in st.query_params and "geo_lng" in st.query_params:
+    try:
+        g_lat = float(st.query_params["geo_lat"])
+        g_lng = float(st.query_params["geo_lng"])
+        st.session_state["tab_picked_lat"] = g_lat
+        st.session_state["tab_picked_lng"] = g_lng
+        st.session_state["sentinel_picked_lat"] = g_lat
+        st.session_state["sentinel_picked_lng"] = g_lng
+        _all_j = fetch_all_junctions()
+        near_j, _ = find_nearest_junction(g_lat, g_lng, _all_j)
+        addr = near_j['name'] if near_j else reverse_geocode_location(g_lat, g_lng)
+        st.session_state["selected_junction_name_val"] = addr
+        st.session_state["tab_select_junction_dropdown"] = addr
+        st.session_state["sentinel_jnc_input"] = addr
+        st.session_state["sentinel_select_junction_dropdown"] = addr
+        st.query_params.clear()
+        st.rerun()
+    except Exception as ex:
+        print(f"[Query Geolocation Handle Note] {ex}")
 
 # Initialize Database on app start
 init_db()
@@ -415,7 +437,7 @@ st.markdown("""
         border: 1px solid rgba(71, 85, 105, 0.3);
     }
     /* ── Map Container Anti-Flicker & Dark Mode Integration ── */
-    iframe[title*="st_folium"], .stFolium iframe {
+    iframe[title*="st_folium"], .stFolium iframe, [data-testid="stCustomComponentV1"] {
         background-color: #070b14 !important;
         border-radius: 12px;
         border: 1px solid rgba(51, 65, 85, 0.4);
@@ -424,7 +446,7 @@ st.markdown("""
         background-color: #070b14 !important;
     }
     .leaflet-tile-container img {
-        transition: opacity 0.15s ease-in-out;
+        transition: none !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1073,29 +1095,51 @@ with tab_citizen:
 
     c_map, c_form = st.columns([1, 1])
 
-    with c_map:
-        st.markdown("##### 📍 Pinpoint Location on Map")
-        st.caption("Click anywhere on the map or use 📍 Current Location button to pinpoint the hazard spot.")
-        
+    # ── Map Fragment: isolate map interactions so full app doesn't rerun/flash ──
+    @st.fragment
+    def render_tab_map_picker():
+        # 🔍 Quick Search Location Bar
+        search_c1, search_c2 = st.columns([3, 1])
+        with search_c1:
+            search_query = st.text_input(
+                "Search location",
+                placeholder="🔍 Search area, road, or city (e.g. Kolhapur, Koge, MG Road...)",
+                label_visibility="collapsed",
+                key="tab_map_search_txt"
+            )
+        with search_c2:
+            if st.button("🔍 Find", key="tab_map_search_btn", use_container_width=True):
+                if search_query and search_query.strip():
+                    with st.spinner("Searching..."):
+                        from src.geo_utils import forward_geocode_location
+                        found = forward_geocode_location(search_query.strip())
+                    if found:
+                        f_lat, f_lon, f_name = found
+                        st.session_state["tab_picked_lat"] = f_lat
+                        st.session_state["tab_picked_lng"] = f_lon
+                        st.session_state["selected_junction_name_val"] = f_name
+                        st.session_state["tab_select_junction_dropdown"] = f_name
+                        st.rerun()
+                    else:
+                        st.warning("Location not found. Try a nearby landmark or city.")
+
         all_jnc_list = fetch_all_junctions()
         default_lat = all_jnc_list[0]['lat'] if all_jnc_list else 12.9716
         default_lon = all_jnc_list[0]['lon'] if all_jnc_list else 77.5946
-        
-        m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
-        LocateControl(auto_start=False).add_to(m_picker)
 
-        # Force precise target crosshair cursor instead of hand icon inside map frame
-        custom_cursor_css = """
+        m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
+
+        # Anti-flicker CSS injected inside map iframe
+        map_inner_css = """
         <style>
         .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
             cursor: crosshair !important;
+            background-color: #0a0e1a !important;
         }
-        .leaflet-container:active, .leaflet-grab:active {
-            cursor: crosshair !important;
-        }
+        .leaflet-tile-container img { transition: none !important; }
         </style>
         """
-        m_picker.get_root().html.add_child(folium.Element(custom_cursor_css))
+        m_picker.get_root().html.add_child(folium.Element(map_inner_css))
 
         for jnc in all_jnc_list:
             folium.Marker(
@@ -1105,7 +1149,6 @@ with tab_citizen:
                 icon=folium.Icon(color="blue", icon="info-sign")
             ).add_to(m_picker)
 
-        # Render red pinpoint marker if user has selected a location
         if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
             p_lat = st.session_state["tab_picked_lat"]
             p_lng = st.session_state["tab_picked_lng"]
@@ -1117,8 +1160,14 @@ with tab_citizen:
                 icon=folium.Icon(color="red", icon="flag")
             ).add_to(m_picker)
 
-        # Restrict returned_objects to last_clicked to prevent cursor movement reruns and map brightness flicker
-        map_data = st_folium(m_picker, width="100%", height=380, key="citizen_tab_map_picker", returned_objects=["last_clicked"])
+        map_data = st_folium(
+            m_picker,
+            use_container_width=True,
+            height=380,
+            key="citizen_tab_map_picker",
+            returned_objects=["last_clicked"],
+            return_on_hover=False
+        )
 
         if map_data and map_data.get("last_clicked"):
             c_lat = map_data["last_clicked"]["lat"]
@@ -1126,52 +1175,191 @@ with tab_citizen:
             if st.session_state.get("tab_picked_lat") != c_lat or st.session_state.get("tab_picked_lng") != c_lng:
                 st.session_state["tab_picked_lat"] = c_lat
                 st.session_state["tab_picked_lng"] = c_lng
-                
+
                 near_jnc, dist_km = find_nearest_junction(c_lat, c_lng, all_jnc_list, threshold_km=1.0)
-                if near_jnc:
-                    det_val = near_jnc['name']
-                else:
-                    det_val = reverse_geocode_location(c_lat, c_lng)
-                
+                det_val = near_jnc['name'] if near_jnc else reverse_geocode_location(c_lat, c_lng)
+
                 st.session_state["selected_junction_name_val"] = det_val
                 st.session_state["tab_select_junction_dropdown"] = det_val
+                # Full page rerun so c_form selectbox picks up the new location
                 st.rerun()
 
-        detected_jnc_name = None
-        detected_address = ""
-
+        # ── Status bar: detected name, coordinates, Reset Location button ──
         if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
             click_lat = st.session_state["tab_picked_lat"]
             click_lng = st.session_state["tab_picked_lng"]
-            near_jnc, dist_km = find_nearest_junction(click_lat, click_lng, all_jnc_list, threshold_km=1.0)
-            if near_jnc:
-                detected_jnc_name = near_jnc['name']
-                st.success(f"✅ **Cataloged Junction Auto-Detected**: {detected_jnc_name} ({round(dist_km*1000)}m away)")
+            all_jnc_list2 = fetch_all_junctions()
+            near_jnc2, dist_km2 = find_nearest_junction(click_lat, click_lng, all_jnc_list2, threshold_km=1.0)
+            if near_jnc2:
+                st.success(f"✅ **Junction Auto-Detected**: {near_jnc2['name']} ({round(dist_km2*1000)}m away)")
             else:
-                detected_address = reverse_geocode_location(click_lat, click_lng)
-                st.success(f"📍 **Pinpoint Location Auto-Detected**: {detected_address}")
+                st.success(f"📍 **Pinpoint Auto-Detected**: {st.session_state.get('selected_junction_name_val', '')}")
+
+            st.markdown(
+                f'<div style="margin-top:4px; font-size:0.76rem; color:#64748b; font-family:monospace;">'
+                f'🌐 Lat: <code style="color:#a5b4fc">{click_lat:.6f}</code>&nbsp;&nbsp;'
+                f'Lng: <code style="color:#a5b4fc">{click_lng:.6f}</code></div>',
+                unsafe_allow_html=True
+            )
+
+            if st.button("🗑️ Reset Location", key="tab_reset_loc_btn", use_container_width=True):
+                for k in ["tab_picked_lat", "tab_picked_lng",
+                          "selected_junction_name_val", "tab_select_junction_dropdown"]:
+                    st.session_state.pop(k, None)
+                st.rerun()
+        else:
+            st.caption("🖱️ Click anywhere on the map to drop a hazard pin.")
+
+        # ── Live Device Hardware GPS ──
+        st.markdown("---")
+        gps_html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .btn-gps {
+            width: 100%;
+            background: linear-gradient(135deg, #059669 0%, #0284c7 100%);
+            color: #ffffff;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+            transition: all 0.2s ease;
+        }
+        .btn-gps:hover { opacity: 0.92; }
+        #msg { margin-top: 6px; font-size: 0.78rem; color: #cbd5e1; text-align: center; line-height: 1.35; }
+        </style>
+        </head>
+        <body>
+        <button class="btn-gps" id="locate-btn" onclick="getExactLocation()">
+            🎯 Get My Exact Device GPS Location
+        </button>
+        <div id="msg"></div>
+        <script>
+        function getExactLocation() {
+            var btn = document.getElementById("locate-btn");
+            var msg = document.getElementById("msg");
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+            msg.innerHTML = "<span style='color:#38bdf8;'>⏳ Requesting live GPS... Please click <b>Allow</b> when prompted.</span>";
+
+            if (!navigator.geolocation) {
+                msg.innerHTML = "<span style='color:#ef4444;'>❌ Geolocation not supported in this browser.</span>";
+                btn.disabled = false;
+                btn.style.opacity = "1.0";
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(pos) {
+                    var lat = pos.coords.latitude;
+                    var lng = pos.coords.longitude;
+                    var acc = Math.round(pos.coords.accuracy || 0);
+                    msg.innerHTML = "<span style='color:#34d399; font-weight:600;'>✅ Exact location found (±" + acc + "m)! Updating map...</span>";
+                    setTimeout(function() {
+                        var pUrl = new URL(window.parent.location.href);
+                        pUrl.searchParams.set("geo_lat", lat);
+                        pUrl.searchParams.set("geo_lng", lng);
+                        window.parent.location.href = pUrl.href;
+                    }, 200);
+                },
+                function(err) {
+                    btn.disabled = false;
+                    btn.style.opacity = "1.0";
+                    if (err.code === 1) {
+                        msg.innerHTML = "<span style='color:#f87171;'>❌ <b>Permission Denied</b>: Click location/lock icon in Safari/Chrome URL bar and click <b>Allow</b>.</span>";
+                    } else if (err.code === 2) {
+                        msg.innerHTML = "<span style='color:#fbbf24;'>⚠️ <b>Mac Wi-Fi required</b>: Ensure <b>Wi-Fi is ON</b> & Location Services is ON in <i>System Settings → Privacy & Security → Location Services</i>.</span>";
+                    } else {
+                        msg.innerHTML = "<span style='color:#fbbf24;'>⚠️ Request timed out. Ensure Wi-Fi is enabled on your Mac and retry.</span>";
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+            );
+        }
+        </script>
+        </body>
+        </html>
+        """
+        components.html(gps_html, height=84)
+
+        # ── Quick City Jump Presets ──
+        st.markdown("<div style='font-size:0.8rem; font-weight:600; color:#94a3b8; margin-top:6px; margin-bottom:6px;'>⚡ Quick Jump to City:</div>", unsafe_allow_html=True)
+        q_col1, q_col2, q_col3, q_col4 = st.columns(4)
+        with q_col1:
+            if st.button("📍 Kolhapur", key="tab_quick_kolhapur", use_container_width=True):
+                st.session_state["tab_picked_lat"] = 16.7050
+                st.session_state["tab_picked_lng"] = 74.2433
+                st.session_state["selected_junction_name_val"] = "Kolhapur, Maharashtra"
+                st.session_state["tab_select_junction_dropdown"] = "Kolhapur, Maharashtra"
+                st.rerun()
+        with q_col2:
+            if st.button("📍 Bangalore", key="tab_quick_blr", use_container_width=True):
+                st.session_state["tab_picked_lat"] = 12.9716
+                st.session_state["tab_picked_lng"] = 77.5946
+                st.session_state["selected_junction_name_val"] = "Bangalore, Karnataka"
+                st.session_state["tab_select_junction_dropdown"] = "Bangalore, Karnataka"
+                st.rerun()
+        with q_col3:
+            if st.button("📍 Pune", key="tab_quick_pune", use_container_width=True):
+                st.session_state["tab_picked_lat"] = 18.5204
+                st.session_state["tab_picked_lng"] = 73.8567
+                st.session_state["selected_junction_name_val"] = "Pune, Maharashtra"
+                st.session_state["tab_select_junction_dropdown"] = "Pune, Maharashtra"
+                st.rerun()
+        with q_col4:
+            if st.button("📍 Mumbai", key="tab_quick_mum", use_container_width=True):
+                st.session_state["tab_picked_lat"] = 19.0760
+                st.session_state["tab_picked_lng"] = 72.8777
+                st.session_state["selected_junction_name_val"] = "Mumbai, Maharashtra"
+                st.session_state["tab_select_junction_dropdown"] = "Mumbai, Maharashtra"
+                st.rerun()
+
+    with c_map:
+        st.markdown("##### 📍 Pinpoint Location on Map")
+        st.caption("Search area, click map, or use 🎯 Device GPS button to pinpoint hazard spot.")
+        render_tab_map_picker()
 
     with c_form:
         st.markdown("##### 🚨 Hazard Details & Evidence")
-        
-        # Build dynamic list of location options including map auto-detected location
+
+        # ── Reset-form callback ──
+        def _reset_tab_form():
+            for k in [
+                "tab_picked_lat", "tab_picked_lng",
+                "selected_junction_name_val", "tab_select_junction_dropdown",
+            ]:
+                st.session_state.pop(k, None)
+
+        # ── Build dynamic location dropdown ──
         current_loc = st.session_state.get("selected_junction_name_val", "")
         catalog_names = list(jnc_names.keys())
-        
+
         loc_options = []
-        if current_loc:
+        if current_loc and current_loc not in catalog_names:
             loc_options.append(current_loc)
         for cname in catalog_names:
             if cname not in loc_options:
                 loc_options.append(cname)
         loc_options.append("➕ Type Custom Location Manually...")
 
-        # Sync current_loc with selectbox widget state key
-        if current_loc and st.session_state.get("tab_select_junction_dropdown") != current_loc:
-            st.session_state["tab_select_junction_dropdown"] = current_loc
-
-        selected_val = st.session_state.get("tab_select_junction_dropdown", loc_options[0])
-        idx = loc_options.index(selected_val) if selected_val in loc_options else 0
+        stored_sel = st.session_state.get("tab_select_junction_dropdown", "")
+        if stored_sel and stored_sel in loc_options:
+            idx = loc_options.index(stored_sel)
+        elif current_loc and current_loc in loc_options:
+            idx = loc_options.index(current_loc)
+        else:
+            idx = 0
 
         selected_option = st.selectbox(
             "Select Junction / Location*",
@@ -1183,15 +1371,15 @@ with tab_citizen:
         if selected_option == "➕ Type Custom Location Manually...":
             selected_jnc_name = st.text_input(
                 "Enter Custom Location*",
-                value="",
-                placeholder="Click map or type exact location..."
+                placeholder="e.g. MG Road & Brigade Junction, Bangalore",
+                key="tab_custom_loc_input"
             )
         else:
             selected_jnc_name = selected_option
             st.session_state["selected_junction_name_val"] = selected_option
 
-        rep_name = st.text_input("Reporter Name / Designation", value="", placeholder="e.g. Traffic Marshal / Resident (Optional)")
-        
+        rep_name = st.text_input("Reporter Name / Designation", placeholder="e.g. Traffic Marshal / Resident (Optional)")
+
         issue_categories = [
             "Pothole / Damaged Road Surface",
             "Broken Traffic Signal / Light",
@@ -1201,20 +1389,24 @@ with tab_citizen:
             "Other (Specify below)"
         ]
         rep_issue_sel = st.selectbox("Issue Category", issue_categories)
-        
+
         custom_issue = ""
         if rep_issue_sel == "Other (Specify below)":
-            custom_issue = st.text_input("Specify Custom Issue Category*", value="", placeholder="e.g. Waterlogging, Fallen Tree, Construction Obstruction...")
+            custom_issue = st.text_input("Specify Custom Issue Category*", placeholder="e.g. Waterlogging, Fallen Tree, Construction Obstruction...")
 
         rep_sev = st.slider("Hazard Severity (1 = Minor, 5 = Severe Hazard)", 1, 5, 3)
-        rep_desc = st.text_area("Detailed Description", value="", placeholder="Describe exact location, lane blockages, or timing...")
-        
+        rep_desc = st.text_area("Detailed Description", placeholder="Describe exact location, lane blockages, or timing...")
+
         uploaded_evidence = st.file_uploader(
             "Upload Photo or Video Evidence (Optional)",
             type=["jpg", "png", "jpeg", "mp4", "mov", "avi", "webm"]
         )
-        
-        submit_btn = st.button("🚨 Submit Hazard Report", use_container_width=True)
+
+        tab_btn1, tab_btn2 = st.columns([3, 1])
+        with tab_btn1:
+            submit_btn = st.button("🚨 Submit Hazard Report", use_container_width=True, type="primary")
+        with tab_btn2:
+            st.button("🔄 Reset", use_container_width=True, on_click=_reset_tab_form, key="tab_reset_form_btn")
 
         if submit_btn:
             if not selected_jnc_name.strip():

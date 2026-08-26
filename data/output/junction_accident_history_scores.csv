@@ -1,0 +1,13 @@
+junction_id,junction_name,city,state,lat,lon,junction_type,accident_history_score,city_baseline_score,local_risk_modifier,total_accidents,fatalities,injuries,city_total_accidents,city_fatalities,city_injuries,adverse_weather_pct,two_wheeler_involvement_pct
+JNC-BLR-001,Silk Board Junction,Bengaluru,Karnataka,12.9172,77.6228,Major Flyover & Arterial Merge,98.0,96.0,1.12,395,175,593,1128,499,1693,45.6,51.4
+JNC-DEL-002,ITO Crossing,New Delhi,Delhi,28.6289,77.2415,High-Speed Multi-Leg Intersection,98.0,96.0,1.05,124,64,187,619,320,933,45.4,52.7
+JNC-BLR-006,Goraguntepalya Junction,Bengaluru,Karnataka,13.0285,77.5404,Industrial Heavy Freight Corridor,98.0,96.0,1.08,395,175,593,1128,499,1693,45.6,51.4
+JNC-HYD-005,Panjagutta Junction,Hyderabad,Telangana,17.4256,78.4514,Commercial Corridor Intersection,96.0,96.0,1.0,68,32,108,341,159,542,39.0,51.9
+JNC-MUM-003,Dadar TT Circle,Mumbai,Maharashtra,19.0178,72.8478,Dense Urban Roundabout & Bus Transit Merge,94.1,96.0,0.98,97,45,157,485,224,783,42.7,48.9
+JNC-MAA-004,Kathipara Junction,Chennai,Tamil Nadu,13.0067,80.202,Cloverleaf Grade Separator,88.3,96.0,0.92,60,22,93,299,111,464,47.5,48.8
+JNC-PNQ-007,Chandani Chowk Junction,Pune,Maharashtra,18.5074,73.7806,Highway Grade Interchange,84.5,96.0,0.88,26,17,40,128,83,199,43.8,52.3
+J005,Kawala Naka,Kolhapur,Maharashtra,16.7018,74.2575,National Highway Entry Interchange,42.4,40.0,1.06,42,6,23,120,18,65,22.0,48.0
+J003,Dabholkar Corner,Kolhapur,Maharashtra,16.7001,74.2482,Station Road Transit Hub,40.8,40.0,1.02,24,4,13,120,18,65,22.0,48.0
+J001,Shivaji Chowk,Kolhapur,Maharashtra,16.6996,74.2433,Heritage Market Central Square,38.0,40.0,0.95,24,4,13,120,18,65,22.0,48.0
+J002,Rajaram Corner,Kolhapur,Maharashtra,16.7025,74.2505,Secondary Arterial Crossroad,36.0,40.0,0.9,24,4,13,120,18,65,22.0,48.0
+J004,Cyber Chowk,Kolhapur,Maharashtra,16.6853,74.2541,University & IT Zone Square,34.0,40.0,0.85,24,4,13,120,18,65,22.0,48.0

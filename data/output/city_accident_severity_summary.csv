@@ -1,0 +1,7 @@
+City,State,Total_Accidents,Fatalities,Injuries,Fatal_Accidents,Serious_Accidents,Minor_Accidents,Adverse_Weather_Pct,Two_Wheeler_Involvement_Pct,Raw_Severity_Index,City_Accident_Risk_Score
+Bengaluru,Karnataka,1128,499,1693,249,495,384,45.6,51.4,8715.2,96.0
+Chennai,Tamil Nadu,299,111,464,61,152,86,47.5,48.8,2235.6,96.0
+Hyderabad,Telangana,341,159,542,82,156,103,39.0,51.9,2767.4,96.0
+Mumbai,Maharashtra,485,224,783,107,229,149,42.7,48.9,3962.0,96.0
+New Delhi,Delhi,619,320,933,159,277,183,45.4,52.7,5176.6,96.0
+Pune,Maharashtra,128,83,199,39,48,41,43.8,52.3,1181.7,96.0

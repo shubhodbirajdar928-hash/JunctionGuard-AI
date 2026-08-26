@@ -4,7 +4,13 @@ and mathematical bounds of the Explainable Risk Engine.
 Uses standard library unittest for zero external dependencies.
 """
 
+import os
+import sys
 import unittest
+
+# Add project root to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.schema import JunctionRecord, ContributingFactor
 from src.database import init_db, fetch_all_junctions
 from src.analytics.risk_engine import ExplainableRiskEngine

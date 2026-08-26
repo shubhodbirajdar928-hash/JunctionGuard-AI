@@ -9,16 +9,27 @@ import json
 import uuid
 from datetime import datetime
 from typing import Dict, Any, List, Optional
-from dotenv import load_dotenv
-from supabase import create_client, Client
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
-_supabase_client: Optional[Client] = None
+try:
+    from supabase import create_client, Client
+    SUPABASE_AVAILABLE = True
+except ImportError:
+    SUPABASE_AVAILABLE = False
+    Client = Any
+
+_supabase_client: Optional[Any] = None
 
 def get_supabase_client() -> Client:
     """Returns a singleton instance of the Supabase client."""
     global _supabase_client
+    if not SUPABASE_AVAILABLE:
+        raise ImportError("supabase package is not installed. Install via: pip install supabase")
     if _supabase_client is None:
         url = os.environ.get("SUPABASE_URL")
         key = os.environ.get("SUPABASE_KEY")

@@ -1,32 +1,8 @@
-<div align="center">
-
-<img src="https://img.shields.io/badge/JunctionGuard-AI-FF4500?style=for-the-badge&logo=shield&logoColor=white" alt="JunctionGuard AI"/>
-
-# 🚨 JunctionGuard AI
-
-### *Roads Safer, Cities Smarter.*
-
-**Explainable AI System for Scoring Accident-Prone Road Junctions in India**
-
-Built for the **OMNIKON Hackathon**
-
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
-[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-00FFCD?style=flat-square&logo=yolo&logoColor=black)](https://ultralytics.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](./LICENSE)
-[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-46E3B7?style=flat-square&logo=render&logoColor=white)](https://render.com)
-
-[🚀 Live Demo](#-live-demo) • [📦 Setup](#-setup--installation) • [✨ Features](#-features) • [🏗️ Architecture](#%EF%B8%8F-technical-architecture) • [👥 Team](#-team--contributions)
-
-</div>
-
----
-
 ## 📖 Overview
 
-**JunctionGuard AI** is a real-time, explainable AI surveillance platform that scores accident-prone road junctions across India. It combines computer vision (YOLOv8), historical accident analytics, and crowdsourced citizen reports to produce a transparent, weighted risk score for each monitored junction — helping traffic authorities proactively identify and address danger zones *before* accidents happen.
+A real-time, explainable AI surveillance platform that scores accident-prone road junctions across India. It combines computer vision (YOLOv8), historical accident analytics, and crowdsourced citizen reports to produce a transparent, weighted risk score for each monitored junction — helping traffic authorities proactively identify and address danger zones *before* accidents happen.
 
-> India records ~1.5 lakh road fatalities annually. JunctionGuard AI turns passive CCTV footage and open data into actionable, junction-level safety intelligence.
+> India records ~1.5 lakh road fatalities annually. This platform turns passive CCTV footage and open data into actionable, junction-level safety intelligence.
 
 ---
 

@@ -6,6 +6,7 @@ YOLOv8 vision analytics preview, and multi-factor explainability breakdowns.
 """
 
 import os
+import json
 import uuid
 import mimetypes
 import cv2
@@ -87,9 +88,7 @@ with st.sidebar:
     st.markdown("""
     <div style="padding: 6px 0 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;">
         <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:32px; height:32px; background:rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.35); border-radius:8px; display:flex; align-items:center; justify-content:center;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
+            <div class="brand-shield-logo" style="width:34px; height:34px;"></div>
             <div>
                 <div style="font-family:'Space Grotesk', sans-serif; font-size:1.05rem; font-weight:800; color:#ffffff;">JunctionGuard</div>
                 <div style="font-size:0.65rem; color:#9ca3af; font-family:'JetBrains Mono', monospace;">AI SURVEILLANCE SYSTEM</div>
@@ -140,9 +139,7 @@ with st.sidebar:
 
     st.markdown("""
     <div style="margin-top: 30px; padding: 12px; background: #12151a; border: 1px solid rgba(249,115,22,0.3); border-radius: 8px; display: flex; align-items: center; gap: 10px;">
-        <div style="width: 32px; height: 32px; background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.4); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+        <div class="brand-shield-logo" style="width:34px; height:34px;"></div>
         <div>
             <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff;">JunctionGuard AI</div>
             <div style="font-size: 0.68rem; color: #9ca3af;">Roads Safer, Cities Smarter.</div>
@@ -193,7 +190,7 @@ def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_p
 
     overview_map_css = """
     <style>
-    .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
+    .leaflet-container {
         background-color: #0a0c0e !important;
     }
     .leaflet-tile, .leaflet-pane, .leaflet-tile-pane, .leaflet-tile-container img {
@@ -206,6 +203,10 @@ def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_p
         filter: none !important;
         -webkit-filter: none !important;
         opacity: 1 !important;
+    }
+    .leaflet-marker-icon {
+        background: transparent !important;
+        border: none !important;
     }
     </style>
     """
@@ -241,7 +242,14 @@ def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_p
 
     if enable_heatmap and map_junctions:
         heat_data = [[j["lat"], j["lon"], float(j["risk_score"] or 50.0) / 100.0] for j in map_junctions]
-        HeatMap(heat_data, radius=26, blur=18, min_opacity=0.35, max_zoom=14).add_to(m)
+        HeatMap(
+            heat_data,
+            radius=32,
+            blur=22,
+            min_opacity=0.45,
+            max_zoom=14,
+            gradient={0.2: '#3b82f6', 0.4: '#10b981', 0.6: '#fbbf24', 0.8: '#f97316', 1.0: '#ef4444'}
+        ).add_to(m)
 
     markers_layer = folium.FeatureGroup(name="Junction Markers")
     for j in map_junctions:
@@ -252,14 +260,32 @@ def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_p
         level = (j["risk_level"] or "LOW").upper()
 
         if level == "HIGH":
-            halo_cls = "pulse-marker-high"
+            halo_cls = "heat-aura-high"
+            circle_color = "#ef4444"
+            aura_radius = 450
         elif level == "MEDIUM":
-            halo_cls = "pulse-marker-med"
+            halo_cls = "heat-aura-med"
+            circle_color = "#f59e0b"
+            aura_radius = 320
         else:
-            halo_cls = "pulse-marker-low"
+            halo_cls = "heat-aura-low"
+            circle_color = "#10b981"
+            aura_radius = 200
+
+        # Thermal heat wave aura circle on the junction
+        folium.Circle(
+            location=[lat, lon],
+            radius=aura_radius,
+            color=circle_color,
+            weight=1,
+            opacity=0.35,
+            fill=True,
+            fill_color=circle_color,
+            fill_opacity=0.20
+        ).add_to(m)
 
         marker_html = f'<div class="{halo_cls}"></div>'
-        icon = folium.DivIcon(html=marker_html, icon_size=(20, 20), icon_anchor=(10, 10))
+        icon = folium.DivIcon(html=marker_html, icon_size=(30, 30), icon_anchor=(15, 15), class_name="junction-heat-icon")
         folium.Marker(
             location=[lat, lon],
             icon=icon,
@@ -296,9 +322,7 @@ if sidebar_nav == "Dashboard":
                 <div class="kpi-num">{total_jnc}</div>
                 <div class="kpi-sub" style="color: #f97316;"><span class="live-dot-green"></span> REAL-TIME</div>
             </div>
-            <div class="kpi-icon-wrap" style="background: rgba(249, 115, 22, 0.12); border: 1px solid rgba(249, 115, 22, 0.35);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="12" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="12" cy="5" r="2"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="12" y1="7" x2="12" y2="9"/><line x1="15" y1="12" x2="17" y2="12"/><line x1="7" y1="12" x2="9" y2="12"/></svg>
-            </div>
+            <div class="kpi-icon-wrap kpi-icon-jnc" style="background: rgba(249, 115, 22, 0.12); border: 1px solid rgba(249, 115, 22, 0.35);"></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -310,9 +334,7 @@ if sidebar_nav == "Dashboard":
                 <div class="kpi-num" style="color: #f87171;">{high_risk_count}</div>
                 <div class="kpi-sub" style="color: #ef4444;"><span class="live-dot-red"></span> CRITICAL</div>
             </div>
-            <div class="kpi-icon-wrap" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.45);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            </div>
+            <div class="kpi-icon-wrap kpi-icon-alert" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.45);"></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -324,9 +346,7 @@ if sidebar_nav == "Dashboard":
                 <div class="kpi-num" style="color: #fbbf24;">{avg_risk_score} <span class="kpi-denom">/100</span></div>
                 <div class="kpi-sub" style="color: #f59e0b;"><span class="live-dot-green"></span> UPDATED</div>
             </div>
-            <div class="kpi-icon-wrap" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            </div>
+            <div class="kpi-icon-wrap kpi-icon-score" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35);"></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -338,9 +358,7 @@ if sidebar_nav == "Dashboard":
                 <div class="kpi-num" style="color: #34d399;">{total_reports}</div>
                 <div class="kpi-sub" style="color: #10b981;"><span class="live-dot-green"></span> LIVE FEED</div>
             </div>
-            <div class="kpi-icon-wrap" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
+            <div class="kpi-icon-wrap kpi-icon-reports" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35);"></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -490,14 +508,66 @@ if sidebar_nav == "Dashboard":
     with p4:
         with st.container(border=True):
             st.markdown('<div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; font-family:\'Space Grotesk\', sans-serif;">QUICK ACTIONS</div>', unsafe_allow_html=True)
-            if st.button("📄 Generate Report", key="dash_p4_action_rep", use_container_width=True):
-                st.toast("Generated Comprehensive Civic Safety Audit Report.")
-            if st.button("📥 Export Data", key="dash_p4_action_exp", use_container_width=True):
-                st.toast("Exported GeoJSON & Incident Records.")
+            
+            # Working Safety Audit Report CSV download
+            audit_report_df = pd.DataFrame([
+                {
+                    "Junction ID": j.get("junction_id", ""),
+                    "Name": j.get("name", ""),
+                    "City": j.get("city", "Pune"),
+                    "Risk Level": j.get("risk_level", "LOW"),
+                    "Risk Score": j.get("risk_score", 0.0),
+                    "Latitude": j.get("lat", 0.0),
+                    "Longitude": j.get("lon", 0.0),
+                    "Last Updated": j.get("last_updated", "")
+                }
+                for j in filtered_junctions
+            ])
+            report_csv = audit_report_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📄 Generate Report (CSV)",
+                data=report_csv,
+                file_name=f"JunctionGuard_Safety_Audit_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+                mime="text/csv",
+                key="dash_p4_action_rep",
+                use_container_width=True
+            )
+
+            # Working Spatial GeoJSON export download
+            geojson_dict = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [float(j.get("lon", 0.0)), float(j.get("lat", 0.0))]
+                        },
+                        "properties": {
+                            "junction_id": j.get("junction_id", ""),
+                            "name": j.get("name", ""),
+                            "risk_level": j.get("risk_level", "LOW"),
+                            "risk_score": float(j.get("risk_score", 0.0)),
+                            "city": j.get("city", "Pune")
+                        }
+                    }
+                    for j in filtered_junctions
+                ]
+            }
+            geojson_str = json.dumps(geojson_dict, indent=2).encode('utf-8')
+            st.download_button(
+                label="📥 Export GIS Data (GeoJSON)",
+                data=geojson_str,
+                file_name=f"JunctionGuard_Spatial_{datetime.now().strftime('%Y%m%d_%H%M')}.geojson",
+                mime="application/geo+json",
+                key="dash_p4_action_exp",
+                use_container_width=True
+            )
+
+            # Working Manage Cameras navigation
             if st.button("📹 Manage Cameras", key="dash_p4_action_cam", use_container_width=True):
-                st.toast("Connected to 12 Video Feed Matrix.")
-            if st.button("⚡ System Diagnostics", key="dash_p4_action_diag", use_container_width=True):
-                st.toast("All 12 Monitored Junctions Nominal (28 FPS Inference).")
+                st.session_state["app_sidebar_navigation"] = "Live CCTV Vision Analytics"
+                st.rerun()
 
 # ----------------------------------------------------
 # 2. INTERACTIVE ALERT MAP

@@ -118,13 +118,7 @@ def render_navbar(active_page: str = "Dashboard"):
     navbar_html = (
         '<div class="tactical-navbar">'
         '<div class="navbar-brand-group">'
-        '<div class="brand-shield-logo">'
-        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-        '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
-        '<circle cx="12" cy="12" r="2" fill="#f97316"/>'
-        '<path d="M12 7v3m0 4v3m-5-5h3m4 0h3"/>'
-        '</svg>'
-        '</div>'
+        '<div class="brand-shield-logo"></div>'
         '<div>'
         '<div class="brand-title">JunctionGuard <span class="brand-ai">AI</span></div>'
         '<div class="brand-sub">Autonomous Vision Analytics &amp; Road Hazard Intelligence</div>'
@@ -132,44 +126,18 @@ def render_navbar(active_page: str = "Dashboard"):
         '</div>'
         '<div class="navbar-status-badges">'
         '<div class="status-pill status-pill-operational">'
-        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+        '<span class="pill-icon"></span>'
         '<div class="pill-meta">'
         '<span class="pill-label">SYSTEM STATUS</span>'
         '<span class="pill-val" style="color: #10b981;">OPERATIONAL</span>'
         '</div>'
         '</div>'
         '<div class="status-pill status-pill-inference">'
-        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>'
+        '<span class="pill-icon"></span>'
         '<div class="pill-meta">'
         '<span class="pill-label">AI INFERENCE</span>'
         '<span class="pill-val" style="color: #f97316;">28 FPS</span>'
         '</div>'
-        '</div>'
-        '<div class="status-pill status-pill-uptime">'
-        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
-        '<div class="pill-meta">'
-        '<span class="pill-label">UPTIME</span>'
-        '<span class="pill-val" style="color: #10b981;">99.98%</span>'
-        '</div>'
-        '</div>'
-        '<div class="status-pill status-pill-nodes">'
-        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>'
-        '<div class="pill-meta">'
-        '<span class="pill-label">MONITORED NODES</span>'
-        '<span class="pill-val" style="color: #f97316;">12</span>'
-        '</div>'
-        '</div>'
-        '</div>'
-        '<div class="navbar-actions">'
-        '<div class="action-icon-wrap" title="Notifications">'
-        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>'
-        '<span class="notification-badge">3</span>'
-        '</div>'
-        '<div class="action-icon-wrap" title="Settings">'
-        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
-        '</div>'
-        '<div class="user-avatar" title="Commander Profile">'
-        '<div class="avatar-inner"></div>'
         '</div>'
         '</div>'
         '</div>'
@@ -190,14 +158,10 @@ def render_dashboard_overview_header(title: str = "Dashboard", subtitle: str = "
         </div>
         <div class="overview-right-actions">
             <div class="datetime-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span class="pill-cal-icon"></span>
                 <span>{date_str}</span>
                 <span class="dt-divider">|</span>
                 <span class="dt-time">{time_str}</span>
-            </div>
-            <div class="deploy-pill-btn">
-                <span>Deploy</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
         </div>
     </div>
@@ -343,13 +307,15 @@ def inject_custom_styles():
         .brand-shield-logo {
             width: 38px;
             height: 38px;
-            background: rgba(249, 115, 22, 0.12);
-            border: 1px solid rgba(249, 115, 22, 0.35);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 12px rgba(249, 115, 22, 0.2);
+            background-color: rgba(249, 115, 22, 0.14) !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23f97316'/%3E%3Cpath d='M12 7v3m0 4v3m-5-5h3m4 0h3'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: 22px 22px !important;
+            border: 1px solid rgba(249, 115, 22, 0.4) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 0 14px rgba(249, 115, 22, 0.25) !important;
+            display: inline-block !important;
         }
         .brand-title {
             font-size: 1.25rem;
@@ -382,6 +348,126 @@ def inject_custom_styles():
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 8px;
             padding: 5px 12px;
+        }
+        .status-pill-operational .pill-icon {
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2.5'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 14px 14px;
+        }
+        .status-pill-inference .pill-icon {
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='2.5'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cline x1='12' y1='2' x2='12' y2='5'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='5' y2='12'/%3E%3Cline x1='19' y1='12' x2='22' y2='12'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 14px 14px;
+        }
+        .pill-cal-icon {
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 14px 14px;
+        }
+
+        /* ── KPI Icon Backgrounds ── */
+        .kpi-icon-jnc {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Ccircle cx='19' cy='12' r='2'/%3E%3Ccircle cx='5' cy='12' r='2'/%3E%3Ccircle cx='12' cy='19' r='2'/%3E%3Ccircle cx='12' cy='5' r='2'/%3E%3Cline x1='12' y1='15' x2='12' y2='17'/%3E%3Cline x1='12' y1='7' x2='12' y2='9'/%3E%3Cline x1='15' y1='12' x2='17' y2='12'/%3E%3Cline x1='7' y1='12' x2='9' y2='12'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: 20px 20px !important;
+        }
+        .kpi-icon-alert {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='2'%3E%3Cpath d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: 20px 20px !important;
+        }
+        .kpi-icon-score {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2'%3E%3Cpolyline points='22 12 18 12 15 21 9 3 6 12 2 12'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: 20px 20px !important;
+        }
+        .kpi-icon-reports {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: 20px 20px !important;
+        }
+
+        /* ── Junction Map Heat Effect ── */
+        .leaflet-marker-icon.junction-heat-icon {
+            background: transparent !important;
+            border: none !important;
+        }
+        .heat-aura-high {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ef4444 20%, rgba(239, 68, 68, 0.65) 50%, rgba(239, 68, 68, 0.15) 80%, transparent 100%);
+            box-shadow: 0 0 16px #ef4444, 0 0 32px rgba(239, 68, 68, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: heat-glow-pulse 2s infinite ease-in-out;
+        }
+        .heat-aura-high::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 8px #ef4444;
+        }
+        .heat-aura-med {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #f59e0b 20%, rgba(245, 158, 11, 0.65) 50%, rgba(245, 158, 11, 0.15) 80%, transparent 100%);
+            box-shadow: 0 0 14px #f59e0b, 0 0 28px rgba(245, 158, 11, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: heat-glow-pulse 2.4s infinite ease-in-out;
+        }
+        .heat-aura-med::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 6px #f59e0b;
+        }
+        .heat-aura-low {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #10b981 20%, rgba(16, 185, 129, 0.65) 50%, rgba(16, 185, 129, 0.15) 80%, transparent 100%);
+            box-shadow: 0 0 10px #10b981, 0 0 20px rgba(16, 185, 129, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .heat-aura-low::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 4px #10b981;
+        }
+        @keyframes heat-glow-pulse {
+            0% { transform: scale(0.9); opacity: 0.85; }
+            50% { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.85; }
         }
         .pill-meta {
             display: flex;

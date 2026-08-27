@@ -5,6 +5,9 @@ enableXsrfProtection = false
 address = "0.0.0.0"
 port = 10000
 
+[client]
+toolbarMode = "viewer"
+
 [theme]
 primaryColor = "#6366f1"
 backgroundColor = "#0a0e1a"

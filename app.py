@@ -58,7 +58,7 @@ if "geo_lat" in st.query_params and "geo_lng" in st.query_params:
         st.session_state["tab_picked_lng"] = g_lng
         st.session_state["sentinel_picked_lat"] = g_lat
         st.session_state["sentinel_picked_lng"] = g_lng
-        st.session_state["app_sidebar_navigation"] = nav_target
+        st.session_state["_pending_nav"] = nav_target  # applied before widget renders
         _all_j = fetch_all_junctions()
         near_j, _ = find_nearest_junction(g_lat, g_lng, _all_j)
         addr = near_j['name'] if near_j else reverse_geocode_location(g_lat, g_lng)
@@ -108,10 +108,19 @@ with st.sidebar:
         "Citizen Hazard Reporting"
     ]
 
+    # Apply any pending programmatic navigation BEFORE the widget is instantiated
+    _pending_nav = st.session_state.pop("_pending_nav", None)
+    _nav_index = nav_options.index(_pending_nav) if _pending_nav in nav_options else 0
+    # Preserve current selection if no pending nav requested
+    if _pending_nav is None and "app_sidebar_navigation" in st.session_state:
+        _current = st.session_state["app_sidebar_navigation"]
+        if _current in nav_options:
+            _nav_index = nav_options.index(_current)
+
     sidebar_nav = st.radio(
         "NAVIGATION",
         options=nav_options,
-        index=0,
+        index=_nav_index,
         format_func=lambda x: {
             "Dashboard": "📊  Dashboard",
             "Interactive Alert Map": "🗺️  Interactive Alert Map",
@@ -528,8 +537,7 @@ if sidebar_nav == "Dashboard":
                 </div>
             </div>
             ''', unsafe_allow_html=True)
-            if st.button("See All Alerts", key="dash_p3_see_alerts", use_container_width=True):
-                st.toast("Opening alert incident telemetry stream...")
+
 
     with p4:
         with st.container(border=True):
@@ -590,10 +598,6 @@ if sidebar_nav == "Dashboard":
                 use_container_width=True
             )
 
-            # Working Manage Cameras navigation
-            if st.button("📹 Manage Cameras", key="dash_p4_action_cam", use_container_width=True):
-                st.session_state["app_sidebar_navigation"] = "Live CCTV Vision Analytics"
-                st.rerun()
 
 # ----------------------------------------------------
 # 2. INTERACTIVE ALERT MAP

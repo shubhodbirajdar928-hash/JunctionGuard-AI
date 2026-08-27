@@ -197,6 +197,14 @@ def inject_custom_styles():
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap');
 
+        /* ── Hide Streamlit 3-dot menu, toolbar, and footer ── */
+        #MainMenu { visibility: hidden !important; display: none !important; }
+        header[data-testid="stHeader"] { visibility: hidden !important; display: none !important; }
+        div[data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
+        div[data-testid="stDecoration"] { visibility: hidden !important; display: none !important; }
+        footer { visibility: hidden !important; display: none !important; }
+        .stDeployButton { visibility: hidden !important; display: none !important; }
+
         /* ── Ultra-Dark Canvas (#0a0c0e) with Subtle 24px Tactical Grid ── */
         html, body, [class*="css"], .stApp {
             font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
@@ -207,6 +215,7 @@ def inject_custom_styles():
             background-size: 24px 24px !important;
             color: #e2e2e5 !important;
         }
+
 
         /* ── Confident Technical Typography Hierarchy ── */
         h1, h2, h3, h4, h5, h6, .brand-title, .overview-title, .card-label, .panel-title {

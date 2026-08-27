@@ -232,13 +232,12 @@ JunctionGuard-AI/
 
 | Name | Role | Contributions |
 |---|---|---|
-| **Sai Prasad** | Team Lead / Full-Stack Developer | System architecture, main dashboard (`app.py`), database design, deployment on Render |
-| **[Team Member 2]** | Computer Vision Engineer | YOLOv8 integration, `src/vision/` pipeline, video processor, stream analytics |
-| **[Team Member 3]** | Data & Analytics Engineer | Risk engine (`risk_engine.py`), Kaggle dataset pipeline, indicator computation |
-| **[Team Member 4]** | Frontend / UI Developer | Streamlit UI components, Folium map integration, custom CSS/animations |
-| **[Team Member 5]** | Backend / DevOps | Supabase integration, geo-utilities, citizen reporting portal, CI/CD |
+| **Shubhod** | Team Lead / Full-Stack Developer | System architecture, main dashboard (`app.py`), database design, deployment on Render |
+| **[Saiprasad]** | Computer Vision Engineer | YOLOv8 integration, `src/vision/` pipeline, video processor, stream analytics |
+| **[Saiprasad]** | Data & Analytics Engineer | Risk engine (`risk_engine.py`), Kaggle dataset pipeline, indicator computation |
+| **[Shubhod And Saiprasad]** | Frontend / UI Developer | Streamlit UI components, Folium map integration, custom CSS/animations |
+| **[Shubhod]** | Backend / DevOps | Supabase integration, geo-utilities, citizen reporting portal, CI/CD |
 
-> 📝 *Please update team member names and specific contribution details as needed.*
 
 ---
 

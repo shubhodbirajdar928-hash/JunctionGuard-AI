@@ -1,7 +1,31 @@
 .venv/
+venv/
 __pycache__/
 *.pyc
+*.pyo
 .DS_Store
+
+# SQLite database (auto-created on startup by init_db())
 *.db
+
+# Environment secrets - NEVER commit these
+.env
+.env.local
+.env.production
+
+# Citizen report uploads (large media files)
 data/citizen_reports/*
 !data/citizen_reports/reports.json
+!data/citizen_reports/.gitkeep
+
+# Vision output files
+data/output/*
+!data/output/.gitkeep
+
+# Sample videos (large files - use Git LFS or exclude)
+# data/sample_videos/*
+
+# IDE
+.idea/
+.vscode/
+*.swp

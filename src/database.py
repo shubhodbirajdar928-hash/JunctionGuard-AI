@@ -457,7 +457,7 @@ def save_risk_score(
     traf_s = comps.get("traffic_density", comps.get("traffic_score", 0.0))
     conf_s = comps.get("near_miss_conflicts", comps.get("conflict_score", 0.0))
     ped_s = comps.get("pedestrian_activity", comps.get("pedestrian_score", 0.0))
-    cit_s = comps.get("citizen_hazard_reports", comps.get("citizen_score", 0.0))
+    cit_s = comps.get("citizen_reports", comps.get("citizen_hazard_reports", comps.get("citizen_score", 0.0)))
 
     try:
         cursor.execute("""
@@ -665,7 +665,8 @@ def add_citizen_report(
     description: str,
     media_filename: Optional[str] = None,
     media_relative_path: Optional[str] = None,
-    media_url: Optional[str] = None
+    media_url: Optional[str] = None,
+    media_type: Optional[str] = None
 ) -> bool:
     """Inserts a new citizen report into both SQLite DB and Supabase."""
     conn = get_db_connection()
@@ -673,17 +674,31 @@ def add_citizen_report(
     report_id = f"REP-{uuid.uuid4().hex[:10].upper()}"
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Ensure table schema has media_url column
+    # Ensure table schema has media_url and media_type columns
     try:
         cursor.execute("ALTER TABLE citizen_reports ADD COLUMN media_url TEXT")
     except Exception:
         pass
+    try:
+        cursor.execute("ALTER TABLE citizen_reports ADD COLUMN media_type TEXT")
+    except Exception:
+        pass
+
+    # Classify media_type if not explicitly provided
+    if not media_type:
+        fn_low = (media_filename or media_url or "").lower()
+        if any(fn_low.endswith(ext) for ext in [".mp4", ".mov", ".avi", ".webm", ".mkv"]):
+            media_type = "video"
+        elif media_url or media_filename:
+            media_type = "photo"
+        else:
+            media_type = "text"
 
     cursor.execute("""
         INSERT INTO citizen_reports 
-        (report_id, junction_id, reporter_name, issue_type, severity, description, media_filename, media_relative_path, media_url, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (report_id, junction_id, reporter, issue, severity, description, media_filename, media_relative_path, media_url, now_str))
+        (report_id, junction_id, reporter_name, issue_type, severity, description, media_filename, media_relative_path, media_url, media_type, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (report_id, junction_id, reporter, issue, severity, description, media_filename, media_relative_path, media_url, media_type, now_str))
     conn.commit()
     conn.close()
 
@@ -697,7 +712,8 @@ def add_citizen_report(
             "status": "PENDING_REVIEW",
             "media_url": media_url,
             "media_filename": media_filename,
-            "media_relative_path": media_relative_path
+            "media_relative_path": media_relative_path,
+            "media_type": media_type
         })
     except Exception:
         pass
@@ -802,9 +818,14 @@ def fetch_junction_by_id(junction_id: str) -> Optional[Dict[str, Any]]:
     )
     return record.to_dict()
 
-def update_junction_risk(junction_id: str, risk_score: float, factors: List[Dict[str, Any]]):
+def update_junction_risk(
+    junction_id: str,
+    risk_score: float,
+    factors: List[Dict[str, Any]],
+    component_scores: Optional[Dict[str, float]] = None
+):
     """Update risk score and contributing factors for a junction (delegates to save_risk_score)."""
-    return save_risk_score(junction_id, risk_score, factors)
+    return save_risk_score(junction_id, risk_score, factors, component_scores=component_scores)
 
 if __name__ == "__main__":
     init_db()

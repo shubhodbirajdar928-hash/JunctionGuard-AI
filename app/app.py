@@ -346,7 +346,14 @@ with col_map:
     MiniMap(toggle_display=True, tile_layer="OpenStreetMap", position="bottomright", width=120, height=80).add_to(m)
     folium.LayerControl(position="topleft", collapsed=False).add_to(m)
             
-    st_folium(m, width="stretch", height=500, key=f"junctions_map_{st.session_state.selected_junction_id}", returned_objects=["last_object_clicked"])
+    st_folium(
+        m,
+        width="stretch",
+        height=500,
+        key=f"junctions_map_{st.session_state.selected_junction_id}",
+        returned_objects=["last_object_clicked"],
+        return_on_hover=False
+    )
 
 # Details Section Below
 st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
@@ -401,7 +408,7 @@ if selected_junction:
                 ⚖️ Explainable Factor Weights & Multi-Source Attribution (Sum = 100%)
             </div>
         """, unsafe_allow_html=True)
-        render_contributing_factors(selected_junction.contributing_factors)
+        render_contributing_factors(selected_junction.contributing_factors, junction_id=selected_junction.junction_id)
         st.markdown("</div>", unsafe_allow_html=True)
 else:
     st.info("Select a junction above to view its detailed breakdown.")

@@ -33,6 +33,20 @@ import streamlit.components.v1 as components
 from src.analytics.data_loader import compute_historical_risk_score, load_accident_dataset
 from src.vision.stream_processor import StreamProcessor
 
+import importlib
+import app.components
+importlib.reload(app.components)
+from app.components import (
+    render_risk_badge,
+    render_contributing_factors,
+    render_awaiting_data_banner,
+    inject_custom_styles,
+    get_risk_badge_html,
+    render_navbar,
+    render_dashboard_overview_header,
+    render_footer
+)
+
 # ── Handle Browser GPS Callback (from HTML5 Geolocation Button) ──
 if "geo_lat" in st.query_params and "geo_lng" in st.query_params:
     try:
@@ -59,624 +73,116 @@ init_db()
 risk_engine = ExplainableRiskEngine()
 
 st.set_page_config(
-    page_title="JunctionGuard AI | Explainable Road Safety",
+    page_title="JunctionGuard AI | Command Center",
     page_icon="🚨",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ============================================================
-# COMPREHENSIVE CSS DESIGN SYSTEM — JunctionGuard AI Brand
-# ============================================================
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+# Inject Stitch Tactical Vision Interface Design System
+inject_custom_styles()
 
-    /* ── Global Dark Palette ── */
-    html, body, [class*="css"], .stApp {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-        background: #070b14 !important;
-        color: #f1f5f9 !important;
-    }
-
-    [data-testid="stAppViewContainer"] {
-        background: #070b14 !important;
-        background-image: 
-            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
-            radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.06) 0px, transparent 50%),
-            radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%) !important;
-    }
-
-    /* ── Top Navigation Bar ── */
-    .cyber-navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(15, 23, 42, 0.75);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 16px 24px;
-        margin-bottom: 8px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-    }
-    .navbar-brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-    }
-    .brand-radar {
-        position: relative;
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(99, 102, 241, 0.15);
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        border-radius: 12px;
-    }
-    .radar-icon {
-        font-size: 1.4rem;
-        z-index: 2;
-    }
-    .brand-title {
-        font-size: 1.45rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        color: #f8fafc;
-        line-height: 1.1;
-    }
-    .brand-ai {
-        background: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 900;
-    }
-    .brand-sub {
-        font-size: 0.78rem;
-        color: #94a3b8;
-        margin-top: 2px;
-        font-weight: 500;
-    }
-    .navbar-status-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    .status-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 14px;
-        border-radius: 9999px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-    }
-    .chip-online {
-        background: rgba(16, 185, 129, 0.12);
-        color: #34d399;
-        border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-    .chip-inference {
-        background: rgba(6, 182, 212, 0.12);
-        color: #38bdf8;
-        border: 1px solid rgba(6, 182, 212, 0.25);
-    }
-    .chip-nodes {
-        background: rgba(99, 102, 241, 0.12);
-        color: #a5b4fc;
-        border: 1px solid rgba(99, 102, 241, 0.25);
-    }
-
-    header[data-testid="stHeader"] {
-        background: rgba(7, 11, 20, 0.85) !important;
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0b1120 0%, #070b14 100%) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-    [data-testid="stSidebar"] label {
-        color: #cbd5e1 !important;
-    }
-
-    /* ── Custom Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-    /* ── Animated Gradient Separator ── */
-    @keyframes gradientFlow {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    .gradient-separator {
-        height: 3px;
-        background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6, #ef4444);
-        background-size: 300% 100%;
-        animation: gradientFlow 4s ease infinite;
-        border-radius: 2px;
-        margin: 0.5rem 0 1.5rem 0;
-    }
-
-    /* ── Metric / KPI Card Styling ── */
-    .metric-card {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(51, 65, 85, 0.5);
-        border-radius: 16px;
-        padding: 20px;
-        color: #f8fafc;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    .metric-card:hover {
-        border-color: rgba(99, 102, 241, 0.5);
-        box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.2);
-        transform: translateY(-2px);
-    }
-    .metric-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--accent-color, #6366f1), transparent);
-        border-radius: 16px 16px 0 0;
-    }
-    .metric-icon {
-        font-size: 1.3rem;
-        margin-right: 6px;
-        opacity: 0.8;
-    }
-    .metric-title {
-        font-size: 0.78rem;
-        color: #94a3b8;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-    }
-    .metric-value {
-        font-size: 2.2rem;
-        font-weight: 800;
-        margin-top: 6px;
-        line-height: 1.1;
-    }
-    .metric-status {
-        font-size: 0.65rem;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    .metric-status .live-dot {
-        width: 6px;
-        height: 6px;
-        background: #10b981;
-        border-radius: 50%;
-        animation: livePulse 2s ease-in-out infinite;
-    }
-    @keyframes livePulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; }
-    }
-    .metric-accent-bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        border-radius: 0 0 16px 16px;
-    }
-
-    /* ── Risk Level Badges ── */
-    .badge-high {
-        background: rgba(239, 68, 68, 0.15);
-        color: #f87171;
-        padding: 5px 14px;
-        border-radius: 9999px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
-        animation: badgePulseHigh 2s ease-in-out infinite;
-    }
-    @keyframes badgePulseHigh {
-        0%, 100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.2); }
-        50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
-    }
-    .badge-medium {
-        background: rgba(245, 158, 11, 0.15);
-        color: #fbbf24;
-        padding: 5px 14px;
-        border-radius: 9999px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-    .badge-low {
-        background: rgba(16, 185, 129, 0.15);
-        color: #34d399;
-        padding: 5px 14px;
-        border-radius: 9999px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    /* ── Pulsing Red Halo CSS Animation for Folium High-Risk Markers ── */
-    @keyframes pulse-red {
-        0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9); }
-        50%  { box-shadow: 0 0 0 25px rgba(239, 68, 68, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-    @keyframes pulse-amber {
-        0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
-        50%  { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-    }
-    .pulse-marker-high {
-        background-color: #ef4444;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        border: 3px solid #ffffff;
-        animation: pulse-red 1.6s infinite;
-    }
-    .pulse-marker-med {
-        background-color: #f59e0b;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        border: 2px solid #ffffff;
-        animation: pulse-amber 2.2s infinite;
-    }
-    .pulse-marker-low {
-        background-color: #10b981;
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        border: 2px solid #ffffff;
-    }
-
-    /* ── Tab Styling ── */
-    .stTabs [data-baseweb="tab-list"] {
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 12px;
-        padding: 4px;
-        gap: 4px;
-        border: 1px solid rgba(51, 65, 85, 0.4);
-    }
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 8px;
-        color: #94a3b8;
-        font-weight: 600;
-        padding: 8px 16px;
-        background: transparent;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        color: #e2e8f0;
-        background: rgba(51, 65, 85, 0.3);
-    }
-    .stTabs [aria-selected="true"] {
-        background: rgba(59, 130, 246, 0.15) !important;
-        color: #60a5fa !important;
-        border-bottom: 2px solid #3b82f6;
-    }
-
-    /* ── Detail / Info Card ── */
-    .detail-card {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(51, 65, 85, 0.5);
-        border-radius: 14px;
-        padding: 20px;
-        color: #f8fafc;
-    }
-    .detail-card h3 {
-        margin: 0 0 12px 0;
-        font-size: 1.4rem;
-        color: #f1f5f9;
-    }
-    .detail-card code {
-        background: rgba(99, 102, 241, 0.15);
-        color: #a5b4fc;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-    }
-
-    /* ── Section Headers ── */
-    .stApp h1, .stApp h2, .stApp h3, .stApp h4 {
-        color: #f1f5f9 !important;
-    }
-
-    /* ── Form Styling ── */
-    .stForm {
-        background: rgba(15, 23, 42, 0.5);
-        border: 1px solid rgba(51, 65, 85, 0.5);
-        border-radius: 12px;
-        padding: 16px;
-    }
-
-    /* ── Footer ── */
-    .app-footer {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(10, 14, 26, 0.9));
-        border: 1px solid rgba(51, 65, 85, 0.3);
-        border-radius: 12px;
-        padding: 16px 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 2rem;
-    }
-    .footer-brand {
-        font-size: 0.85rem;
-        color: #64748b;
-        font-weight: 600;
-    }
-    .footer-version {
-        font-size: 0.7rem;
-        color: #475569;
-        background: rgba(51, 65, 85, 0.3);
-        padding: 3px 10px;
-        border-radius: 9999px;
-        border: 1px solid rgba(71, 85, 105, 0.3);
-    }
-    /* ── Map Container Anti-Flicker & Dark Mode Integration ── */
-    iframe[title*="st_folium"], .stFolium iframe, [data-testid="stCustomComponentV1"] {
-        background-color: #070b14 !important;
-        border-radius: 12px;
-        border: 1px solid rgba(51, 65, 85, 0.4);
-    }
-    .leaflet-container {
-        background-color: #070b14 !important;
-    }
-    .leaflet-tile-container img {
-        transition: none !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# ── Top Navigation Bar ──
-st.markdown("""
-<div class="cyber-navbar">
-    <div class="navbar-brand">
-        <div class="brand-radar">
-            <span class="radar-icon">🚨</span>
-            <span class="radar-ring"></span>
+# ── Sidebar Navigation & Controls ──
+with st.sidebar:
+    st.markdown("""
+    <div style="padding: 6px 0 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:32px; height:32px; background:rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.35); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+                <div style="font-family:'Space Grotesk', sans-serif; font-size:1.05rem; font-weight:800; color:#ffffff;">JunctionGuard</div>
+                <div style="font-size:0.65rem; color:#9ca3af; font-family:'JetBrains Mono', monospace;">AI SURVEILLANCE SYSTEM</div>
+            </div>
         </div>
-        <div>
-            <div class="brand-title">JunctionGuard <span class="brand-ai">AI</span></div>
-            <div class="brand-sub">Autonomous Vision Analytics &amp; Explainable Road Hazard Intelligence</div>
-        </div>
-    </div>
-    <div class="navbar-status-group">
-        <div class="status-chip chip-online">
-            <span class="live-dot"></span>
-            <span>SYSTEM LIVE (99.98% SLA)</span>
-        </div>
-        <div class="status-chip chip-inference">
-            <span>⚡ YOLOv8 INFERENCE: 28 FPS</span>
-        </div>
-        <div class="status-chip chip-nodes">
-            <span>🛰️ 12 MONITORED NODES</span>
-        </div>
-    </div>
-</div>
-<div class="gradient-separator"></div>
-""", unsafe_allow_html=True)
-
-# ── Sidebar Controls ──
-st.sidebar.markdown("""
-<div style="text-align: center; padding: 8px 0 16px 0; border-bottom: 1px solid rgba(51,65,85,0.4); margin-bottom: 16px;">
-    <img src="https://img.icons8.com/color/96/traffic-light.png" width="50" style="margin-bottom: 6px;">
-    <div style="font-size: 1.1rem; font-weight: 700; color: #f1f5f9;">Dashboard Controls</div>
-    <div style="font-size: 0.65rem; color: #475569; background: rgba(51,65,85,0.3); display: inline-block;
-                padding: 2px 10px; border-radius: 9999px; margin-top: 4px; border: 1px solid rgba(71,85,105,0.3);">
-        v1.0 • Live Mode
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# Load Junction Data (conforming strictly to Data Contract)
-junctions = fetch_all_junctions()
-
-# Filter Junctions
-risk_filter = st.sidebar.multiselect(
-    "Filter Risk Level",
-    options=["HIGH", "MEDIUM", "LOW"],
-    default=["HIGH", "MEDIUM", "LOW"]
-)
-
-filtered_junctions = [j for j in junctions if j["risk_level"] in risk_filter]
-
-# Top KPI Summary Cards
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-total_jnc = len(junctions)
-high_risk_count = sum(1 for j in junctions if j["risk_level"] == "HIGH")
-avg_risk_score = round(sum(j["risk_score"] for j in junctions if j["risk_score"] is not None) / max(1, total_jnc), 1)
-total_reports = len(fetch_citizen_reports())
-
-with kpi1:
-    st.markdown(f"""
-    <div class="metric-card" style="--accent-color: #6366f1;">
-        <div class="metric-title"><span class="metric-icon">◉</span> Monitored Junctions</div>
-        <div class="metric-value" style="color: #e2e8f0;">{total_jnc}</div>
-        <div class="metric-status"><div class="live-dot"></div> REAL-TIME</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #6366f1, transparent);"></div>
     </div>
     """, unsafe_allow_html=True)
 
-with kpi2:
-    st.markdown(f"""
-    <div class="metric-card" style="--accent-color: #ef4444;">
-        <div class="metric-title"><span class="metric-icon">⚠</span> High Risk Hotspots</div>
-        <div class="metric-value" style="color:#f87171;">{high_risk_count}</div>
-        <div class="metric-status"><div class="live-dot"></div> CRITICAL</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #ef4444, transparent);"></div>
-    </div>
-    """, unsafe_allow_html=True)
+    nav_options = [
+        "Dashboard",
+        "Interactive Alert Map",
+        "Explainability & Factor Breakdown",
+        "Live CCTV Vision Analytics",
+        "Citizen Hazard Reporting"
+    ]
 
-with kpi3:
-    st.markdown(f"""
-    <div class="metric-card" style="--accent-color: #f59e0b;">
-        <div class="metric-title"><span class="metric-icon">📊</span> Avg Risk Score</div>
-        <div class="metric-value" style="color:#fbbf24;">{avg_risk_score}<span style="font-size:1rem; color:#64748b;">/100</span></div>
-        <div class="metric-status"><div class="live-dot"></div> UPDATED</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #f59e0b, transparent);"></div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with kpi4:
-    st.markdown(f"""
-    <div class="metric-card" style="--accent-color: #3b82f6;">
-        <div class="metric-title"><span class="metric-icon">📋</span> Citizen Reports</div>
-        <div class="metric-value" style="color:#60a5fa;">{total_reports}</div>
-        <div class="metric-status"><div class="live-dot"></div> LIVE FEED</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, #3b82f6, transparent);"></div>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.write("")
-
-# Main Layout Tabs
-tab_map, tab_explain, tab_vision, tab_citizen = st.tabs([
-    "🗺️ Interactive Alert Map",
-    "📊 Explainability & Factor Breakdown",
-    "📹 Live CCTV Vision Analytics (Track A)",
-    "📝 Citizen Hazard Reporting"
-])
-
-# ----------------------------------------------------
-# TAB 1: REAL-TIME GLOBAL & REGIONAL RISK SURVEILLANCE MAP
-# ----------------------------------------------------
-with tab_map:
-    st.subheader("🗺️ Global & Regional Junction Risk Surveillance System")
-    st.markdown(
-        "Single unified GIS command map with seamless **View Modes** (Satellite, Streets, Dark Tactical) "
-        "and **Explainable Risk Layers** (Heatmaps, Hazard Buffers, Radar Halos)."
+    sidebar_nav = st.radio(
+        "NAVIGATION",
+        options=nav_options,
+        index=0,
+        format_func=lambda x: {
+            "Dashboard": "📊  Dashboard",
+            "Interactive Alert Map": "🗺️  Interactive Alert Map",
+            "Explainability & Factor Breakdown": "⚖️  Explainability & Factor Breakdown",
+            "Live CCTV Vision Analytics": "📹  Live CCTV Vision Analytics",
+            "Citizen Hazard Reporting": "🚨  Citizen Hazard Reporting"
+        }.get(x, x),
+        key="app_sidebar_navigation",
+        label_visibility="collapsed"
     )
 
-    # ── Map Control Toolbar: View Options & Risk Part ──
-    with st.container():
-        st.markdown('<div style="background:rgba(15,23,42,0.7); border:1px solid rgba(51,65,85,0.5); border-radius:14px; padding:16px 20px; margin-bottom:15px;">', unsafe_allow_html=True)
-        
-        # Row 1: Geographic Scope & Base View Options
-        ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([2, 2, 2])
-        
-        with ctrl_col1:
-            map_scope = st.selectbox(
-                "🌐 Geographic Scope",
-                options=[
-                    "🌍 Single World Map (Global View)",
-                    "🇮🇳 India National Hotspot Overview",
-                    "🎯 Focus on Specific Junction Camera"
-                ],
-                index=1
-            )
-            
-        with ctrl_col2:
-            base_view_mode = st.selectbox(
-                "🎨 Map View Style",
-                options=[
-                    "🛰️ HD Satellite Imagery (Real World)",
-                    "🛣️ Street Navigation (OpenStreetMap)",
-                    "🌃 Dark Tactical / Command Center",
-                    "🗺️ Clean Light Map",
-                    "🏔️ Topographic Terrain"
-                ],
-                index=0
-            )
+    st.markdown("<div style='margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px;'></div>", unsafe_allow_html=True)
 
-        with ctrl_col3:
-            if "Specific Junction" in map_scope:
-                junction_pick_options = {f"📍 {j['name']} ({j['risk_level']})": j for j in filtered_junctions}
-                picked_jnc_label = st.selectbox("Select Target Junction", options=list(junction_pick_options.keys()))
-                focused_jnc = junction_pick_options.get(picked_jnc_label)
-            else:
-                focused_jnc = None
-                st.selectbox("Camera Status", options=["📡 All Junction Telemetry Live", "⚡ Radar Beacon Active"], disabled=True)
+    # Junction Selector Dropdown
+    junctions_raw = fetch_all_junctions()
+    jnc_select_options = ["All Junctions"] + [j["name"] for j in junctions_raw]
+    sidebar_selected_jnc = st.selectbox("JUNCTION SELECTOR", options=jnc_select_options, index=0)
 
-        st.markdown('<hr style="margin:10px 0; border-color:rgba(51,65,85,0.4);">', unsafe_allow_html=True)
+    # Time Range Dropdown
+    sidebar_time_range = st.selectbox("TIME RANGE", options=["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Live Stream"], index=0)
 
-        # Row 2: "Those Risk Part" (Risk Layers & Thresholds)
-        risk_col1, risk_col2, risk_col3, risk_col4 = st.columns([2, 2, 2, 2])
+    # Risk Filter Multiselect
+    risk_filter = st.multiselect(
+        "FILTER RISK LEVEL",
+        options=["HIGH", "MEDIUM", "LOW"],
+        default=["HIGH", "MEDIUM", "LOW"]
+    )
 
-        with risk_col1:
-            map_risk_filter = st.multiselect(
-                "🚨 Filter Risk Severity",
-                options=["HIGH", "MEDIUM", "LOW"],
-                default=["HIGH", "MEDIUM", "LOW"]
-            )
+    st.markdown("""
+    <div style="margin-top: 30px; padding: 12px; background: #12151a; border: 1px solid rgba(249,115,22,0.3); border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.4); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff;">JunctionGuard AI</div>
+            <div style="font-size: 0.68rem; color: #9ca3af;">Roads Safer, Cities Smarter.</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        with risk_col2:
-            enable_heatmap = st.checkbox("🔥 Accident Density Heatmap", value=True)
-            heat_radius = st.slider("Heat Intensity Radius", min_value=15, max_value=45, value=28, step=5) if enable_heatmap else 28
+# Render Top Tactical Navigation Bar
+render_navbar(sidebar_nav)
 
-        with risk_col3:
-            enable_buffers = st.checkbox("⭕ Hazard Conflict Buffers", value=True)
-            buffer_radius_m = st.selectbox("Safety Buffer Radius", options=[250, 500, 1000], index=1, format_func=lambda x: f"{x} Meters") if enable_buffers else 500
+# Render Subheader Overview Bar
+nav_subtitles = {
+    "Dashboard": "Real-time Junction Risk Surveillance System",
+    "Interactive Alert Map": "Real-time Spatial Hazard & Risk Density Surveillance",
+    "Explainability & Factor Breakdown": "Transparent AI Scoring & Contributing Factor Weights",
+    "Live CCTV Vision Analytics": "Autonomous Vision Inference & Traffic Anomaly Detection",
+    "Citizen Hazard Reporting": "Crowdsourced Hazard Verification & Community Evidence"
+}
+render_dashboard_overview_header(title=sidebar_nav, subtitle=nav_subtitles.get(sidebar_nav, "Real-time Junction Risk Surveillance System"))
 
-        with risk_col4:
-            marker_style = st.radio(
-                "⚡ Marker Style",
-                options=["Pulsing Radar Beacons", "Standard Pin Markers"],
-                index=0,
-                horizontal=True
-            )
+# Load and filter junction records
+junctions = fetch_all_junctions()
+if sidebar_selected_jnc != "All Junctions":
+    filtered_junctions = [j for j in junctions if j["name"] == sidebar_selected_jnc and j["risk_level"] in risk_filter]
+else:
+    filtered_junctions = [j for j in junctions if j["risk_level"] in risk_filter]
 
-        st.markdown('</div>', unsafe_allow_html=True)
+def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_prefix: str = "dash"):
+    """Reusable interactive map renderer with Esri dark tiles and pulsing radar halos."""
+    map_risk_filter = risk_filter
+    enable_heatmap = "Heatmap" in base_view_mode
 
-    # Filter junctions displayed on map based on the map_risk_filter
     map_junctions = [j for j in filtered_junctions if j["risk_level"] in map_risk_filter]
+    map_center = [18.5204, 73.8567] if any("Pune" in j.get("city", "") or "Shivaji" in j["name"] for j in map_junctions) else [20.5937, 78.9629]
+    map_zoom = 11 if any("Pune" in j.get("city", "") for j in map_junctions) else 6
 
-    # Live Risk Telemetry Mini HUD above Map
-    map_high = sum(1 for j in map_junctions if j["risk_level"] == "HIGH")
-    map_med = sum(1 for j in map_junctions if j["risk_level"] == "MEDIUM")
-    map_low = sum(1 for j in map_junctions if j["risk_level"] == "LOW")
-    map_avg = round(sum(j["risk_score"] for j in map_junctions if j["risk_score"] is not None) / max(1, len(map_junctions)), 1)
-
-    hud_c1, hud_c2, hud_c3, hud_c4 = st.columns(4)
-    hud_c1.markdown(f'<div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#fca5a5; font-weight:600;">🔴 HIGH RISK HOTSPOTS</span><span style="font-size:1.3rem; font-weight:800; color:#ef4444;">{map_high}</span></div>', unsafe_allow_html=True)
-    hud_c2.markdown(f'<div style="background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#fde68a; font-weight:600;">🟡 MEDIUM RISK ZONES</span><span style="font-size:1.3rem; font-weight:800; color:#f59e0b;">{map_med}</span></div>', unsafe_allow_html=True)
-    hud_c3.markdown(f'<div style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#a7f3d0; font-weight:600;">🟢 LOW RISK NODES</span><span style="font-size:1.3rem; font-weight:800; color:#10b981;">{map_low}</span></div>', unsafe_allow_html=True)
-    hud_c4.markdown(f'<div style="background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.78rem; color:#bfdbfe; font-weight:600;">📊 AVG RISK INDEX</span><span style="font-size:1.3rem; font-weight:800; color:#3b82f6;">{map_avg}/100</span></div>', unsafe_allow_html=True)
-
-    st.write("")
-
-    # Determine center and zoom level based on Geographic Scope
-    if "Global" in map_scope:
-        map_center = [20.0, 0.0]
-        map_zoom = 2
-        min_zoom = 2
-    elif "Specific Junction" in map_scope and focused_jnc is not None:
-        map_center = [focused_jnc["lat"], focused_jnc["lon"]]
-        map_zoom = 15
-        min_zoom = 2
-    else:  # India National Overview
-        map_center = [20.5937, 78.9629]
-        map_zoom = 5
-        min_zoom = 2
-
-    # Initialize SINGLE NON-REPEATING Folium Map (no infinite tiling clones)
     m = folium.Map(
         location=map_center,
         zoom_start=map_zoom,
-        min_zoom=min_zoom,
+        min_zoom=2,
         max_zoom=19,
         tiles=None,
         control_scale=True,
@@ -685,231 +191,393 @@ with tab_map:
         min_lat=-85, max_lat=85, min_lon=-180, max_lon=180
     )
 
-    # 1. Base Tile Layers with no_wrap=True (Guarantees ONE single world map, no horizontal wrapping)
+    overview_map_css = """
+    <style>
+    .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
+        background-color: #0a0c0e !important;
+    }
+    .leaflet-tile, .leaflet-pane, .leaflet-tile-pane, .leaflet-tile-container img {
+        filter: none !important;
+        -webkit-filter: none !important;
+        opacity: 1 !important;
+        transition: none !important;
+    }
+    .leaflet-tile:hover {
+        filter: none !important;
+        -webkit-filter: none !important;
+        opacity: 1 !important;
+    }
+    </style>
+    """
+    m.get_root().html.add_child(folium.Element(overview_map_css))
+
     satellite_tile = folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        attr="Esri World Imagery, Maxar, Earthstar Geographics",
-        name="🛰️ HD Satellite Imagery (Real World)",
-        overlay=False,
-        control=True,
+        attr="Esri World Imagery",
+        name="Satellite Imagery",
         no_wrap=True,
         bounds=[[-85, -180], [85, 180]]
     )
-
     streets_tile = folium.TileLayer(
-        tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        attr="&copy; OpenStreetMap contributors",
-        name="🛣️ Street Navigation (OpenStreetMap)",
-        overlay=False,
-        control=True,
+        tiles="OpenStreetMap",
+        name="Street Navigation",
         no_wrap=True,
         bounds=[[-85, -180], [85, 180]]
     )
-
     dark_tile = folium.TileLayer(
-        tiles="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        attr="&copy; OpenStreetMap contributors &copy; CARTO",
-        name="🌃 Dark Tactical / Command Center",
-        overlay=False,
-        control=True,
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri World Dark Gray Canvas",
+        name="Dark Tactical",
         no_wrap=True,
         bounds=[[-85, -180], [85, 180]]
     )
 
-    positron_tile = folium.TileLayer(
-        tiles="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        attr="&copy; OpenStreetMap contributors &copy; CARTO",
-        name="🗺️ Clean Light Map",
-        overlay=False,
-        control=True,
-        no_wrap=True,
-        bounds=[[-85, -180], [85, 180]]
-    )
-
-    topo_tile = folium.TileLayer(
-        tiles="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-        attr="Map data &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap",
-        name="🏔️ Topographic Terrain",
-        overlay=False,
-        control=True,
-        no_wrap=True,
-        bounds=[[-85, -180], [85, 180]]
-    )
-
-    # Add default layer based on user dropdown selection
     if "Satellite" in base_view_mode:
         satellite_tile.add_to(m)
-        streets_tile.add_to(m)
-        dark_tile.add_to(m)
-        positron_tile.add_to(m)
-        topo_tile.add_to(m)
     elif "Street" in base_view_mode:
         streets_tile.add_to(m)
-        satellite_tile.add_to(m)
-        dark_tile.add_to(m)
-        positron_tile.add_to(m)
-        topo_tile.add_to(m)
-    elif "Dark" in base_view_mode:
-        dark_tile.add_to(m)
-        satellite_tile.add_to(m)
-        streets_tile.add_to(m)
-        positron_tile.add_to(m)
-        topo_tile.add_to(m)
-    elif "Terrain" in base_view_mode:
-        topo_tile.add_to(m)
-        satellite_tile.add_to(m)
-        streets_tile.add_to(m)
-        dark_tile.add_to(m)
-        positron_tile.add_to(m)
     else:
-        positron_tile.add_to(m)
-        satellite_tile.add_to(m)
-        streets_tile.add_to(m)
         dark_tile.add_to(m)
-        topo_tile.add_to(m)
 
-    # 2. Add Risk HeatMap Layer
     if enable_heatmap and map_junctions:
-        heat_data = []
-        for j in map_junctions:
-            weight = (j.get("risk_score") or 30.0) / 100.0
-            # Add primary center point and surrounding radius points
-            heat_data.append([j["lat"], j["lon"], weight * 1.6])
-            heat_data.append([j["lat"] + 0.0018, j["lon"] + 0.0018, weight * 0.9])
-            heat_data.append([j["lat"] - 0.0018, j["lon"] - 0.0018, weight * 0.9])
-        
-        heatmap_layer = folium.FeatureGroup(name="🔥 Accident Risk Heatmap", overlay=True)
-        HeatMap(
-            heat_data,
-            radius=heat_radius,
-            blur=18,
-            max_zoom=13,
-            gradient={0.2: '#10b981', 0.45: '#f59e0b', 0.75: '#ef4444', 1.0: '#991b1b'}
-        ).add_to(heatmap_layer)
-        heatmap_layer.add_to(m)
+        heat_data = [[j["lat"], j["lon"], float(j["risk_score"] or 50.0) / 100.0] for j in map_junctions]
+        HeatMap(heat_data, radius=26, blur=18, min_opacity=0.35, max_zoom=14).add_to(m)
 
-    # 3. Add Hazard Conflict Buffer Zones (Safety Perimeters)
-    if enable_buffers and map_junctions:
-        buffer_layer = folium.FeatureGroup(name=f"⭕ Hazard Conflict Buffers ({buffer_radius_m}m)", overlay=True)
-        for jnc in map_junctions:
-            lvl = jnc.get("risk_level", "LOW")
-            if lvl == "HIGH":
-                buf_color = "#ef4444"
-                buf_opacity = 0.20
-            elif lvl == "MEDIUM":
-                buf_color = "#f59e0b"
-                buf_opacity = 0.14
-            else:
-                buf_color = "#10b981"
-                buf_opacity = 0.08
-
-            folium.Circle(
-                location=[jnc["lat"], jnc["lon"]],
-                radius=buffer_radius_m,
-                color=buf_color,
-                fill=True,
-                fill_color=buf_color,
-                fill_opacity=buf_opacity,
-                weight=1.5,
-                dash_array="6, 4",
-                tooltip=f"Danger Buffer ({buffer_radius_m}m): {jnc['name']}"
-            ).add_to(buffer_layer)
-        buffer_layer.add_to(m)
-
-    # 4. Add Interactive Junction Markers with Live Radar Halos
-    markers_layer = folium.FeatureGroup(name="🚨 Junction Hotspot Markers", overlay=True)
-    for jnc in map_junctions:
-        score = jnc["risk_score"] or 0.0
-        level = jnc["risk_level"] or "LOW"
-        name = jnc["name"]
-        lat, lon = jnc["lat"], jnc["lon"]
+    markers_layer = folium.FeatureGroup(name="Junction Markers")
+    for j in map_junctions:
+        lat = j["lat"]
+        lon = j["lon"]
+        name = j["name"]
+        score = j["risk_score"] or 0.0
+        level = (j["risk_level"] or "LOW").upper()
 
         if level == "HIGH":
-            marker_html = f'<div class="pulse-marker-high" title="{name}: {score}"></div>'
-            color_hex = "#ef4444"
-            badge_bg = "#ef4444"
-            pin_color = "red"
+            halo_cls = "pulse-marker-high"
         elif level == "MEDIUM":
-            marker_html = f'<div class="pulse-marker-med" title="{name}: {score}"></div>'
-            color_hex = "#f59e0b"
-            badge_bg = "#f59e0b"
-            pin_color = "orange"
+            halo_cls = "pulse-marker-med"
         else:
-            marker_html = f'<div class="pulse-marker-low" title="{name}: {score}"></div>'
-            color_hex = "#10b981"
-            badge_bg = "#10b981"
-            pin_color = "green"
+            halo_cls = "pulse-marker-low"
 
-        factors_items = "".join([
-            f'<div style="display:flex; justify-content:space-between; margin-bottom:3px;">'
-            f'<span style="color:#64748b;">• {f["factor"]}:</span>'
-            f'<b style="color:#334155;">{int(f["weight"]*100)}%</b></div>'
-            for f in (jnc["contributing_factors"] or [])[:3]
-        ])
-
-        gmaps_url = f"https://www.google.com/maps/search/?api=1&query={lat},{lon}"
-
-        popup_content = f"""
-        <div style="font-family: 'Segoe UI', system-ui, sans-serif; width: 260px; padding: 6px 4px;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-                <h4 style="margin:0; color: #0f172a; font-size: 0.95rem; line-height:1.2;">{name}</h4>
-            </div>
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin:6px 0;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; color:#64748b; font-weight:600;">JUNCTION RISK SCORE</span>
-                    <span style="background:{badge_bg}; color:white; padding:2px 8px; border-radius:9999px; font-size:0.65rem; font-weight:700;">{level}</span>
-                </div>
-                <div style="font-size:1.6rem; font-weight:800; color:{color_hex}; line-height:1.2; margin-top:2px;">
-                    {score}<span style="font-size:0.85rem; color:#94a3b8; font-weight:500;"> / 100</span>
-                </div>
-            </div>
-            <div style="font-size:0.75rem; margin-top:6px;">
-                <b style="color:#475569;">Top Contributing Risk Factors:</b>
-                <div style="margin-top:4px;">{factors_items}</div>
-            </div>
-            <div style="margin-top:10px; padding-top:8px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.7rem; color:#94a3b8; font-family:monospace;">{lat:.4f}, {lon:.4f}</span>
-                <a href="{gmaps_url}" target="_blank" style="color:#3b82f6; text-decoration:none; font-size:0.75rem; font-weight:600;">
-                    📍 Google Maps &rarr;
-                </a>
-            </div>
-        </div>
-        """
-
-        if marker_style == "Pulsing Radar Beacons":
-            icon = folium.DivIcon(
-                html=marker_html,
-                icon_size=(20, 20),
-                icon_anchor=(10, 10)
-            )
-            folium.Marker(
-                location=[lat, lon],
-                icon=icon,
-                popup=folium.Popup(popup_content, max_width=300),
-                tooltip=f"{name} | {level} Risk ({score:.1f}/100)"
-            ).add_to(markers_layer)
-        else:
-            folium.Marker(
-                location=[lat, lon],
-                popup=folium.Popup(popup_content, max_width=300),
-                tooltip=f"{name} | {level} Risk ({score:.1f}/100)",
-                icon=folium.Icon(color=pin_color, icon="info-sign")
-            ).add_to(markers_layer)
+        marker_html = f'<div class="{halo_cls}"></div>'
+        icon = folium.DivIcon(html=marker_html, icon_size=(20, 20), icon_anchor=(10, 10))
+        folium.Marker(
+            location=[lat, lon],
+            icon=icon,
+            tooltip=f"{name} | {level} Risk ({score:.1f}/100)"
+        ).add_to(markers_layer)
 
     markers_layer.add_to(m)
 
-    # 5. Interactive GIS Plugins
-    Fullscreen(position="topright").add_to(m)
-    MiniMap(toggle_display=True, tile_layer="OpenStreetMap", position="bottomright", width=140, height=100).add_to(m)
-    folium.LayerControl(position="topleft", collapsed=False).add_to(m)
-
-    st_folium(m, width="stretch", height=600, key=f"unified_map_{map_scope}_{base_view_mode}_{len(map_junctions)}_{marker_style}", returned_objects=["last_object_clicked"])
+    return st_folium(
+        m,
+        width="stretch",
+        height=height,
+        key=f"{key_prefix}_overview_map_{base_view_mode}_{len(map_junctions)}",
+        returned_objects=["last_object_clicked"],
+        return_on_hover=False
+    )
 
 # ----------------------------------------------------
-# TAB 2: EXPLAINABILITY & CONTRIBUTING FACTORS
+# 1. DASHBOARD OVERVIEW (HOME)
 # ----------------------------------------------------
-with tab_explain:
-    st.subheader("📊 Explainable Junction Risk Scoring")
+if sidebar_nav == "Dashboard":
+    # Top KPI Summary Cards (Matching Reference Image)
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    total_jnc = len(junctions)
+    high_risk_count = sum(1 for j in junctions if j["risk_level"] == "HIGH")
+    avg_risk_score = round(sum(j["risk_score"] for j in junctions if j["risk_score"] is not None) / max(1, total_jnc), 1)
+    total_reports = len(fetch_citizen_reports())
+
+    with kpi1:
+        st.markdown(f"""
+        <div class="kpi-tactical-card">
+            <div>
+                <div class="kpi-label">MONITORED JUNCTIONS</div>
+                <div class="kpi-num">{total_jnc}</div>
+                <div class="kpi-sub" style="color: #f97316;"><span class="live-dot-green"></span> REAL-TIME</div>
+            </div>
+            <div class="kpi-icon-wrap" style="background: rgba(249, 115, 22, 0.12); border: 1px solid rgba(249, 115, 22, 0.35);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="12" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="12" cy="5" r="2"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="12" y1="7" x2="12" y2="9"/><line x1="15" y1="12" x2="17" y2="12"/><line x1="7" y1="12" x2="9" y2="12"/></svg>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi2:
+        st.markdown(f"""
+        <div class="kpi-tactical-card kpi-card-critical">
+            <div>
+                <div class="kpi-label">HIGH RISK HOTSPOTS</div>
+                <div class="kpi-num" style="color: #f87171;">{high_risk_count}</div>
+                <div class="kpi-sub" style="color: #ef4444;"><span class="live-dot-red"></span> CRITICAL</div>
+            </div>
+            <div class="kpi-icon-wrap" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.45);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi3:
+        st.markdown(f"""
+        <div class="kpi-tactical-card">
+            <div>
+                <div class="kpi-label">AVG RISK SCORE</div>
+                <div class="kpi-num" style="color: #fbbf24;">{avg_risk_score} <span class="kpi-denom">/100</span></div>
+                <div class="kpi-sub" style="color: #f59e0b;"><span class="live-dot-green"></span> UPDATED</div>
+            </div>
+            <div class="kpi-icon-wrap" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi4:
+        st.markdown(f"""
+        <div class="kpi-tactical-card">
+            <div>
+                <div class="kpi-label">CITIZEN REPORTS</div>
+                <div class="kpi-num" style="color: #34d399;">{total_reports}</div>
+                <div class="kpi-sub" style="color: #10b981;"><span class="live-dot-green"></span> LIVE FEED</div>
+            </div>
+            <div class="kpi-icon-wrap" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.write("")
+
+    # Top Row: Interactive Risk Map (Left) & Live CCTV Feed (Right)
+    col_map, col_cctv = st.columns([1, 1])
+
+    with col_map:
+        # Header with view mode buttons matching reference image
+        map_h_col1, map_h_col2 = st.columns([1, 1])
+        with map_h_col1:
+            st.markdown('<div class="panel-title" style="font-size:0.95rem; font-weight:700; color:#ffffff; letter-spacing:0.04em; text-transform:uppercase; margin-top:6px;">INTERACTIVE RISK MAP</div>', unsafe_allow_html=True)
+        with map_h_col2:
+            base_view_mode = st.selectbox(
+                "Map Mode",
+                options=[
+                    "Heatmap Mode",
+                    "Dark Tactical",
+                    "Satellite Imagery",
+                    "Street Navigation"
+                ],
+                index=0,
+                label_visibility="collapsed",
+                key="dash_map_mode_select"
+            )
+
+        render_surveillance_folium_map(base_view_mode, height=380, key_prefix="dash")
+
+        st.markdown("""
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#12151a; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:6px 12px; margin-top:6px; font-size:0.72rem; font-family:'JetBrains Mono', monospace;">
+            <span style="color:#9ca3af;">RISK LEVEL:</span>
+            <span style="display:inline-flex; align-items:center; gap:5px; color:#f87171;"><span class="live-dot-red"></span> HIGH</span>
+            <span style="display:inline-flex; align-items:center; gap:5px; color:#fbbf24;"><span style="width:6px; height:6px; border-radius:50%; background:#f59e0b; display:inline-block;"></span> MEDIUM</span>
+            <span style="display:inline-flex; align-items:center; gap:5px; color:#34d399;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; display:inline-block;"></span> LOW</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col_cctv:
+        # Header for CCTV Feed matching reference image
+        cctv_h_col1, cctv_h_col2 = st.columns([1, 1])
+        with cctv_h_col1:
+            st.markdown('<div class="panel-title" style="font-size:0.95rem; font-weight:700; color:#ffffff; letter-spacing:0.04em; text-transform:uppercase; margin-top:6px;">LIVE CCTV FEED</div>', unsafe_allow_html=True)
+        with cctv_h_col2:
+            st.markdown('<div style="text-align:right; margin-top:6px;"><span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:700; color:#ef4444; font-family:\'JetBrains Mono\', monospace;"><span class="live-dot-red"></span> LIVE</span></div>', unsafe_allow_html=True)
+
+        now_str = datetime.now().strftime("%I:%M:%S %p")
+        st.markdown(f"""
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#12151a; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:6px 12px; margin-bottom:8px; font-size:0.74rem; font-family:'JetBrains Mono', monospace;">
+            <span style="color:#e2e2e5;">JUNCTION ID: <b style="color:#ffffff;">J-17 Shivajinagar Junction, Pune</b></span>
+            <span style="color:#f97316; font-weight:700;">{now_str}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Video stream playback
+        sample_video_path = "data/sample_videos/indian_traffic_1.mp4"
+        if os.path.exists(sample_video_path):
+            st.video(sample_video_path)
+        else:
+            st.info("CCTV video stream loaded. Connect RTSP stream for live telemetry.")
+
+        # Bottom CCTV controls matching reference image
+        ctrl_col1, ctrl_col2, ctrl_col3, ctrl_col4 = st.columns([1, 1, 1, 3])
+        with ctrl_col1:
+            st.button("📸", help="Capture Snapshot", key="dash_cctv_snap")
+        with ctrl_col2:
+            st.button("⏺️", help="Record Incident", key="dash_cctv_rec")
+        with ctrl_col3:
+            st.button("⛶", help="Fullscreen", key="dash_cctv_full")
+        with ctrl_col4:
+            st.selectbox("Camera", options=["Camera 01 - Northbound", "Camera 02 - East Crossing", "Camera 03 - Pedestrian Refuge"], index=0, label_visibility="collapsed", key="dash_cctv_cam_sel")
+
+    # Bottom Row: 4 Panels matching reference image
+    st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
+    p1, p2, p3, p4 = st.columns(4)
+
+    with p1:
+        with st.container(border=True):
+            st.markdown('<div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-family:\'Space Grotesk\', sans-serif;">RISK SEVERITY FILTERS</div>', unsafe_allow_html=True)
+            st.multiselect(
+                "Filter Severity",
+                options=["HIGH", "MEDIUM", "LOW"],
+                default=["HIGH", "MEDIUM", "LOW"],
+                label_visibility="collapsed",
+                key="dash_p1_severity_multiselect"
+            )
+            st.checkbox("🔥 Accident Density Heatmap", value=True, key="dash_p1_heat_chk")
+            st.checkbox("🛡️ Hazard Conflict Buffers", value=True, key="dash_p1_buf_chk")
+            st.slider("Heat Intensity Radius", min_value=15, max_value=45, value=28, step=5, key="dash_p1_heat_slider")
+            st.selectbox("Safety Buffer Radius", options=["250 Meters", "500 Meters", "1000 Meters"], index=1, key="dash_p1_buf_sel")
+
+    with p2:
+        with st.container(border=True):
+            st.markdown('''
+            <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; font-family:'Space Grotesk', sans-serif;">
+                RISK TREND (LAST 24 HOURS)
+            </div>
+            <div style="display:flex; gap:10px; font-size:0.68rem; font-family:'JetBrains Mono', monospace; margin-bottom:6px;">
+                <span style="color:#ef4444;">● High Risk</span>
+                <span style="color:#f59e0b;">● Medium Risk</span>
+                <span style="color:#10b981;">● Low Risk</span>
+            </div>
+            ''', unsafe_allow_html=True)
+            trend_df = pd.DataFrame({
+                "High Risk": [68, 74, 82, 65, 78, 85, 76],
+                "Medium Risk": [45, 52, 48, 55, 42, 50, 48],
+                "Low Risk": [18, 22, 16, 25, 20, 15, 21]
+            }, index=["10 AM", "2 PM", "6 PM", "10 PM", "2 AM", "6 AM", "10 AM"])
+            st.line_chart(trend_df, color=["#ef4444", "#f59e0b", "#10b981"], height=160)
+
+    with p3:
+        with st.container(border=True):
+            st.markdown('''
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; font-family:'Space Grotesk', sans-serif;">
+                    ALERT SUMMARY
+                </div>
+                <span style="font-size:0.72rem; color:#f97316; font-weight:700; font-family:'JetBrains Mono', monospace;">View All</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+                <div style="background:rgba(239,68,68,0.10); border:1px solid rgba(239,68,68,0.3); border-radius:6px; padding:7px 10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.74rem; font-weight:700; color:#f87171;">⚠️ High Risk Detected</span>
+                        <span style="font-size:0.64rem; color:#9ca3af; font-family:'JetBrains Mono', monospace;">2 min ago</span>
+                    </div>
+                    <div style="font-size:0.70rem; color:#cbd5e1; margin-top:2px;">JM Road, Pune</div>
+                </div>
+                <div style="background:rgba(245,158,11,0.10); border:1px solid rgba(245,158,11,0.3); border-radius:6px; padding:7px 10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.74rem; font-weight:700; color:#fbbf24;">⚡ Accident Prone Zone</span>
+                        <span style="font-size:0.64rem; color:#9ca3af; font-family:'JetBrains Mono', monospace;">12 min ago</span>
+                    </div>
+                    <div style="font-size:0.70rem; color:#cbd5e1; margin-top:2px;">Kharadi Bypass</div>
+                </div>
+                <div style="background:rgba(245,158,11,0.10); border:1px solid rgba(245,158,11,0.3); border-radius:6px; padding:7px 10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.74rem; font-weight:700; color:#fbbf24;">🚗 Heavy Traffic Congestion</span>
+                        <span style="font-size:0.64rem; color:#9ca3af; font-family:'JetBrains Mono', monospace;">18 min ago</span>
+                    </div>
+                    <div style="font-size:0.70rem; color:#cbd5e1; margin-top:2px;">Hinjewadi Phase 1</div>
+                </div>
+            </div>
+            ''', unsafe_allow_html=True)
+            if st.button("See All Alerts", key="dash_p3_see_alerts", use_container_width=True):
+                st.toast("Opening alert incident telemetry stream...")
+
+    with p4:
+        with st.container(border=True):
+            st.markdown('<div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; font-family:\'Space Grotesk\', sans-serif;">QUICK ACTIONS</div>', unsafe_allow_html=True)
+            if st.button("📄 Generate Report", key="dash_p4_action_rep", use_container_width=True):
+                st.toast("Generated Comprehensive Civic Safety Audit Report.")
+            if st.button("📥 Export Data", key="dash_p4_action_exp", use_container_width=True):
+                st.toast("Exported GeoJSON & Incident Records.")
+            if st.button("📹 Manage Cameras", key="dash_p4_action_cam", use_container_width=True):
+                st.toast("Connected to 12 Video Feed Matrix.")
+            if st.button("⚡ System Diagnostics", key="dash_p4_action_diag", use_container_width=True):
+                st.toast("All 12 Monitored Junctions Nominal (28 FPS Inference).")
+
+# ----------------------------------------------------
+# 2. INTERACTIVE ALERT MAP
+# ----------------------------------------------------
+elif sidebar_nav == "Interactive Alert Map":
+    map_h_col1, map_h_col2 = st.columns([1, 1])
+    with map_h_col1:
+        st.markdown('<div class="panel-title" style="font-size:0.95rem; font-weight:700; color:#ffffff; letter-spacing:0.04em; text-transform:uppercase; margin-top:6px;">INTERACTIVE RISK MAP &amp; HOTSPOT SPATIAL INTELLIGENCE</div>', unsafe_allow_html=True)
+    with map_h_col2:
+        base_view_mode = st.selectbox(
+            "Map Mode",
+            options=[
+                "Heatmap Mode",
+                "Dark Tactical",
+                "Satellite Imagery",
+                "Street Navigation"
+            ],
+            index=0,
+            label_visibility="collapsed",
+            key="iam_map_mode_select"
+        )
+
+    col_iam_map, col_iam_tools = st.columns([2.3, 1])
+    with col_iam_map:
+        render_surveillance_folium_map(base_view_mode, height=490, key_prefix="iam")
+        st.markdown("""
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#12151a; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:6px 12px; margin-top:6px; font-size:0.72rem; font-family:'JetBrains Mono', monospace;">
+            <span style="color:#9ca3af;">RISK LEVEL:</span>
+            <span style="display:inline-flex; align-items:center; gap:5px; color:#f87171;"><span class="live-dot-red"></span> HIGH</span>
+            <span style="display:inline-flex; align-items:center; gap:5px; color:#fbbf24;"><span style="width:6px; height:6px; border-radius:50%; background:#f59e0b; display:inline-block;"></span> MEDIUM</span>
+            <span style="display:inline-flex; align-items:center; gap:5px; color:#34d399;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; display:inline-block;"></span> LOW</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col_iam_tools:
+        with st.container(border=True):
+            st.markdown('<div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-family:\'Space Grotesk\', sans-serif;">SPATIAL RISK FILTERS</div>', unsafe_allow_html=True)
+            st.checkbox("🔥 Accident Density Heatmap", value=True, key="iam_heat_chk")
+            st.checkbox("🛡️ Hazard Conflict Buffers", value=True, key="iam_buf_chk")
+            st.slider("Heat Intensity Radius", min_value=15, max_value=45, value=28, step=5, key="iam_heat_slider")
+            st.selectbox("Safety Buffer Radius", options=["250 Meters", "500 Meters", "1000 Meters"], index=1, key="iam_buf_sel")
+
+        with st.container(border=True):
+            st.markdown('<div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-family:\'Space Grotesk\', sans-serif;">JUNCTION INSPECTOR</div>', unsafe_allow_html=True)
+            j_inspect_options = [j["name"] for j in filtered_junctions]
+            if j_inspect_options:
+                chosen_inspect = st.selectbox("Inspect Junction", options=j_inspect_options, index=0, key="iam_inspect_jnc")
+                j_obj = next((j for j in filtered_junctions if j["name"] == chosen_inspect), None)
+                if j_obj:
+                    j_lvl = (j_obj.get("risk_level") or "LOW").upper()
+                    j_score = j_obj.get("risk_score") or 0.0
+                    st.markdown(f"""
+                    <div style="margin-top: 8px; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 6px; font-family:'JetBrains Mono', monospace; font-size: 0.74rem;">
+                        <div>Score: <b style="color:{'#f87171' if j_lvl=='HIGH' else '#fbbf24' if j_lvl=='MEDIUM' else '#34d399'}">{j_score:.1f}/100</b></div>
+                        <div style="margin-top: 4px;">Status: <b>{j_lvl}</b></div>
+                        <div style="margin-top: 4px; color:#9ca3af;">Coords: {j_obj.get('lat', 0):.4f}, {j_obj.get('lon', 0):.4f}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown('<div style="font-size: 0.85rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; font-family:\'Space Grotesk\', sans-serif;">MONITORED JUNCTIONS SPATIAL RISK INVENTORY</div>', unsafe_allow_html=True)
+        jnc_table_data = []
+        for j in filtered_junctions:
+            jnc_table_data.append({
+                "Junction Name": j.get("name", "Unknown"),
+                "City": j.get("city", "Pune"),
+                "Risk Level": j.get("risk_level", "LOW"),
+                "Risk Score": f"{j.get('risk_score', 0.0):.1f} / 100",
+                "Latitude": f"{j.get('lat', 0.0):.4f}",
+                "Longitude": f"{j.get('lon', 0.0):.4f}",
+            })
+        if jnc_table_data:
+            st.dataframe(pd.DataFrame(jnc_table_data), use_container_width=True, hide_index=True)
+
+# ----------------------------------------------------
+# 3. EXPLAINABILITY & CONTRIBUTING FACTORS
+# ----------------------------------------------------
+elif sidebar_nav == "Explainability & Factor Breakdown":
+    st.subheader("Explainable Junction Risk Scoring Engine")
     st.markdown("Unlike black-box models, JunctionGuard AI exposes the **exact factor weight breakdown** driving each score.")
 
     col_select, col_details = st.columns([1, 2])
@@ -947,6 +615,21 @@ with tab_explain:
             factors_df["percentage"] = (factors_df["weight"] * 100).round(1)
 
             st.write("#### 🔍 Risk Contribution Breakdown")
+
+            top_factors = jnc_data["contributing_factors"]
+            if top_factors and top_factors[0].get("factor") in ["Citizen Reports", "Citizen Hazard Reports"]:
+                try:
+                    from src.analytics.risk_engine import get_citizen_cluster_stats
+                    cluster_info = get_citizen_cluster_stats(selected_id)
+                    sub_line = cluster_info.get("summary_line")
+                except Exception:
+                    sub_line = None
+                if sub_line:
+                    st.markdown(f"""
+                    <div style="background: rgba(245, 158, 11, 0.12); border-left: 3px solid #f59e0b; border-radius: 6px; padding: 7px 12px; margin: 8px 0 14px 0; font-size: 0.82rem; color: #fbbf24;">
+                        📢 <b>Citizen Alert Cluster:</b> {sub_line}
+                    </div>
+                    """, unsafe_allow_html=True)
             
             fig = px.bar(
                 factors_df,
@@ -980,10 +663,10 @@ with tab_explain:
             hc4.metric("Motorcycle Impact %", f"{hist_stats['motorcycle_involvement_pct']}%")
 
 # ----------------------------------------------------
-# TAB 3: LIVE CCTV VISION ANALYTICS (TRACK A)
+# 4. LIVE CCTV VISION ANALYTICS (TRACK A)
 # ----------------------------------------------------
-with tab_vision:
-    st.subheader("📹 Real-time CCTV Video Analytics (YOLOv8 + OpenCV)")
+elif sidebar_nav == "Live CCTV Vision Analytics":
+    st.subheader("Real-Time CCTV Video Analytics (YOLOv8 + OpenCV)")
     st.markdown(
         "Processes intersection CCTV streams to detect vehicle counts, pedestrian exposure, "
         "high **two-wheeler weaving density** (critical for Indian traffic), and spatial near-miss proximity."
@@ -1084,10 +767,10 @@ with tab_vision:
                 time.sleep(0.08)
 
 # ----------------------------------------------------
-# TAB 4: CITIZEN HAZARD REPORTING
+# 5. CITIZEN HAZARD REPORTING
 # ----------------------------------------------------
-with tab_citizen:
-    st.subheader("📝 Citizen Road Hazard Reporting")
+elif sidebar_nav == "Citizen Hazard Reporting":
+    st.subheader("Citizen Road Hazard Reporting & Telemetry Evidence")
     st.markdown("Citizens and traffic police can report road hazards with interactive GPS / map location picking, auto-junction detection, and media evidence upload.")
 
     if "submitted_report_msg" in st.session_state:
@@ -1119,7 +802,7 @@ with tab_citizen:
                         st.session_state["tab_picked_lng"] = f_lon
                         st.session_state["selected_junction_name_val"] = f_name
                         st.session_state["tab_select_junction_dropdown"] = f_name
-                        st.rerun()
+                        st.rerun(scope="app")
                     else:
                         st.warning("Location not found. Try a nearby landmark or city.")
 
@@ -1129,14 +812,24 @@ with tab_citizen:
 
         m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
 
-        # Anti-flicker CSS injected inside map iframe
+        # Anti-flicker CSS injected inside map iframe (Bug 1 Fix)
         map_inner_css = """
         <style>
         .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
             cursor: crosshair !important;
-            background-color: #0a0e1a !important;
+            background-color: #081425 !important;
         }
-        .leaflet-tile-container img { transition: none !important; }
+        .leaflet-tile, .leaflet-pane, .leaflet-tile-pane, .leaflet-tile-container img {
+            filter: none !important;
+            -webkit-filter: none !important;
+            transition: none !important;
+            opacity: 1 !important;
+        }
+        .leaflet-tile:hover {
+            filter: none !important;
+            -webkit-filter: none !important;
+            opacity: 1 !important;
+        }
         </style>
         """
         m_picker.get_root().html.add_child(folium.Element(map_inner_css))
@@ -1182,7 +875,7 @@ with tab_citizen:
                 st.session_state["selected_junction_name_val"] = det_val
                 st.session_state["tab_select_junction_dropdown"] = det_val
                 # Full page rerun so c_form selectbox picks up the new location
-                st.rerun()
+                st.rerun(scope="app")
 
         # ── Status bar: detected name, coordinates, Reset Location button ──
         if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
@@ -1354,10 +1047,12 @@ with tab_citizen:
         loc_options.append("➕ Type Custom Location Manually...")
 
         stored_sel = st.session_state.get("tab_select_junction_dropdown", "")
-        if stored_sel and stored_sel in loc_options:
-            idx = loc_options.index(stored_sel)
-        elif current_loc and current_loc in loc_options:
+        # Ensure detected location from map click is actively synced to dropdown (Bug 2 Fix)
+        if current_loc and current_loc in loc_options:
+            st.session_state["tab_select_junction_dropdown"] = current_loc
             idx = loc_options.index(current_loc)
+        elif stored_sel and stored_sel in loc_options:
+            idx = loc_options.index(stored_sel)
         else:
             idx = 0
 
@@ -1457,12 +1152,24 @@ with tab_citizen:
                     except Exception as e:
                         print(f"[Evidence Upload Note] {e}")
 
+                media_type_val = None
+                if uploaded_evidence is not None:
+                    file_ext = os.path.splitext(uploaded_evidence.name)[1].lower()
+                    media_type_val = "video" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "photo"
+
                 add_citizen_report(
                     target_id, rep_name, final_issue, rep_sev, final_desc,
                     media_filename=saved_filename,
                     media_relative_path=saved_relative_path,
-                    media_url=media_url
+                    media_url=media_url,
+                    media_type=media_type_val
                 )
+
+                # Immediately trigger Explainable Risk Engine recalculation upon report submission
+                try:
+                    risk_engine.compute_junction_risk(target_id)
+                except Exception as rx:
+                    print(f"[Risk Engine Recalculation Note] {rx}")
                 
                 # Clear/reset picked map location and form session state
                 st.session_state.pop("tab_picked_lat", None)
@@ -1526,22 +1233,5 @@ with tab_citizen:
     else:
         st.write("No reports submitted yet.")
 
-# ── Modern Branded Cyber Footer ──
-st.markdown("""
-<div class="cyber-footer">
-    <div class="footer-left">
-        <div class="footer-logo">🛡️ JunctionGuard AI</div>
-        <div class="footer-copy">Autonomous Vision Analytics &amp; Explainable Road Hazard Intelligence</div>
-    </div>
-    <div class="footer-center">
-        <span class="footer-tag">Python 3.11</span>
-        <span class="footer-tag">YOLOv8 Vision</span>
-        <span class="footer-tag">Explainable AI</span>
-        <span class="footer-tag">GIS Heatmaps</span>
-    </div>
-    <div class="footer-right">
-        <div class="footer-uptime">● 99.98% System Uptime</div>
-        <div class="footer-version">v2.4.0 • Enterprise Edition</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+# ── Tactical Telemetry Footer ──
+render_footer()

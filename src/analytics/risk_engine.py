@@ -14,6 +14,7 @@ import os
 import json
 import numpy as np
 import pandas as pd
+from datetime import datetime, timedelta
 from typing import Dict, Any, List, Optional, Tuple, Union
 
 from src.analytics.data_loader import compute_historical_risk_score, DATA_DIR
@@ -27,17 +28,210 @@ DEFAULT_WEIGHTS = {
     "traffic_density": 0.20,           # Track A2: Vehicle Density & Flow Velocity
     "near_miss_conflicts": 0.20,       # Track A2: Spatial Conflict Proximity Index
     "pedestrian_activity": 0.15,       # Track A2: Pedestrian Crossing & Vulnerability
-    "citizen_hazard_reports": 0.15     # Citizen Feedback: Hazard Submissions & Severity
+    "citizen_reports": 0.15            # Citizen Feedback: Hazard Submissions & Clustering
 }
+
+def parse_report_timestamp(ts_val: Any) -> Optional[datetime]:
+    """Parses various timestamp representations into a Python datetime object."""
+    if not ts_val:
+        return None
+    if isinstance(ts_val, datetime):
+        return ts_val
+    ts_str = str(ts_val).strip()
+    for fmt in [
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%d"
+    ]:
+        try:
+            return datetime.strptime(ts_str[:19].replace("T", " "), "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            pass
+    try:
+        return datetime.fromisoformat(ts_str.replace("Z", "+00:00")).replace(tzinfo=None)
+    except Exception:
+        pass
+    return None
+
+def classify_report_media(r: Dict[str, Any]) -> str:
+    """Classifies a report as 'video', 'photo', or 'text' based on media attributes."""
+    media_type = str(r.get("media_type") or "").lower()
+    media_url = str(r.get("media_url") or "").lower()
+    media_fn = str(r.get("media_filename") or "").lower()
+    media_rel = str(r.get("media_relative_path") or "").lower()
+
+    # Video check: 3 points
+    video_exts = (".mp4", ".mov", ".avi", ".webm", ".mkv")
+    if "video" in media_type or any(ext in media_url or ext in media_fn or ext in media_rel for ext in video_exts):
+        return "video"
+
+    # Photo check: 2 points
+    image_exts = (".jpg", ".jpeg", ".png", ".webp", ".gif")
+    if "image" in media_type or "photo" in media_type or any(ext in media_url or ext in media_fn or ext in media_rel for ext in image_exts):
+        return "photo"
+    if r.get("media_url") and str(r.get("media_url")).strip() not in ["", "None", "null"]:
+        return "photo"
+    if r.get("media_filename") and str(r.get("media_filename")).strip() not in ["", "None", "null"]:
+        return "photo"
+
+    return "text"
+
+def _resolve_duplicate_cluster(cluster_items: List[Tuple[datetime, Dict[str, Any]]]) -> Dict[str, Any]:
+    """Given multiple duplicate reports from the same reporter, retain the report with the highest evidence tier."""
+    if len(cluster_items) == 1:
+        return cluster_items[0][1]
+    points_map = {"video": 3, "photo": 2, "text": 1}
+    best_rep = cluster_items[0][1]
+    best_pts = points_map.get(classify_report_media(best_rep), 1)
+
+    for _, r in cluster_items[1:]:
+        pts = points_map.get(classify_report_media(r), 1)
+        if pts > best_pts:
+            best_rep = r
+            best_pts = pts
+    return best_rep
+
+def compute_citizen_report_cluster(
+    reports: List[Dict[str, Any]],
+    window_days: int = 30,
+    dedupe_window_minutes: int = 10,
+    reference_time: Optional[datetime] = None
+) -> Dict[str, Any]:
+    """
+    Evaluates citizen report clustering for a junction:
+      1. Filters reports within a rolling time window (e.g. last 30 days).
+      2. Anti-abuse: Deduplicates reports from same reporter_name within 10 minutes.
+         Note: A production version would need proper user accounts/auth for this, not just a name field.
+      3. Weights reports: Text-only = 1 pt, Photo = 2 pts, Video = 3 pts.
+      4. Sums into report_severity_score and normalizes to 0-100 scale (capped at 10+ points = 100).
+    """
+    now = reference_time or datetime.now()
+    cutoff = now - timedelta(days=window_days)
+
+    if not reports:
+        return {
+            "cluster_size": 0,
+            "media_count": 0,
+            "photo_count": 0,
+            "video_count": 0,
+            "text_count": 0,
+            "report_severity_score": 0,
+            "normalized_score": 0.0,
+            "summary_line": "0 reports in last 30 days, 0 with photo/video evidence",
+            "deduplicated_reports": []
+        }
+
+    # Step 1: Filter to 30-day window and parse timestamps
+    recent_reports: List[Tuple[datetime, Dict[str, Any]]] = []
+    for r in reports:
+        raw_ts = r.get("timestamp") or r.get("submitted_at")
+        ts = parse_report_timestamp(raw_ts)
+        if ts is None:
+            ts = now
+        if ts >= cutoff:
+            recent_reports.append((ts, r))
+
+    if not recent_reports:
+        return {
+            "cluster_size": 0,
+            "media_count": 0,
+            "photo_count": 0,
+            "video_count": 0,
+            "text_count": 0,
+            "report_severity_score": 0,
+            "normalized_score": 0.0,
+            "summary_line": "0 reports in last 30 days, 0 with photo/video evidence",
+            "deduplicated_reports": []
+        }
+
+    # Step 2: Anti-abuse deduplication
+    # Anti-abuse deduplication: In hackathon-scope, we deduplicate by reporter_name within a 10-minute window.
+    # Note: A production version would need proper user accounts/auth for this, not just a name field.
+    grouped_by_reporter: Dict[str, List[Tuple[datetime, Dict[str, Any]]]] = {}
+    for ts, r in recent_reports:
+        rep_name = str(r.get("reporter_name") or "anonymous").strip().lower()
+        if rep_name not in grouped_by_reporter:
+            grouped_by_reporter[rep_name] = []
+        grouped_by_reporter[rep_name].append((ts, r))
+
+    deduplicated: List[Dict[str, Any]] = []
+    for rep_name, rep_list in grouped_by_reporter.items():
+        rep_list.sort(key=lambda x: x[0])
+        current_cluster: List[Tuple[datetime, Dict[str, Any]]] = []
+
+        for ts, r in rep_list:
+            if not current_cluster:
+                current_cluster.append((ts, r))
+            else:
+                last_ts = current_cluster[-1][0]
+                diff_secs = abs((ts - last_ts).total_seconds())
+                if diff_secs <= dedupe_window_minutes * 60:
+                    current_cluster.append((ts, r))
+                else:
+                    deduplicated.append(_resolve_duplicate_cluster(current_cluster))
+                    current_cluster = [(ts, r)]
+        if current_cluster:
+            deduplicated.append(_resolve_duplicate_cluster(current_cluster))
+
+    # Step 3: Weight reports
+    points_map = {"video": 3, "photo": 2, "text": 1}
+    photo_count = 0
+    video_count = 0
+    text_count = 0
+    total_points = 0
+
+    for rep in deduplicated:
+        m_tier = classify_report_media(rep)
+        pts = points_map[m_tier]
+        total_points += pts
+        if m_tier == "video":
+            video_count += 1
+        elif m_tier == "photo":
+            photo_count += 1
+        else:
+            text_count += 1
+
+    cluster_size = len(deduplicated)
+    media_count = photo_count + video_count
+
+    # Step 4: Normalize to 0-100 scale using reasonable cap (10+ weighted points = 100)
+    normalized_score = round(min(100.0, (total_points / 10.0) * 100.0), 1)
+
+    summary_line = (
+        f"{cluster_size} {'report' if cluster_size == 1 else 'reports'} in last 30 days, "
+        f"{media_count} with photo/video evidence"
+    )
+
+    return {
+        "cluster_size": cluster_size,
+        "media_count": media_count,
+        "photo_count": photo_count,
+        "video_count": video_count,
+        "text_count": text_count,
+        "report_severity_score": total_points,
+        "normalized_score": normalized_score,
+        "summary_line": summary_line,
+        "deduplicated_reports": deduplicated
+    }
 
 def load_citizen_reports_data(junction_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """
-    Loads citizen reports from data/citizen_reports/reports.json and SQLite database.
+    Loads citizen reports from SQLite database and data/citizen_reports/reports.json.
     Filters by junction_id if provided.
     """
     reports: List[Dict[str, Any]] = []
 
-    # 1. Load from JSON file if available
+    # 1. Load from SQLite Database
+    try:
+        db_reports = fetch_citizen_reports(junction_id)
+        if db_reports:
+            reports.extend(db_reports)
+    except Exception:
+        pass
+
+    # 2. Load from JSON file if available
     if os.path.exists(CITIZEN_REPORTS_JSON):
         try:
             with open(CITIZEN_REPORTS_JSON, "r", encoding="utf-8") as f:
@@ -47,24 +241,43 @@ def load_citizen_reports_data(junction_id: Optional[str] = None) -> List[Dict[st
         except Exception:
             pass
 
-    # 2. Load from SQLite Database
-    try:
-        db_reports = fetch_citizen_reports(junction_id)
-        if db_reports:
-            reports.extend(db_reports)
-    except Exception:
-        pass
+    # Deduplicate by report_id
+    seen_ids = set()
+    deduped: List[Dict[str, Any]] = []
+    for r in reports:
+        r_id = r.get("report_id") or r.get("id")
+        if r_id:
+            if r_id in seen_ids:
+                continue
+            seen_ids.add(r_id)
+        deduped.append(r)
 
     # Filter by junction_id if specified
     if junction_id is not None:
         filtered = [
-            r for r in reports 
+            r for r in deduped 
             if str(r.get("junction_id", "")).strip().upper() == str(junction_id).strip().upper()
             or str(r.get("junction_name", "")).strip().lower() in str(junction_id).strip().lower()
         ]
         return filtered
 
-    return reports
+    return deduped
+
+def get_citizen_cluster_stats(
+    junction_id: str,
+    window_days: int = 30,
+    dedupe_window_minutes: int = 10
+) -> Dict[str, Any]:
+    """
+    Retrieves citizen reports for a junction and computes its clustering metrics:
+    cluster_size, media_count, photo_count, video_count, normalized_score, summary_line.
+    """
+    reports = load_citizen_reports_data(junction_id)
+    return compute_citizen_report_cluster(
+        reports,
+        window_days=window_days,
+        dedupe_window_minutes=dedupe_window_minutes
+    )
 
 def calculate_junction_risk_score(
     traffic_indicators: Optional[Union[Dict[str, Any], float]] = None,
@@ -144,20 +357,17 @@ def calculate_junction_risk_score(
         s_conflict = 45.0
         s_ped = 40.0
 
-    # 3. Extract & Normalize Citizen Hazard Reports Score
+    # 3. Extract & Normalize Citizen Reports Clustering Score
+    cluster_metrics = None
     if isinstance(citizen_reports, list):
-        report_count = len(citizen_reports)
-        if report_count > 0:
-            avg_sev = sum(float(r.get("severity", 3)) for r in citizen_reports) / report_count
-            s_citizen = min(100.0, (report_count * 15.0) + (avg_sev * 8.0))
-        else:
-            s_citizen = 30.0  # Baseline when no specific reports filed
+        cluster_metrics = compute_citizen_report_cluster(citizen_reports)
+        s_citizen = cluster_metrics["normalized_score"]
     elif isinstance(citizen_reports, (int, float)):
+        # If integer count provided (e.g. legacy/mock callers)
         report_count = int(citizen_reports)
-        s_citizen = min(100.0, 30.0 + (report_count * 14.0))
+        s_citizen = min(100.0, (report_count / 10.0) * 100.0) if report_count > 0 else 0.0
     else:
-        report_count = 0
-        s_citizen = 35.0
+        s_citizen = 0.0
 
     # Environmental weather modifier (applied as soft boost during monsoon/rain)
     weather_multiplier = 1.0
@@ -173,7 +383,7 @@ def calculate_junction_risk_score(
     w_traf = weights.get("traffic_density", 0.20)
     w_conf = weights.get("near_miss_conflicts", 0.20)
     w_ped = weights.get("pedestrian_activity", 0.15)
-    w_cit = weights.get("citizen_hazard_reports", 0.15)
+    w_cit = weights.get("citizen_reports", weights.get("citizen_hazard_reports", 0.15))
 
     c_hist = s_hist * w_hist
     c_traf = s_traffic * w_traf
@@ -190,7 +400,7 @@ def calculate_junction_risk_score(
         ("Near-Miss & Spatial Conflicts", c_conf),
         ("Traffic Density & Movement", c_traf),
         ("Pedestrian Activity", c_ped),
-        ("Citizen Hazard Reports", c_cit)
+        ("Citizen Reports", c_cit)
     ]
 
     total_contrib = max(0.001, sum(c[1] for c in contributions))
@@ -217,7 +427,7 @@ def calculate_junction_risk_score(
     else:
         risk_level = "LOW"
 
-    return {
+    res_dict = {
         "risk_score": total_risk,
         "risk_level": risk_level,
         "contributing_factors": contributing_factors,
@@ -226,9 +436,13 @@ def calculate_junction_risk_score(
             "traffic_density": round(s_traffic, 1),
             "near_miss_conflicts": round(s_conflict, 1),
             "pedestrian_activity": round(s_ped, 1),
+            "citizen_reports": round(s_citizen, 1),
             "citizen_hazard_reports": round(s_citizen, 1)
         }
     }
+    if cluster_metrics:
+        res_dict["cluster_metrics"] = cluster_metrics
+    return res_dict
 
 class ExplainableRiskEngine:
     """
@@ -272,7 +486,12 @@ class ExplainableRiskEngine:
 
         # 5. Persist updated score to SQLite and Supabase
         try:
-            update_junction_risk(junction_id, result["risk_score"], result["contributing_factors"])
+            update_junction_risk(
+                junction_id,
+                result["risk_score"],
+                result["contributing_factors"],
+                component_scores=result.get("component_scores")
+            )
         except Exception as e:
             print(f"[RiskEngine DB Note] {e}")
 

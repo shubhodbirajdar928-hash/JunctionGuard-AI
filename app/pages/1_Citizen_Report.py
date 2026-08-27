@@ -10,6 +10,7 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_loader import load_junctions
+from components import inject_custom_styles, render_navbar, render_footer
 
 import folium
 import importlib
@@ -58,155 +59,10 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── Comprehensive CSS for Citizen Report Page ──
-st.markdown("""
-<style>
-    /* ── Global Dark Theme Override ── */
-    .stApp,
-    [data-testid="stAppViewContainer"] {
-        background: #0a0e1a !important;
-        color: #e2e8f0 !important;
-    }
-    header[data-testid="stHeader"] {
-        background: rgba(10, 14, 26, 0.85) !important;
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(51, 65, 85, 0.4);
-    }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0f1729 0%, #0a0e1a 100%) !important;
-        border-right: 1px solid rgba(51, 65, 85, 0.5);
-    }
+# ── Inject Stitch Tactical Vision Interface Design System ──
+inject_custom_styles()
 
-    /* ── Custom Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-    /* ── Map Container Anti-Flicker & Dark Mode Integration ── */
-    iframe[title*="st_folium"], .stFolium iframe, [data-testid="stCustomComponentV1"] {
-        background-color: #0a0e1a !important;
-        border-radius: 12px;
-        border: 1px solid rgba(51, 65, 85, 0.4);
-    }
-    .leaflet-container {
-        background-color: #0a0e1a !important;
-    }
-    .leaflet-tile-container img {
-        transition: none !important;
-    }
-
-    /* ── Section Headers ── */
-    .stApp h1, .stApp h2, .stApp h3, .stApp h4 {
-        color: #f1f5f9 !important;
-    }
-
-    /* ── Animated Gradient Separator ── */
-    @keyframes gradientFlow {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    .gradient-separator {
-        height: 3px;
-        background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6, #ef4444);
-        background-size: 300% 100%;
-        animation: gradientFlow 4s ease infinite;
-        border-radius: 2px;
-        margin: 0.5rem 0 1.5rem 0;
-    }
-
-    /* ── Report Card ── */
-    .report-card {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.75) 100%);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(51, 65, 85, 0.4);
-        border-left: 4px solid #6366f1;
-        border-radius: 12px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        transition: all 0.25s ease;
-    }
-    .report-card:hover {
-        border-color: rgba(99, 102, 241, 0.5);
-        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
-        transform: translateY(-1px);
-    }
-    .report-header {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(71, 85, 105, 0.3);
-        padding-bottom: 0.5rem;
-        margin-bottom: 0.75rem;
-        font-size: 0.85rem;
-        color: #94a3b8;
-    }
-    .report-junction {
-        color: #a5b4fc;
-        font-weight: 600;
-    }
-    .report-timestamp {
-        color: #64748b;
-        font-size: 0.78rem;
-        background: rgba(51, 65, 85, 0.3);
-        padding: 2px 10px;
-        border-radius: 9999px;
-        border: 1px solid rgba(71, 85, 105, 0.3);
-    }
-    .report-reporter {
-        font-size: 0.9rem;
-        margin-bottom: 0.6rem;
-        color: #e2e8f0;
-    }
-    .report-description {
-        font-size: 0.88rem;
-        line-height: 1.6;
-        color: #94a3b8;
-    }
-
-    /* ── Form Styling ── */
-    .stForm {
-        background: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(51, 65, 85, 0.4);
-        border-radius: 12px;
-        padding: 16px;
-    }
-
-    /* ── Footer ── */
-    .app-footer {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(10, 14, 26, 0.9));
-        border: 1px solid rgba(51, 65, 85, 0.3);
-        border-radius: 12px;
-        padding: 16px 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 2rem;
-    }
-    .footer-brand {
-        font-size: 0.85rem;
-        color: #64748b;
-        font-weight: 600;
-    }
-    .footer-version {
-        font-size: 0.7rem;
-        color: #475569;
-        background: rgba(51, 65, 85, 0.3);
-        padding: 3px 10px;
-        border-radius: 9999px;
-        border: 1px solid rgba(71, 85, 105, 0.3);
-    }
-
-    /* ── Submission Success Animation ── */
-    @keyframes slideInUp {
-        from { opacity: 0; transform: translateY(10px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    .stSuccess {
-        animation: slideInUp 0.4s ease-out;
-    }
-</style>
-""", unsafe_allow_html=True)
 
 # Define directories
 # The script is in app/pages/1_Citizen_Report.py, project root is two levels up.
@@ -253,31 +109,8 @@ def save_report(report_data):
         st.error(f"Failed to save report: {e}")
         return False
 
-# ── Top Navigation Bar ──
-st.markdown("""
-<div class="cyber-navbar">
-    <div class="navbar-brand">
-        <div class="brand-radar">
-            <span class="radar-icon">📣</span>
-            <span class="radar-ring"></span>
-        </div>
-        <div>
-            <div class="brand-title">Citizen Hazard <span class="brand-ai">Sentinel</span></div>
-            <div class="brand-sub">Public Safety &amp; Crowdsourced Infrastructure Hazard Reporting</div>
-        </div>
-    </div>
-    <div class="navbar-status-group">
-        <div class="status-chip chip-online">
-            <span class="live-dot"></span>
-            <span>DISPATCH LIVE</span>
-        </div>
-        <div class="status-chip chip-nodes">
-            <span>🛡️ CIVIC SENTINEL</span>
-        </div>
-    </div>
-</div>
-<div class="gradient-separator"></div>
-""", unsafe_allow_html=True)
+# ── Top Tactical Navigation Bar ──
+render_navbar("Reports")
 
 # Load the placeholder junctions
 junctions = load_junctions()
@@ -313,7 +146,7 @@ def render_map_picker():
                     st.session_state["sentinel_picked_lng"] = f_lon
                     st.session_state["sentinel_jnc_input"] = f_name
                     st.session_state["sentinel_select_junction_dropdown"] = f_name
-                    st.rerun()
+                    st.rerun(scope="app")
                 else:
                     st.warning("Location not found. Try a nearby landmark or city.")
 
@@ -322,17 +155,27 @@ def render_map_picker():
 
     m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
 
+    # Anti-flicker CSS injected inside map iframe (Bug 1 Fix)
     map_inner_css = """
     <style>
     .leaflet-container, .leaflet-grab, .leaflet-interactive, .leaflet-drag-target {
         cursor: crosshair !important;
-        background-color: #0a0e1a !important;
+        background-color: #081425 !important;
     }
-    .leaflet-tile-container img { transition: none !important; }
+    .leaflet-tile, .leaflet-pane, .leaflet-tile-pane, .leaflet-tile-container img {
+        filter: none !important;
+        -webkit-filter: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+    }
+    .leaflet-tile:hover {
+        filter: none !important;
+        -webkit-filter: none !important;
+        opacity: 1 !important;
+    }
     </style>
     """
     m_picker.get_root().html.add_child(folium.Element(map_inner_css))
-
 
     for jnc in junctions:
         folium.Marker(
@@ -379,7 +222,7 @@ def render_map_picker():
             st.session_state["sentinel_jnc_input"] = det_val
             st.session_state["sentinel_select_junction_dropdown"] = det_val
             # Full page rerun so col_form picks up the new location value
-            st.rerun()
+            st.rerun(scope="app")
 
     # ── Status bar: shows detected name, coordinates, and Reset button ──
     if "sentinel_picked_lat" in st.session_state and "sentinel_picked_lng" in st.session_state:
@@ -554,10 +397,12 @@ with col_form:
     loc_options.append("➕ Type Custom Location Manually...")
 
     stored_sel = st.session_state.get("sentinel_select_junction_dropdown", "")
-    if stored_sel and stored_sel in loc_options:
-        idx = loc_options.index(stored_sel)
-    elif current_loc and current_loc in loc_options:
+    # Ensure detected location from map click is actively synced to dropdown (Bug 2 Fix)
+    if current_loc and current_loc in loc_options:
+        st.session_state["sentinel_select_junction_dropdown"] = current_loc
         idx = loc_options.index(current_loc)
+    elif stored_sel and stored_sel in loc_options:
+        idx = loc_options.index(stored_sel)
     else:
         idx = 0
 
@@ -677,6 +522,11 @@ if st.session_state.pop("_form_submit_requested", False):
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
 
+        media_type_val = None
+        if uploaded_file is not None:
+            file_ext = os.path.splitext(uploaded_file.name)[1].lower()
+            media_type_val = "video" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "photo"
+
         try:
             from src.database import add_citizen_report
             add_citizen_report(
@@ -687,7 +537,8 @@ if st.session_state.pop("_form_submit_requested", False):
                 description=final_desc,
                 media_filename=saved_filename,
                 media_relative_path=saved_relative_path,
-                media_url=media_url
+                media_url=media_url,
+                media_type=media_type_val
             )
         except Exception as ex:
             print(f"[Database Sync Note] {ex}")
@@ -806,21 +657,5 @@ else:
                     
             st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
 
-# ── Modern Branded Cyber Footer ──
-st.markdown("""
-<div class="cyber-footer">
-    <div class="footer-left">
-        <div class="footer-logo">📣 Citizen Hazard Sentinel • JunctionGuard AI</div>
-        <div class="footer-copy">Crowdsourced Infrastructure Hazards &amp; Vision AI Feedback Loop</div>
-    </div>
-    <div class="footer-center">
-        <span class="footer-tag">Public Sentinel</span>
-        <span class="footer-tag">Instant Sync</span>
-        <span class="footer-tag">Verified Dispatch</span>
-    </div>
-    <div class="footer-right">
-        <div class="footer-uptime">● 99.98% System Uptime</div>
-        <div class="footer-version">v2.4.0 • Public Edition</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+# ── Tactical Telemetry Footer ──
+render_footer()

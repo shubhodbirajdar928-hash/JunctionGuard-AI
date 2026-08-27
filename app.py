@@ -12,7 +12,7 @@ import mimetypes
 import cv2
 import streamlit as st
 import folium
-from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster
+from folium.plugins import HeatMap, MiniMap, Fullscreen, MarkerCluster, LocateControl
 from streamlit_folium import st_folium
 import pandas as pd
 import plotly.express as px
@@ -53,15 +53,18 @@ if "geo_lat" in st.query_params and "geo_lng" in st.query_params:
     try:
         g_lat = float(st.query_params["geo_lat"])
         g_lng = float(st.query_params["geo_lng"])
+        nav_target = st.query_params.get("nav", "Citizen Hazard Reporting")
         st.session_state["tab_picked_lat"] = g_lat
         st.session_state["tab_picked_lng"] = g_lng
         st.session_state["sentinel_picked_lat"] = g_lat
         st.session_state["sentinel_picked_lng"] = g_lng
+        st.session_state["app_sidebar_navigation"] = nav_target
         _all_j = fetch_all_junctions()
         near_j, _ = find_nearest_junction(g_lat, g_lng, _all_j)
         addr = near_j['name'] if near_j else reverse_geocode_location(g_lat, g_lng)
         st.session_state["selected_junction_name_val"] = addr
         st.session_state["tab_select_junction_dropdown"] = addr
+        st.session_state["sync_dropdown_from_map"] = addr
         st.session_state["sentinel_jnc_input"] = addr
         st.session_state["sentinel_select_junction_dropdown"] = addr
         st.query_params.clear()
@@ -162,19 +165,34 @@ render_dashboard_overview_header(title=sidebar_nav, subtitle=nav_subtitles.get(s
 
 # Load and filter junction records
 junctions = fetch_all_junctions()
+selected_jnc_record = next((j for j in junctions if j["name"] == sidebar_selected_jnc), None) if sidebar_selected_jnc != "All Junctions" else None
+
 if sidebar_selected_jnc != "All Junctions":
-    filtered_junctions = [j for j in junctions if j["name"] == sidebar_selected_jnc and j["risk_level"] in risk_filter]
+    filtered_junctions = [j for j in junctions if j["name"] == sidebar_selected_jnc]
 else:
     filtered_junctions = [j for j in junctions if j["risk_level"] in risk_filter]
 
 def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_prefix: str = "dash"):
     """Reusable interactive map renderer with Esri dark tiles and pulsing radar halos."""
-    map_risk_filter = risk_filter
     enable_heatmap = "Heatmap" in base_view_mode
 
-    map_junctions = [j for j in filtered_junctions if j["risk_level"] in map_risk_filter]
-    map_center = [18.5204, 73.8567] if any("Pune" in j.get("city", "") or "Shivaji" in j["name"] for j in map_junctions) else [20.5937, 78.9629]
-    map_zoom = 11 if any("Pune" in j.get("city", "") for j in map_junctions) else 6
+    # When a specific junction is selected in the sidebar, center directly on it with close zoom!
+    if selected_jnc_record:
+        map_junctions = [selected_jnc_record]
+        map_center = [selected_jnc_record["lat"], selected_jnc_record["lon"]]
+        map_zoom = 15
+    else:
+        map_junctions = [j for j in filtered_junctions if j["risk_level"] in risk_filter]
+        pune_jnc = next((j for j in map_junctions if "Pune" in j.get("city", "") or "Shivaji" in j["name"]), None)
+        if pune_jnc:
+            map_center = [18.5204, 73.8567]
+            map_zoom = 11
+        elif map_junctions:
+            map_center = [map_junctions[0]["lat"], map_junctions[0]["lon"]]
+            map_zoom = 11
+        else:
+            map_center = [18.5204, 73.8567]
+            map_zoom = 6
 
     m = folium.Map(
         location=map_center,
@@ -298,7 +316,7 @@ def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_p
         m,
         width="stretch",
         height=height,
-        key=f"{key_prefix}_overview_map_{base_view_mode}_{len(map_junctions)}",
+        key=f"{key_prefix}_overview_map_{base_view_mode}_{sidebar_selected_jnc.replace(' ', '_')}_{round(map_center[0], 3)}_{round(map_center[1], 3)}_{len(map_junctions)}",
         returned_objects=["last_object_clicked"],
         return_on_hover=False
     )
@@ -309,10 +327,17 @@ def render_surveillance_folium_map(base_view_mode: str, height: int = 380, key_p
 if sidebar_nav == "Dashboard":
     # Top KPI Summary Cards (Matching Reference Image)
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-    total_jnc = len(junctions)
-    high_risk_count = sum(1 for j in junctions if j["risk_level"] == "HIGH")
-    avg_risk_score = round(sum(j["risk_score"] for j in junctions if j["risk_score"] is not None) / max(1, total_jnc), 1)
-    total_reports = len(fetch_citizen_reports())
+    if selected_jnc_record:
+        total_jnc = 1
+        high_risk_count = 1 if selected_jnc_record.get("risk_level") == "HIGH" else 0
+        avg_risk_score = round(selected_jnc_record.get("risk_score") or 0.0, 1)
+        all_reps = fetch_citizen_reports()
+        total_reports = sum(1 for r in all_reps if r.get("junction_id") == selected_jnc_record.get("junction_id"))
+    else:
+        total_jnc = len(junctions)
+        high_risk_count = sum(1 for j in junctions if j["risk_level"] == "HIGH")
+        avg_risk_score = round(sum(j["risk_score"] for j in junctions if j["risk_score"] is not None) / max(1, total_jnc), 1)
+        total_reports = len(fetch_citizen_reports())
 
     with kpi1:
         st.markdown(f"""
@@ -406,9 +431,10 @@ if sidebar_nav == "Dashboard":
             st.markdown('<div style="text-align:right; margin-top:6px;"><span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:700; color:#ef4444; font-family:\'JetBrains Mono\', monospace;"><span class="live-dot-red"></span> LIVE</span></div>', unsafe_allow_html=True)
 
         now_str = datetime.now().strftime("%I:%M:%S %p")
+        jnc_label = f"{selected_jnc_record['junction_id']} {selected_jnc_record['name']}" if selected_jnc_record else "J-17 Shivajinagar Junction, Pune"
         st.markdown(f"""
         <div style="display:flex; justify-content:space-between; align-items:center; background:#12151a; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:6px 12px; margin-bottom:8px; font-size:0.74rem; font-family:'JetBrains Mono', monospace;">
-            <span style="color:#e2e2e5;">JUNCTION ID: <b style="color:#ffffff;">J-17 Shivajinagar Junction, Pune</b></span>
+            <span style="color:#e2e2e5;">JUNCTION ID: <b style="color:#ffffff;">{jnc_label}</b></span>
             <span style="color:#f97316; font-weight:700;">{now_str}</span>
         </div>
         """, unsafe_allow_html=True)
@@ -654,7 +680,9 @@ elif sidebar_nav == "Explainability & Factor Breakdown":
 
     with col_select:
         jnc_names = {j["name"]: j["junction_id"] for j in junctions}
-        selected_name = st.selectbox("Select Junction to Analyze", options=list(jnc_names.keys()))
+        j_keys = list(jnc_names.keys())
+        default_idx = j_keys.index(sidebar_selected_jnc) if sidebar_selected_jnc in j_keys else 0
+        selected_name = st.selectbox("Select Junction to Analyze", options=j_keys, index=default_idx)
         selected_id = jnc_names[selected_name]
 
         # Recalculate or retrieve latest risk score
@@ -869,21 +897,36 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                         st.session_state["tab_picked_lng"] = f_lon
                         st.session_state["selected_junction_name_val"] = f_name
                         st.session_state["tab_select_junction_dropdown"] = f_name
+                        st.session_state["sync_dropdown_from_map"] = f_name
                         st.rerun(scope="app")
                     else:
                         st.warning("Location not found. Try a nearby landmark or city.")
 
         all_jnc_list = fetch_all_junctions()
-        pune_jnc = next((j for j in all_jnc_list if "Pune" in j.get("city", "") or "Shivaji" in j["name"]), None)
-        default_lat = pune_jnc['lat'] if pune_jnc else (all_jnc_list[0]['lat'] if all_jnc_list else 18.5204)
-        default_lon = pune_jnc['lon'] if pune_jnc else (all_jnc_list[0]['lon'] if all_jnc_list else 73.8567)
+        if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
+            initial_lat = float(st.session_state["tab_picked_lat"])
+            initial_lon = float(st.session_state["tab_picked_lng"])
+            initial_zoom = 15
+        else:
+            pune_jnc = next((j for j in all_jnc_list if "Pune" in j.get("city", "") or "Shivaji" in j["name"]), None)
+            initial_lat = pune_jnc['lat'] if pune_jnc else (all_jnc_list[0]['lat'] if all_jnc_list else 18.5204)
+            initial_lon = pune_jnc['lon'] if pune_jnc else (all_jnc_list[0]['lon'] if all_jnc_list else 73.8567)
+            initial_zoom = 12
 
         m_picker = folium.Map(
-            location=[default_lat, default_lon],
-            zoom_start=12,
+            location=[initial_lat, initial_lon],
+            zoom_start=initial_zoom,
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
             attr="Esri World Dark Gray Canvas"
         )
+
+        LocateControl(
+            auto_start=False,
+            flyTo=True,
+            keepCurrentZoomLevel=False,
+            position='topleft',
+            strings={"title": "🎯 Locate My Exact Device GPS Position"}
+        ).add_to(m_picker)
 
         # Anti-flicker CSS injected inside map iframe (Bug 1 Fix)
         map_inner_css = """
@@ -925,7 +968,6 @@ elif sidebar_nav == "Citizen Hazard Reporting":
         if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
             p_lat = st.session_state["tab_picked_lat"]
             p_lng = st.session_state["tab_picked_lng"]
-            m_picker.location = [p_lat, p_lng]
             pin_html = '<div style="width:26px; height:26px; border-radius:50%; background:#ef4444; box-shadow:0 0 16px #ef4444; border:3px solid #ffffff; display:flex; align-items:center; justify-content:center;"><div style="width:6px; height:6px; background:#fff; border-radius:50%;"></div></div>'
             folium.Marker(
                 [p_lat, p_lng],
@@ -938,7 +980,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
             m_picker,
             width="stretch",
             height=380,
-            key="citizen_tab_map_picker",
+            key=f"citizen_tab_map_picker_{round(initial_lat, 4)}_{round(initial_lon, 4)}",
             returned_objects=["last_clicked"],
             return_on_hover=False
         )
@@ -955,6 +997,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
 
                 st.session_state["selected_junction_name_val"] = det_val
                 st.session_state["tab_select_junction_dropdown"] = det_val
+                st.session_state["sync_dropdown_from_map"] = det_val
                 # Full page rerun so c_form selectbox picks up the new location
                 st.rerun(scope="app")
 
@@ -984,7 +1027,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
         else:
             st.caption("🖱️ Click anywhere on the map to drop a hazard pin.")
 
-        # ── Live Device Hardware GPS ──
+        # ── Live Device Hardware GPS & Network Auto-Detection ──
         st.markdown("---")
         gps_html = """
         <!DOCTYPE html>
@@ -1001,7 +1044,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
             padding: 11px 16px;
             border-radius: 8px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1011,12 +1054,12 @@ elif sidebar_nav == "Citizen Hazard Reporting":
             transition: all 0.2s ease;
         }
         .btn-gps:hover { opacity: 0.92; }
-        #msg { margin-top: 6px; font-size: 0.78rem; color: #cbd5e1; text-align: center; line-height: 1.35; }
+        #msg { margin-top: 6px; font-size: 0.76rem; color: #cbd5e1; text-align: center; line-height: 1.35; }
         </style>
         </head>
         <body>
         <button class="btn-gps" id="locate-btn" onclick="getExactLocation()">
-            🎯 Get My Exact Device GPS Location
+            🎯 Device GPS Location
         </button>
         <div id="msg"></div>
         <script>
@@ -1025,7 +1068,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
             var msg = document.getElementById("msg");
             btn.disabled = true;
             btn.style.opacity = "0.7";
-            msg.innerHTML = "<span style='color:#38bdf8;'>⏳ Requesting live GPS... Please click <b>Allow</b> when prompted.</span>";
+            msg.innerHTML = "<span style='color:#38bdf8;'>⏳ Requesting live GPS... Please click <b>Allow</b>.</span>";
 
             if (!navigator.geolocation) {
                 msg.innerHTML = "<span style='color:#ef4444;'>❌ Geolocation not supported in this browser.</span>";
@@ -1041,31 +1084,56 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                     var acc = Math.round(pos.coords.accuracy || 0);
                     msg.innerHTML = "<span style='color:#34d399; font-weight:600;'>✅ Exact location found (±" + acc + "m)! Updating map...</span>";
                     setTimeout(function() {
-                        var pUrl = new URL(window.parent.location.href);
-                        pUrl.searchParams.set("geo_lat", lat);
-                        pUrl.searchParams.set("geo_lng", lng);
-                        window.parent.location.href = pUrl.href;
-                    }, 200);
+                        var target = "/?geo_lat=" + encodeURIComponent(lat) + "&geo_lng=" + encodeURIComponent(lng) + "&nav=" + encodeURIComponent("Citizen Hazard Reporting");
+                        try {
+                            window.top.location.href = target;
+                        } catch(e) {
+                            try {
+                                window.parent.location.href = target;
+                            } catch(e2) {
+                                window.location.href = target;
+                            }
+                        }
+                    }, 150);
                 },
                 function(err) {
                     btn.disabled = false;
                     btn.style.opacity = "1.0";
                     if (err.code === 1) {
-                        msg.innerHTML = "<span style='color:#f87171;'>❌ <b>Permission Denied</b>: Click location/lock icon in Safari/Chrome URL bar and click <b>Allow</b>.</span>";
+                        msg.innerHTML = "<span style='color:#f87171;'>❌ <b>Permission Denied</b>: Click location icon in browser bar and click <b>Allow</b>.</span>";
                     } else if (err.code === 2) {
-                        msg.innerHTML = "<span style='color:#fbbf24;'>⚠️ <b>Mac Wi-Fi required</b>: Ensure <b>Wi-Fi is ON</b> & Location Services is ON in <i>System Settings → Privacy & Security → Location Services</i>.</span>";
+                        msg.innerHTML = "<span style='color:#fbbf24;'>⚠️ <b>Wi-Fi required</b>: Ensure Wi-Fi is ON in System Settings.</span>";
                     } else {
-                        msg.innerHTML = "<span style='color:#fbbf24;'>⚠️ Request timed out. Ensure Wi-Fi is enabled on your Mac and retry.</span>";
+                        msg.innerHTML = "<span style='color:#fbbf24;'>⚠️ GPS timed out. Use Network Auto-Detect button.</span>";
                     }
                 },
-                { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
             );
         }
         </script>
         </body>
         </html>
         """
-        st_components.html(gps_html, height=84)
+        loc_c1, loc_c2 = st.columns([1, 1])
+        with loc_c1:
+            st_components.html(gps_html, height=80)
+        with loc_c2:
+            if st.button("🌐 Network / IP Auto-Detect", key="btn_ip_autodetect", use_container_width=True):
+                with st.spinner("Detecting exact network location..."):
+                    loc = get_ip_location()
+                    if loc:
+                        ip_lat, ip_lon, ip_name = loc
+                        st.session_state["tab_picked_lat"] = ip_lat
+                        st.session_state["tab_picked_lng"] = ip_lon
+                        near_j, dist_km = find_nearest_junction(ip_lat, ip_lon, all_jnc_list, threshold_km=1.0)
+                        det_name = near_j['name'] if near_j else (reverse_geocode_location(ip_lat, ip_lon) or ip_name)
+                        st.session_state["selected_junction_name_val"] = det_name
+                        st.session_state["tab_select_junction_dropdown"] = det_name
+                        st.session_state["sync_dropdown_from_map"] = det_name
+                        st.toast(f"📍 Detected: {det_name}")
+                        st.rerun()
+                    else:
+                        st.error("Could not detect location via IP. Please use the map or city buttons.")
 
         # ── Quick City Jump Presets ──
         st.markdown("<div style='font-size:0.8rem; font-weight:600; color:#94a3b8; margin-top:6px; margin-bottom:6px;'>⚡ Quick Jump to City:</div>", unsafe_allow_html=True)
@@ -1076,6 +1144,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                 st.session_state["tab_picked_lng"] = 74.2433
                 st.session_state["selected_junction_name_val"] = "Kolhapur, Maharashtra"
                 st.session_state["tab_select_junction_dropdown"] = "Kolhapur, Maharashtra"
+                st.session_state["sync_dropdown_from_map"] = "Kolhapur, Maharashtra"
                 st.rerun()
         with q_col2:
             if st.button("📍 Bangalore", key="tab_quick_blr", use_container_width=True):
@@ -1083,6 +1152,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                 st.session_state["tab_picked_lng"] = 77.5946
                 st.session_state["selected_junction_name_val"] = "Bangalore, Karnataka"
                 st.session_state["tab_select_junction_dropdown"] = "Bangalore, Karnataka"
+                st.session_state["sync_dropdown_from_map"] = "Bangalore, Karnataka"
                 st.rerun()
         with q_col3:
             if st.button("📍 Pune", key="tab_quick_pune", use_container_width=True):
@@ -1090,6 +1160,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                 st.session_state["tab_picked_lng"] = 73.8567
                 st.session_state["selected_junction_name_val"] = "Pune, Maharashtra"
                 st.session_state["tab_select_junction_dropdown"] = "Pune, Maharashtra"
+                st.session_state["sync_dropdown_from_map"] = "Pune, Maharashtra"
                 st.rerun()
         with q_col4:
             if st.button("📍 Mumbai", key="tab_quick_mum", use_container_width=True):
@@ -1097,6 +1168,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                 st.session_state["tab_picked_lng"] = 72.8777
                 st.session_state["selected_junction_name_val"] = "Mumbai, Maharashtra"
                 st.session_state["tab_select_junction_dropdown"] = "Mumbai, Maharashtra"
+                st.session_state["sync_dropdown_from_map"] = "Mumbai, Maharashtra"
                 st.rerun()
 
     with c_map:
@@ -1129,21 +1201,37 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                 loc_options.append(cname)
         loc_options.append("➕ Type Custom Location Manually...")
 
-        stored_sel = st.session_state.get("tab_select_junction_dropdown", "")
-        # Ensure detected location from map click is actively synced to dropdown (Bug 2 Fix)
-        if current_loc and current_loc in loc_options:
-            st.session_state["tab_select_junction_dropdown"] = current_loc
-            idx = loc_options.index(current_loc)
-        elif stored_sel and stored_sel in loc_options:
-            idx = loc_options.index(stored_sel)
-        else:
-            idx = 0
+        # Sync dropdown from external map click or GPS only when requested
+        if "sync_dropdown_from_map" in st.session_state:
+            target_val = st.session_state.pop("sync_dropdown_from_map")
+            if target_val in loc_options:
+                st.session_state["tab_select_junction_dropdown"] = target_val
+
+        # Callback when user explicitly interacts with the dropdown:
+        def on_junction_dropdown_change():
+            sel = st.session_state.get("tab_select_junction_dropdown")
+            if sel and sel in jnc_names:
+                sel_jnc = next((j for j in all_db_junctions if j["name"] == sel), None)
+                if sel_jnc:
+                    st.session_state["tab_picked_lat"] = sel_jnc["lat"]
+                    st.session_state["tab_picked_lng"] = sel_jnc["lon"]
+                    st.session_state["selected_junction_name_val"] = sel
+            elif sel:
+                st.session_state["selected_junction_name_val"] = sel
+
+        if "tab_select_junction_dropdown" not in st.session_state or st.session_state["tab_select_junction_dropdown"] not in loc_options:
+            if current_loc and current_loc in loc_options:
+                st.session_state["tab_select_junction_dropdown"] = current_loc
+            elif sidebar_selected_jnc != "All Junctions" and sidebar_selected_jnc in loc_options:
+                st.session_state["tab_select_junction_dropdown"] = sidebar_selected_jnc
+            else:
+                st.session_state["tab_select_junction_dropdown"] = loc_options[0]
 
         selected_option = st.selectbox(
             "Select Junction / Location*",
             options=loc_options,
-            index=idx,
-            key="tab_select_junction_dropdown"
+            key="tab_select_junction_dropdown",
+            on_change=on_junction_dropdown_change
         )
 
         if selected_option == "➕ Type Custom Location Manually...":
@@ -1154,7 +1242,6 @@ elif sidebar_nav == "Citizen Hazard Reporting":
             )
         else:
             selected_jnc_name = selected_option
-            st.session_state["selected_junction_name_val"] = selected_option
 
         rep_name = st.text_input("Reporter Name / Designation", placeholder="e.g. Traffic Marshal / Resident (Optional)")
 

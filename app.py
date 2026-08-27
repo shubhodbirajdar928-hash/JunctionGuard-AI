@@ -30,13 +30,13 @@ import importlib
 import src.geo_utils
 importlib.reload(src.geo_utils)
 from src.geo_utils import find_nearest_junction, reverse_geocode_location, get_ip_location, forward_geocode_location
-import streamlit.components.v1 as components
+import streamlit.components.v1 as st_components
 from src.analytics.data_loader import compute_historical_risk_score, load_accident_dataset
 from src.vision.stream_processor import StreamProcessor
 
 import importlib
-import app.components
-importlib.reload(app.components)
+import app.components as app_comp
+importlib.reload(app_comp)
 from app.components import (
     render_risk_badge,
     render_contributing_factors,
@@ -840,9 +840,6 @@ elif sidebar_nav == "Live CCTV Vision Analytics":
 # 5. CITIZEN HAZARD REPORTING
 # ----------------------------------------------------
 elif sidebar_nav == "Citizen Hazard Reporting":
-    st.subheader("Citizen Road Hazard Reporting & Telemetry Evidence")
-    st.markdown("Citizens and traffic police can report road hazards with interactive GPS / map location picking, auto-junction detection, and media evidence upload.")
-
     if "submitted_report_msg" in st.session_state:
         st.success(st.session_state.pop("submitted_report_msg"))
 
@@ -877,10 +874,16 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                         st.warning("Location not found. Try a nearby landmark or city.")
 
         all_jnc_list = fetch_all_junctions()
-        default_lat = all_jnc_list[0]['lat'] if all_jnc_list else 12.9716
-        default_lon = all_jnc_list[0]['lon'] if all_jnc_list else 77.5946
+        pune_jnc = next((j for j in all_jnc_list if "Pune" in j.get("city", "") or "Shivaji" in j["name"]), None)
+        default_lat = pune_jnc['lat'] if pune_jnc else (all_jnc_list[0]['lat'] if all_jnc_list else 18.5204)
+        default_lon = pune_jnc['lon'] if pune_jnc else (all_jnc_list[0]['lon'] if all_jnc_list else 73.8567)
 
-        m_picker = folium.Map(location=[default_lat, default_lon], zoom_start=13, tiles="OpenStreetMap")
+        m_picker = folium.Map(
+            location=[default_lat, default_lon],
+            zoom_start=12,
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+            attr="Esri World Dark Gray Canvas"
+        )
 
         # Anti-flicker CSS injected inside map iframe (Bug 1 Fix)
         map_inner_css = """
@@ -900,32 +903,40 @@ elif sidebar_nav == "Citizen Hazard Reporting":
             -webkit-filter: none !important;
             opacity: 1 !important;
         }
+        .leaflet-marker-icon {
+            background: transparent !important;
+            border: none !important;
+        }
         </style>
         """
         m_picker.get_root().html.add_child(folium.Element(map_inner_css))
 
         for jnc in all_jnc_list:
+            level = (jnc.get("risk_level") or "LOW").upper()
+            m_col = "#ef4444" if level == "HIGH" else ("#f59e0b" if level == "MEDIUM" else "#10b981")
+            m_html = f'<div style="width:18px; height:18px; border-radius:50%; background:{m_col}; box-shadow:0 0 10px {m_col}; border:2px solid #ffffff;"></div>'
             folium.Marker(
                 [jnc['lat'], jnc['lon']],
                 popup=jnc['name'],
-                tooltip=f"Junction: {jnc['name']}",
-                icon=folium.Icon(color="blue", icon="info-sign")
+                tooltip=f"Junction: {jnc['name']} ({level})",
+                icon=folium.DivIcon(html=m_html, icon_size=(18, 18), icon_anchor=(9, 9), class_name="junction-heat-marker")
             ).add_to(m_picker)
 
         if "tab_picked_lat" in st.session_state and "tab_picked_lng" in st.session_state:
             p_lat = st.session_state["tab_picked_lat"]
             p_lng = st.session_state["tab_picked_lng"]
             m_picker.location = [p_lat, p_lng]
+            pin_html = '<div style="width:26px; height:26px; border-radius:50%; background:#ef4444; box-shadow:0 0 16px #ef4444; border:3px solid #ffffff; display:flex; align-items:center; justify-content:center;"><div style="width:6px; height:6px; background:#fff; border-radius:50%;"></div></div>'
             folium.Marker(
                 [p_lat, p_lng],
                 popup=folium.Popup(f"<b>📍 Selected Hazard Location</b><br>({p_lat:.5f}, {p_lng:.5f})", max_width=250),
                 tooltip="📍 Selected Hazard Pinpoint",
-                icon=folium.Icon(color="red", icon="flag")
+                icon=folium.DivIcon(html=pin_html, icon_size=(26, 26), icon_anchor=(13, 13), class_name="junction-heat-marker")
             ).add_to(m_picker)
 
         map_data = st_folium(
             m_picker,
-            use_container_width=True,
+            width="stretch",
             height=380,
             key="citizen_tab_map_picker",
             returned_objects=["last_clicked"],
@@ -1054,7 +1065,7 @@ elif sidebar_nav == "Citizen Hazard Reporting":
         </body>
         </html>
         """
-        components.html(gps_html, height=84)
+        st_components.html(gps_html, height=84)
 
         # ── Quick City Jump Presets ──
         st.markdown("<div style='font-size:0.8rem; font-weight:600; color:#94a3b8; margin-top:6px; margin-bottom:6px;'>⚡ Quick Jump to City:</div>", unsafe_allow_html=True)
@@ -1105,6 +1116,8 @@ elif sidebar_nav == "Citizen Hazard Reporting":
                 st.session_state.pop(k, None)
 
         # ── Build dynamic location dropdown ──
+        all_db_junctions = fetch_all_junctions()
+        jnc_names = {j["name"]: j["junction_id"] for j in all_db_junctions}
         current_loc = st.session_state.get("selected_junction_name_val", "")
         catalog_names = list(jnc_names.keys())
 

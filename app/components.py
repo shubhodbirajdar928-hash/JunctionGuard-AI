@@ -142,7 +142,7 @@ def render_navbar(active_page: str = "Dashboard"):
         '</div>'
         '</div>'
     )
-    st.html(navbar_html)
+    st.markdown(navbar_html, unsafe_allow_html=True)
 
 def render_dashboard_overview_header(title: str = "Dashboard", subtitle: str = "Real-time Junction Risk Surveillance System"):
     """Renders the subheader bar with active page title, subtitle, and live date/time widget."""
@@ -150,44 +150,46 @@ def render_dashboard_overview_header(title: str = "Dashboard", subtitle: str = "
     date_str = now.strftime("%b %d, %Y")
     time_str = now.strftime("%I:%M:%S %p")
     
-    st.html(f"""
-    <div class="overview-header-bar">
-        <div>
-            <div class="overview-title">{title}</div>
-            <div class="overview-sub">{subtitle}</div>
-        </div>
-        <div class="overview-right-actions">
-            <div class="datetime-pill">
-                <span class="pill-cal-icon"></span>
-                <span>{date_str}</span>
-                <span class="dt-divider">|</span>
-                <span class="dt-time">{time_str}</span>
-            </div>
-        </div>
-    </div>
-    """)
+    header_html = (
+        '<div class="overview-header-bar">'
+        '<div>'
+        f'<div class="overview-title">{title}</div>'
+        f'<div class="overview-sub">{subtitle}</div>'
+        '</div>'
+        '<div class="overview-right-actions">'
+        '<div class="datetime-pill">'
+        '<span class="pill-cal-icon"></span>'
+        f'<span>{date_str}</span>'
+        '<span class="dt-divider">|</span>'
+        f'<span class="dt-time">{time_str}</span>'
+        '</div>'
+        '</div>'
+        '</div>'
+    )
+    st.markdown(header_html, unsafe_allow_html=True)
 
 def render_footer():
     """Renders the bottom status bar matching the reference image."""
-    st.html("""
-    <div class="tactical-footer">
-        <div class="footer-stat">
-            <span class="live-dot-green"></span>
-            <span>Data Source: Live Sensors + CCTV + IoT</span>
-        </div>
-        <div class="footer-stat">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span>AI Model: <b>JunctionGuard v2.1</b></span>
-        </div>
-        <div class="footer-stat">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            <span>Data Refresh: <b>2 sec ago</b></span>
-        </div>
-        <div class="footer-stat footer-copyright">
-            &copy; 2025 JunctionGuard AI. All Rights Reserved.
-        </div>
-    </div>
-    """)
+    footer_html = (
+        '<div class="tactical-footer">'
+        '<div class="footer-stat">'
+        '<span class="live-dot-green"></span>'
+        '<span>Data Source: Live Sensors + CCTV + IoT</span>'
+        '</div>'
+        '<div class="footer-stat">'
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
+        '<span>AI Model: <b>JunctionGuard v2.1</b></span>'
+        '</div>'
+        '<div class="footer-stat">'
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>'
+        '<span>Data Refresh: <b>2 sec ago</b></span>'
+        '</div>'
+        '<div class="footer-stat footer-copyright">'
+        '&copy; 2025 JunctionGuard AI. All Rights Reserved.'
+        '</div>'
+        '</div>'
+    )
+    st.markdown(footer_html, unsafe_allow_html=True)
 
 def inject_custom_styles():
     """Injects the Stitch Tactical Vision Interface design system."""
